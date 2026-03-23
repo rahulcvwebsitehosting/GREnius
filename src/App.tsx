@@ -1,4 +1,8 @@
 /**
+ * Master the GRE
+ */
+
+/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -24,11 +28,10 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
-  Volume2,
   Trash2,
   Target
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult } from './utils';
 import { GRE_WORDS, GRE_QUANT, GRE_VERBAL } from './data';
 import { QuizResult, UserSettings } from './types';
@@ -179,7 +182,7 @@ const Progress = () => {
   
   const { level, title, progress, nextXP } = getLevelInfo(xp);
 
-  const categories = ['behavior', 'intellect', 'emotion', 'speech', 'morality', 'change', 'opposition', 'perception'];
+  const categories = ['Behavior', 'Intellect', 'Emotion', 'Speech', 'Morality', 'Change', 'Opposition', 'Perception'];
   
   const percentile = Math.min(99, Math.floor((xp / 8000) * 100) + 10);
 
@@ -720,11 +723,16 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
   const nextQuestion = () => {
     if (sessionTotalRef.current > 0 && sessionTotalRef.current % 5 === 0) {
-      recordQuizResult('Verbal', sessionCorrectRef.current, sessionTotalRef.current);
-      setSessionCorrect(0);
-      setSessionTotal(0);
+      const c = sessionCorrectRef.current;
+      const t = sessionTotalRef.current;
+      
+      // Reset refs BEFORE recording to avoid race condition
       sessionCorrectRef.current = 0;
       sessionTotalRef.current = 0;
+      setSessionCorrect(0);
+      setSessionTotal(0);
+      
+      recordQuizResult('Verbal', c, t);
       playSound('xp', soundEnabled);
     }
 
@@ -735,7 +743,8 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     setShowExplanation(false);
     setIsCorrect(null);
     setTimer(0);
-    setIsTimerActive(true);
+    // Use a slight delay or ensure state update is clean
+    setTimeout(() => setIsTimerActive(true), 0);
     playSound('flip', soundEnabled);
   };
 
@@ -1075,6 +1084,11 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
         sessionCorrectRef.current = next;
         return next;
       });
+      
+      // Update quant_correct storage for accolade
+      const quantCorrect = getStorage('grenius_quant_correct', 0) as number;
+      setStorage('grenius_quant_correct', quantCorrect + 1);
+      
       const newXp = awardXP(XP_REWARDS.correctQuant);
       onXpChange(newXp);
     } else {
@@ -1084,11 +1098,16 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
   const nextQuestion = () => {
     if (sessionTotalRef.current > 0 && sessionTotalRef.current % 5 === 0) {
-      recordQuizResult('Quantitative', sessionCorrectRef.current, sessionTotalRef.current);
-      setSessionCorrect(0);
-      setSessionTotal(0);
+      const c = sessionCorrectRef.current;
+      const t = sessionTotalRef.current;
+      
+      // Reset refs BEFORE recording to avoid race condition
       sessionCorrectRef.current = 0;
       sessionTotalRef.current = 0;
+      setSessionCorrect(0);
+      setSessionTotal(0);
+      
+      recordQuizResult('Quantitative', c, t);
       playSound('xp', soundEnabled);
     }
 
@@ -1097,7 +1116,7 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     setShowExplanation(false);
     setIsCorrect(null);
     setTimer(0);
-    setIsTimerActive(true);
+    setTimeout(() => setIsTimerActive(true), 0);
     setNeInput('');
     playSound('flip', soundEnabled);
   };
@@ -1108,9 +1127,10 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     } else if (val === '=') {
       try {
         // Use Function constructor to safely evaluate math expression
-        // Only allow numbers and basic operators
+        // Only allow numbers, basic operators, and decimal point
         const sanitized = calcValue.replace(/[^0-9+\-*/().]/g, '');
-        const result = Function('"use strict"; return (' + sanitized + ')')();
+        // Use a more restricted evaluation if possible, but sanitized regex helps
+        const result = new Function('"use strict"; return (' + sanitized + ')')();
         setCalcValue(String(parseFloat(result.toFixed(8))));
       } catch {
         setCalcValue('Error');
@@ -1272,7 +1292,7 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 <p className="text-3xl font-mono font-bold text-white truncate">{calcValue}</p>
               </div>
               <div className="grid grid-cols-4 gap-2">
-                {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '⌫', 'C', '+'].map((btn) => (
+                {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '⌫', '+'].map((btn) => (
                   <button
                     key={btn}
                     onClick={() => handleCalc(btn)}
@@ -1282,8 +1302,14 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                   </button>
                 ))}
                 <button 
+                  onClick={() => handleCalc('C')}
+                  className="col-span-2 h-12 bg-red-500/20 hover:bg-red-500/30 text-red-500 rounded-sm font-mono font-bold transition-colors"
+                >
+                  C
+                </button>
+                <button 
                   onClick={() => handleCalc('=')}
-                  className="col-span-4 h-12 bg-accent-gold hover:bg-accent-gold/90 text-white rounded-sm font-mono font-bold transition-colors"
+                  className="col-span-2 h-12 bg-accent-gold hover:bg-accent-gold/90 text-white rounded-sm font-mono font-bold transition-colors"
                 >
                   =
                 </button>
@@ -2046,7 +2072,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [globalSearch, setGlobalSearch] = useState('');
   const [settings, setSettings] = useState<UserSettings>(getStorage(STORAGE_KEYS.settings, {

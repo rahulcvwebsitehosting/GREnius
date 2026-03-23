@@ -173,6 +173,18 @@ export function recordQuizResult(type: string, correct: number, total: number) {
   setStorage(STORAGE_KEYS.quizHistory, updated);
 }
 
+export function trackWeakWord(wordId: number) {
+  const weakWords = getStorage(STORAGE_KEYS.weakWords, []) as number[];
+  if (!weakWords.includes(wordId)) {
+    setStorage(STORAGE_KEYS.weakWords, [...weakWords, wordId]);
+  }
+}
+
+export function removeWeakWord(wordId: number) {
+  const weakWords = getStorage(STORAGE_KEYS.weakWords, []) as number[];
+  setStorage(STORAGE_KEYS.weakWords, weakWords.filter(id => id !== wordId));
+}
+
 // XP and Leveling
 export const XP_REWARDS = {
   correctVocab: 10,
@@ -183,7 +195,10 @@ export const XP_REWARDS = {
   perfectQuiz: 50
 };
 
-export const LEVELS = [0, 100, 250, 500, 900, 1400, 2100, 3000, 4200, 5700, 8000];
+export const LEVELS = [
+  0, 100, 250, 500, 900, 1400, 2100, 3000, 4200, 5700, 
+  8000, 11000, 15000, 20000, 26000, 33000, 41000, 50000, 60000, 75000
+];
 
 export function getLevelInfo(xp: number) {
   let level = 1;
@@ -195,16 +210,20 @@ export function getLevelInfo(xp: number) {
   }
 
   const titles = [
-    "Novice", "Novice", "Novice", "Novice", 
-    "Scholar", "Scholar", "Scholar", "Scholar", "Scholar",
-    "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith",
+    "Novice", "Novice", "Apprentice", "Apprentice", 
+    "Scholar", "Scholar", "Academic", "Academic", "Intellectual",
+    "Wordsmith", "Wordsmith", "Etymologist", "Etymologist", "Philologist", "Philologist", "Lexicographer", "Lexicographer", "Polymath", "Polymath",
     "GRE Master"
   ];
   
   const title = titles[Math.min(level - 1, titles.length - 1)];
-  const nextXP = LEVELS[level] || LEVELS[LEVELS.length - 1] * 2;
+  
+  // If we are at the max level, progress is 100% and nextXP is null or current
+  const isMaxLevel = level >= LEVELS.length;
+  const nextXP = isMaxLevel ? LEVELS[LEVELS.length - 1] : LEVELS[level];
   const prevXP = LEVELS[level - 1] || 0;
-  const progress = ((xp - prevXP) / (nextXP - prevXP)) * 100;
+  
+  const progress = isMaxLevel ? 100 : ((xp - prevXP) / (nextXP - prevXP)) * 100;
 
   return { level, title, progress, nextXP };
 }

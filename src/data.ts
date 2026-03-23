@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Word, QuantQuestion, VerbalQuestion, ChessPuzzle } from './types';
+import { Word, QuantQuestion, VerbalQuestion } from './types';
 
 export const GRE_WORDS: Word[] = [
   {
@@ -1253,26 +1253,5 @@ export const GRE_VERBAL: VerbalQuestion[] = [
     options: ["complaisance", "agreeableness", "arrogance", "diffidence", "apathy", "antipathy"],
     answers: ["complaisance", "agreeableness"],
     explanation: "The sentence suggests the manager was willing to please or agree. 'Complaisance' and 'agreeableness' fit this description."
-  }
-];
-
-export const CHESS_PUZZLES: ChessPuzzle[] = [
-  {
-    id: 1,
-    title: "Back Rank Mate",
-    difficulty: "Easy",
-    description: "White to move and mate in 1.",
-    position: "r5k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1",
-    solution: "Ra8#",
-    explanation: "The black king is trapped on the back rank by its own pawns. The white rook moves to a8 to deliver checkmate."
-  },
-  {
-    id: 2,
-    title: "Smothered Mate",
-    difficulty: "Medium",
-    description: "White to move and mate in 2.",
-    position: "6rk/5Npp/8/8/8/8/8/7K w - - 0 1",
-    solution: "Nf7#",
-    explanation: "The black king is completely surrounded by its own pieces. The white knight moves to f7 to deliver a smothered mate."
   }
 ];

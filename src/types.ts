@@ -45,16 +45,6 @@ export interface VerbalQuestion {
   }[];
 }
 
-export interface ChessPuzzle {
-  id: number;
-  title: string;
-  difficulty: string;
-  description: string;
-  position: string;
-  solution: string;
-  explanation: string;
-}
-
 export interface QuizResult {
   section: string;
   score: number;

@@ -1,0 +1,210 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+// Audio System (Web Audio API)
+let audioCtx: AudioContext | null = null;
+
+export function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+}
+
+export function playSound(type: 'correct' | 'wrong' | 'flip' | 'xp' | 'levelup', enabled: boolean) {
+  if (!enabled) return;
+  initAudio();
+  if (!audioCtx) return;
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  const configs = {
+    correct: { freq: 523, type: 'sine' as OscillatorType, duration: 0.2, gain: 0.3 },
+    wrong:   { freq: 220, type: 'sawtooth' as OscillatorType, duration: 0.3, gain: 0.2 },
+    flip:    { freq: 440, type: 'sine' as OscillatorType, duration: 0.1, gain: 0.1 },
+    xp:      { freq: 659, type: 'sine' as OscillatorType, duration: 0.15, gain: 0.25 },
+    levelup: { freq: 784, type: 'sine' as OscillatorType, duration: 0.5, gain: 0.4 }
+  };
+
+  const c = configs[type];
+  osc.type = c.type;
+  osc.frequency.value = c.freq;
+  gain.gain.setValueAtTime(c.gain, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + c.duration);
+  osc.start();
+  osc.stop(audioCtx.currentTime + c.duration);
+}
+
+// Confetti System
+export function fireConfetti() {
+  const canvas = document.getElementById('confetti-canvas') as HTMLCanvasElement;
+  if (!canvas) return;
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = Array.from({ length: 120 }, () => ({
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    vx: (Math.random() - 0.5) * 20,
+    vy: Math.random() * -15 - 5,
+    color: ['#F0C040', '#3DD6C8', '#FF6B6B', '#A78BFA', '#3DD68C'][Math.floor(Math.random() * 5)],
+    size: Math.random() * 6 + 3,
+    rotation: Math.random() * 360,
+    rotationSpeed: (Math.random() - 0.5) * 10,
+    gravity: 0.4,
+    life: 1
+  }));
+
+  function animate() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.rotation += p.rotationSpeed;
+      p.life -= 0.015;
+      if (p.life > 0) {
+        alive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI / 180);
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      }
+    });
+    if (alive) requestAnimationFrame(animate);
+    else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = 'none';
+    }
+  }
+  animate();
+}
+
+// Storage Helpers
+export const STORAGE_KEYS = {
+  xp: 'grenius_xp',
+  level: 'grenius_level',
+  streak: 'grenius_streak',
+  lastVisit: 'grenius_last_visit',
+  masteredWords: 'grenius_mastered_words',
+  weakWords: 'grenius_weak_words',
+  quizHistory: 'grenius_quiz_history',
+  settings: 'grenius_settings',
+  dailyGoals: 'grenius_daily_goals',
+  studyTime: 'grenius_study_time'
+};
+
+export function getStorage<T>(key: string, defaultValue: T): T {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (e) {
+    console.error(`Error parsing storage key ${key}:`, e);
+    return defaultValue;
+  }
+}
+
+export function setStorage<T>(key: string, value: T) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+export function awardXP(amount: number): number {
+  const current = getStorage(STORAGE_KEYS.xp, 0) as number;
+  const newXP = current + amount;
+  setStorage(STORAGE_KEYS.xp, newXP);
+  return newXP;
+}
+
+export function updateStreak(): number {
+  const today = new Date().toDateString(); // e.g. "Mon Mar 23 2026"
+  const lastVisit = getStorage(STORAGE_KEYS.lastVisit, null) as string | null;
+  const currentStreak = getStorage(STORAGE_KEYS.streak, 0) as number;
+  
+  if (lastVisit === today) {
+    // Already visited today, streak unchanged
+    return currentStreak;
+  }
+  
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toDateString();
+  
+  let newStreak: number;
+  if (lastVisit === yesterdayStr) {
+    // Visited yesterday → increment streak
+    newStreak = currentStreak + 1;
+  } else if (lastVisit === null) {
+    // First ever visit
+    newStreak = 1;
+  } else {
+    // Missed a day → reset streak
+    newStreak = 1;
+  }
+  
+  setStorage(STORAGE_KEYS.lastVisit, today);
+  setStorage(STORAGE_KEYS.streak, newStreak);
+  return newStreak;
+}
+
+export function recordQuizResult(type: string, correct: number, total: number) {
+  const history = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
+  const entry = {
+    type,
+    score: Math.round((correct / total) * 100),
+    correct,
+    total,
+    date: new Date().toISOString()
+  };
+  // Keep only last 50 results
+  const updated = [...history, entry].slice(-50);
+  setStorage(STORAGE_KEYS.quizHistory, updated);
+}
+
+// XP and Leveling
+export const XP_REWARDS = {
+  correctVocab: 10,
+  correctQuant: 15,
+  correctVerbal: 12,
+  flashcardMastered: 5,
+  dailyStreak: 20,
+  perfectQuiz: 50
+};
+
+export const LEVELS = [0, 100, 250, 500, 900, 1400, 2100, 3000, 4200, 5700, 8000];
+
+export function getLevelInfo(xp: number) {
+  let level = 1;
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= LEVELS[i]) {
+      level = i + 1;
+      break;
+    }
+  }
+
+  const titles = [
+    "Novice", "Novice", "Novice", "Novice", 
+    "Scholar", "Scholar", "Scholar", "Scholar", "Scholar",
+    "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith", "Wordsmith",
+    "GRE Master"
+  ];
+  
+  const title = titles[Math.min(level - 1, titles.length - 1)];
+  const nextXP = LEVELS[level] || LEVELS[LEVELS.length - 1] * 2;
+  const prevXP = LEVELS[level - 1] || 0;
+  const progress = ((xp - prevXP) / (nextXP - prevXP)) * 100;
+
+  return { level, title, progress, nextXP };
+}

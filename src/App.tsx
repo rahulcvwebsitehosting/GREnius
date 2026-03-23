@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Brain, 
   LayoutDashboard, 
@@ -318,26 +318,30 @@ const MindGames = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
   const startNumberMemory = () => {
     setGameState('playing');
-    nextLevel();
+    nextLevelWith(1);
   };
 
-  const nextLevel = () => {
-    const newNumber = Math.floor(Math.random() * Math.pow(10, level)).toString();
+  const nextLevelWith = (currentLevel: number) => {
+    const digits = Math.max(1, currentLevel);
+    const min = Math.pow(10, digits - 1);
+    const max = Math.pow(10, digits) - 1;
+    const newNumber = Math.floor(min + Math.random() * (max - min + 1)).toString();
     setNumber(newNumber);
     setShowNumber(true);
     setUserInput('');
     playSound('flip', soundEnabled);
-    setTimeout(() => setShowNumber(false), 2000 + (level * 500));
+    setTimeout(() => setShowNumber(false), 2000 + (currentLevel * 500));
   };
 
   const checkNumber = () => {
     if (userInput === number) {
+      const newLevel = level + 1;
       setScore(score + (level * 100));
-      setLevel(level + 1);
+      setLevel(newLevel);
       playSound('correct', soundEnabled);
       const newXp = awardXP(level * 5);
       onXpChange(newXp);
-      nextLevel();
+      nextLevelWith(newLevel);
     } else {
       setGameState('end');
       playSound('wrong', soundEnabled);
@@ -420,6 +424,21 @@ const MindGames = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                   <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Academic<br />Performance.</h2>
                 </div>
                 
+                <div className="max-w-md mx-auto p-8 bg-red-50 rounded-sm border border-red-100 space-y-6">
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Expected Sequence</span>
+                    <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter">{number}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Your Input</span>
+                    <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter opacity-50">{userInput || 'No Input'}</p>
+                  </div>
+                  <p className="text-xs font-sans text-red-600 leading-relaxed">
+                    The cognitive load exceeded your current working memory capacity at Level {level}. 
+                    Regular practice can help expand this capacity.
+                  </p>
+                </div>
+
                 <div className="grid grid-cols-2 gap-8 max-w-md mx-auto">
                   <div className="p-8 bg-bg-primary rounded-sm border border-ink/5 text-left">
                     <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Level</span>
@@ -513,10 +532,22 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [blankSelections, setBlankSelections] = useState<string[]>([]);
   const [rcAnswers, setRcAnswers] = useState<{[key: number]: string}>({});
   const [showExplanation, setShowExplanation] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [timer, setTimer] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionTotal, setSessionTotal] = useState(0);
+  const sessionCorrectRef = useRef(0);
+  const sessionTotalRef = useRef(0);
+
+  useEffect(() => {
+    return () => {
+      if (sessionTotalRef.current > 0) {
+        recordQuizResult('Verbal', sessionCorrectRef.current, sessionTotalRef.current);
+      }
+    };
+  }, []);
+
   const soundEnabled = getStorage(STORAGE_KEYS.settings, { soundEnabled: true }).soundEnabled;
 
   useEffect(() => {
@@ -557,14 +588,24 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
       setSelectedAnswers(newAnswers);
     } else {
       setSelectedAnswers([ans]);
+      const correct = currentQuestion.answers?.includes(ans) || false;
+      setIsCorrect(correct);
       setShowExplanation(true);
       setIsTimerActive(false);
-      setSessionTotal(t => t + 1);
+      setSessionTotal(t => {
+        const next = t + 1;
+        sessionTotalRef.current = next;
+        return next;
+      });
       
-      if (currentQuestion.answers?.includes(ans)) {
+      if (correct) {
         playSound('correct', soundEnabled);
         fireConfetti();
-        setSessionCorrect(c => c + 1);
+        setSessionCorrect(c => {
+          const next = c + 1;
+          sessionCorrectRef.current = next;
+          return next;
+        });
         const newXp = awardXP(XP_REWARDS.correctVerbal);
         onXpChange(newXp);
       } else {
@@ -578,11 +619,20 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     const newAnswers = { ...rcAnswers, [questionIndex]: opt };
     setRcAnswers(newAnswers);
     
-    const isCorrect = opt === currentQuestion.questions?.[questionIndex].answer;
-    setSessionTotal(t => t + 1);
-    if (isCorrect) {
+    const correct = opt === currentQuestion.questions?.[questionIndex].answer;
+    setIsCorrect(correct);
+    setSessionTotal(t => {
+      const next = t + 1;
+      sessionTotalRef.current = next;
+      return next;
+    });
+    if (correct) {
       playSound('correct', soundEnabled);
-      setSessionCorrect(c => c + 1);
+      setSessionCorrect(c => {
+        const next = c + 1;
+        sessionCorrectRef.current = next;
+        return next;
+      });
       const newXp = awardXP(XP_REWARDS.correctVerbal);
       onXpChange(newXp);
     } else {
@@ -616,15 +666,24 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
   const submitTC = () => {
     if (blankSelections.length !== currentQuestion.blanks || !blankSelections.every(s => s)) return;
+    const correct = blankSelections.every((ans, idx) => currentQuestion.answers?.[idx] === ans);
+    setIsCorrect(correct);
     setShowExplanation(true);
     setIsTimerActive(false);
-    setSessionTotal(t => t + 1);
+    setSessionTotal(t => {
+      const next = t + 1;
+      sessionTotalRef.current = next;
+      return next;
+    });
     
-    const isCorrect = blankSelections.every((ans, idx) => currentQuestion.answers?.[idx] === ans);
-    if (isCorrect) {
+    if (correct) {
       playSound('correct', soundEnabled);
       fireConfetti();
-      setSessionCorrect(c => c + 1);
+      setSessionCorrect(c => {
+        const next = c + 1;
+        sessionCorrectRef.current = next;
+        return next;
+      });
       const newXp = awardXP(XP_REWARDS.correctVerbal);
       onXpChange(newXp);
     } else {
@@ -634,15 +693,24 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
   const submitSE = () => {
     if (selectedAnswers.length !== 2) return;
+    const correct = selectedAnswers.every(ans => currentQuestion.answers?.includes(ans));
+    setIsCorrect(correct);
     setShowExplanation(true);
     setIsTimerActive(false);
-    setSessionTotal(t => t + 1);
+    setSessionTotal(t => {
+      const next = t + 1;
+      sessionTotalRef.current = next;
+      return next;
+    });
     
-    const isCorrect = selectedAnswers.every(ans => currentQuestion.answers?.includes(ans));
-    if (isCorrect) {
+    if (correct) {
       playSound('correct', soundEnabled);
       fireConfetti();
-      setSessionCorrect(c => c + 1);
+      setSessionCorrect(c => {
+        const next = c + 1;
+        sessionCorrectRef.current = next;
+        return next;
+      });
       const newXp = awardXP(XP_REWARDS.correctVerbal);
       onXpChange(newXp);
     } else {
@@ -651,23 +719,24 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   };
 
   const nextQuestion = () => {
+    if (sessionTotalRef.current > 0 && sessionTotalRef.current % 5 === 0) {
+      recordQuizResult('Verbal', sessionCorrectRef.current, sessionTotalRef.current);
+      setSessionCorrect(0);
+      setSessionTotal(0);
+      sessionCorrectRef.current = 0;
+      sessionTotalRef.current = 0;
+      playSound('xp', soundEnabled);
+    }
+
     setCurrentIndex((prev) => (prev + 1) % GRE_VERBAL.length);
     setSelectedAnswers([]);
     setBlankSelections([]);
     setRcAnswers({});
     setShowExplanation(false);
+    setIsCorrect(null);
     setTimer(0);
     setIsTimerActive(true);
     playSound('flip', soundEnabled);
-  };
-
-  const finishSession = () => {
-    if (sessionTotal > 0) {
-      recordQuizResult('Verbal', sessionCorrect, sessionTotal);
-      setSessionCorrect(0);
-      setSessionTotal(0);
-      playSound('xp', soundEnabled);
-    }
   };
 
   return (
@@ -739,6 +808,14 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                         );
                       })}
                     </div>
+                    {rcAnswers[qIdx] !== undefined && (
+                      <div className="p-6 bg-bg-primary rounded-sm border-l-4 border-l-accent-gold space-y-2 mt-4">
+                        <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em]">
+                          {rcAnswers[qIdx] === q.answer ? '✓ Correct' : '✗ Incorrect'}
+                        </span>
+                        <p className="text-sm font-sans text-ink/60 leading-relaxed italic">{q.explanation}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -766,10 +843,12 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                             key={optIdx}
                             onClick={() => selectBlankOption(blankIndex, opt)}
                             className={`p-4 rounded-sm border text-left text-sm font-sans transition-all
-                              ${blankSelections[blankIndex] === opt
-                                ? (showExplanation 
-                                    ? (currentQuestion.answers?.[blankIndex] === opt ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
-                                    : 'bg-ink text-white border-ink')
+                              ${showExplanation && currentQuestion.answers?.[blankIndex] === opt
+                                ? 'bg-ink text-white border-ink'
+                                : blankSelections[blankIndex] === opt && showExplanation && currentQuestion.answers?.[blankIndex] !== opt
+                                ? 'bg-red-50 border-red-200 text-red-900'
+                                : blankSelections[blankIndex] === opt && !showExplanation
+                                ? 'bg-ink text-white border-ink'
                                 : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60'}`}
                           >
                             {opt}
@@ -795,14 +874,16 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       onClick={() => handleAnswer(opt)}
                       className={`
                         group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
-                        ${selectedAnswers.includes(opt) 
-                          ? (currentQuestion.answers?.includes(opt) ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
+                        ${showExplanation && currentQuestion.answers?.includes(opt)
+                          ? 'bg-ink text-white border-ink'
+                          : selectedAnswers.includes(opt) && !currentQuestion.answers?.includes(opt)
+                          ? 'bg-red-50 border-red-200 text-red-900'
                           : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60'}
                       `}
                     >
                       <span className={`
                         w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
-                        ${selectedAnswers.includes(opt) ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
+                        ${(showExplanation && currentQuestion.answers?.includes(opt)) || selectedAnswers.includes(opt) ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
                       `}>
                         {String.fromCharCode(65 + idx)}
                       </span>
@@ -836,13 +917,58 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 className="space-y-8"
               >
                 <div className="p-8 bg-white rounded-sm border border-ink/5 shadow-sm space-y-6">
-                  <div className="flex items-center gap-3 text-accent-gold">
-                    <CheckCircle2 size={20} />
-                    <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.2em]">Scholarly Insight</h3>
+                  <div className={`flex items-center gap-3 ${isCorrect ? 'text-teal-500' : 'text-red-500'}`}>
+                    {isCorrect ? <CheckCircle2 size={20} /> : <X size={20} />}
+                    <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.2em]">
+                      {isCorrect ? 'Correct Analysis' : 'Incorrect Analysis'}
+                    </h3>
                   </div>
-                  <p className="text-lg font-sans text-ink/60 leading-relaxed italic">
-                    {currentQuestion.explanation}
-                  </p>
+                  
+                  <div className="space-y-4">
+                    <p className="text-lg font-sans text-ink/60 leading-relaxed italic">
+                      {currentQuestion.explanation}
+                    </p>
+
+                    {currentQuestion.type === 'RC' && currentQuestion.questions && (
+                      <div className="pt-4 border-t border-ink/5 space-y-6">
+                        <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Question Breakdown</h4>
+                        <div className="space-y-6">
+                          {currentQuestion.questions.map((q, idx) => (
+                            <div key={idx} className="space-y-3">
+                              <p className="text-xs font-sans font-bold text-ink">{q.q}</p>
+                              <div className="p-4 bg-bg-primary rounded-sm border border-ink/5">
+                                <p className="text-sm font-sans font-bold text-accent-gold mb-1">{q.answer}</p>
+                                <p className="text-xs font-sans text-ink/60 leading-relaxed italic">
+                                  {q.explanation}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {currentQuestion.answers && (
+                      <div className="pt-4 border-t border-ink/5 space-y-4">
+                        <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct Solution</h4>
+                        <div className="space-y-3">
+                          {currentQuestion.answers.map((ans, idx) => {
+                            const wordData = GRE_WORDS.find(w => w.word.toLowerCase() === ans.toLowerCase());
+                            return (
+                              <div key={idx} className="p-4 bg-bg-primary rounded-sm border border-ink/5">
+                                <p className="text-sm font-sans font-bold text-ink mb-1">{ans}</p>
+                                {wordData && (
+                                  <p className="text-xs font-sans text-ink/60 leading-relaxed">
+                                    <span className="font-bold text-accent-gold">Definition:</span> {wordData.definition}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <button 
                   onClick={nextQuestion}
@@ -850,14 +976,6 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 >
                   Next Challenge <ArrowRight size={14} />
                 </button>
-                {sessionTotal >= 5 && (
-                  <button 
-                    onClick={finishSession}
-                    className="w-full py-4 bg-ink/5 text-ink/40 rounded-sm font-sans font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-ink/10 hover:text-ink transition-all flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle2 size={12} /> Finish Session & Record
-                  </button>
-                )}
               </motion.div>
             ) : (
               <motion.div 
@@ -890,6 +1008,7 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [timer, setTimer] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [showCalculator, setShowCalculator] = useState(false);
@@ -897,6 +1016,17 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [neInput, setNeInput] = useState('');
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionTotal, setSessionTotal] = useState(0);
+  const sessionCorrectRef = useRef(0);
+  const sessionTotalRef = useRef(0);
+
+  useEffect(() => {
+    return () => {
+      if (sessionTotalRef.current > 0) {
+        recordQuizResult('Quantitative', sessionCorrectRef.current, sessionTotalRef.current);
+      }
+    };
+  }, []);
+
   const soundEnabled = getStorage(STORAGE_KEYS.settings, { soundEnabled: true }).soundEnabled;
 
   useEffect(() => {
@@ -927,14 +1057,24 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const handleAnswer = (ans: string) => {
     if (showExplanation) return;
     setSelectedAnswer(ans);
+    const correct = ans.trim() === currentQuestion.answer.trim();
+    setIsCorrect(correct);
     setShowExplanation(true);
     setIsTimerActive(false);
-    setSessionTotal(t => t + 1);
+    setSessionTotal(t => {
+      const next = t + 1;
+      sessionTotalRef.current = next;
+      return next;
+    });
 
-    if (ans.trim() === currentQuestion.answer.trim()) {
+    if (correct) {
       playSound('correct', soundEnabled);
       fireConfetti();
-      setSessionCorrect(c => c + 1);
+      setSessionCorrect(c => {
+        const next = c + 1;
+        sessionCorrectRef.current = next;
+        return next;
+      });
       const newXp = awardXP(XP_REWARDS.correctQuant);
       onXpChange(newXp);
     } else {
@@ -943,22 +1083,23 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   };
 
   const nextQuestion = () => {
+    if (sessionTotalRef.current > 0 && sessionTotalRef.current % 5 === 0) {
+      recordQuizResult('Quantitative', sessionCorrectRef.current, sessionTotalRef.current);
+      setSessionCorrect(0);
+      setSessionTotal(0);
+      sessionCorrectRef.current = 0;
+      sessionTotalRef.current = 0;
+      playSound('xp', soundEnabled);
+    }
+
     setCurrentIndex((prev) => (prev + 1) % GRE_QUANT.length);
     setSelectedAnswer(null);
     setShowExplanation(false);
+    setIsCorrect(null);
     setTimer(0);
     setIsTimerActive(true);
     setNeInput('');
     playSound('flip', soundEnabled);
-  };
-
-  const finishSession = () => {
-    if (sessionTotal > 0) {
-      recordQuizResult('Quantitative', sessionCorrect, sessionTotal);
-      setSessionCorrect(0);
-      setSessionTotal(0);
-      playSound('xp', soundEnabled);
-    }
   };
 
   const handleCalc = (val: string) => {
@@ -1037,14 +1178,16 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       onClick={() => handleAnswer(opt)}
                       className={`
                         group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
-                        ${selectedAnswer === opt 
-                          ? (opt === currentQuestion.answer ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
+                        ${showExplanation && opt === currentQuestion.answer
+                          ? 'bg-ink text-white border-ink'
+                          : selectedAnswer === opt && opt !== currentQuestion.answer
+                          ? 'bg-red-50 border-red-200 text-red-900'
                           : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60'}
                       `}
                     >
                       <span className={`
                         w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
-                        ${selectedAnswer === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
+                        ${(showExplanation && opt === currentQuestion.answer) || selectedAnswer === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
                       `}>
                         {opt}
                       </span>
@@ -1070,14 +1213,16 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       onClick={() => handleAnswer(opt)}
                       className={`
                         group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
-                        ${selectedAnswer === opt 
-                          ? (opt === currentQuestion.answer ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
+                        ${showExplanation && opt === currentQuestion.answer
+                          ? 'bg-ink text-white border-ink'
+                          : selectedAnswer === opt && opt !== currentQuestion.answer
+                          ? 'bg-red-50 border-red-200 text-red-900'
                           : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60'}
                       `}
                     >
                       <span className={`
                         w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
-                        ${selectedAnswer === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
+                        ${(showExplanation && opt === currentQuestion.answer) || selectedAnswer === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
                       `}>
                         {String.fromCharCode(65 + idx)}
                       </span>
@@ -1156,13 +1301,21 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 className="space-y-8"
               >
                 <div className="p-8 bg-white rounded-sm border border-ink/5 shadow-sm space-y-6">
-                  <div className="flex items-center gap-3 text-accent-gold">
-                    <CheckCircle2 size={20} />
-                    <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.2em]">Mathematical Proof</h3>
+                  <div className={`flex items-center gap-3 ${isCorrect ? 'text-teal-500' : 'text-red-500'}`}>
+                    {isCorrect ? <CheckCircle2 size={20} /> : <X size={20} />}
+                    <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.2em]">
+                      {isCorrect ? 'Mathematical Proof' : 'Error Analysis'}
+                    </h3>
                   </div>
-                  <p className="text-lg font-sans text-ink/60 leading-relaxed italic">
-                    {currentQuestion.explanation}
-                  </p>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-bg-primary rounded-sm border border-ink/5">
+                      <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] mb-2">Correct Answer</p>
+                      <p className="text-2xl font-serif font-bold text-accent-gold">{currentQuestion.answer}</p>
+                    </div>
+                    <p className="text-lg font-sans text-ink/60 leading-relaxed italic">
+                      {currentQuestion.explanation}
+                    </p>
+                  </div>
                 </div>
                 <button 
                   onClick={nextQuestion}
@@ -1170,14 +1323,6 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 >
                   Next Challenge <ArrowRight size={14} />
                 </button>
-                {sessionTotal >= 5 && (
-                  <button 
-                    onClick={finishSession}
-                    className="w-full py-4 bg-ink/5 text-ink/40 rounded-sm font-sans font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-ink/10 hover:text-ink transition-all flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle2 size={12} /> Finish Session & Record
-                  </button>
-                )}
               </motion.div>
             ) : (
               <motion.div 
@@ -1206,10 +1351,14 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   );
 };
 
-const Vocabulary = ({ onBack, onXpChange }: { onBack: () => void, onXpChange: (xp: number) => void }) => {
-  const [view, setView] = useState<'menu' | 'flashcards' | 'list'>('menu');
+const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBack: () => void, onXpChange: (xp: number) => void, globalSearch?: string, onSearchClear?: () => void }) => {
+  const [view, setView] = useState<'menu' | 'flashcards' | 'list' | 'practice'>('menu');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [practiceOptions, setPracticeOptions] = useState<string[]>([]);
+  const [selectedPracticeOption, setSelectedPracticeOption] = useState<string | null>(null);
+  const [showPracticeExplanation, setShowPracticeExplanation] = useState(false);
+  const [isPracticeCorrect, setIsPracticeCorrect] = useState<boolean | null>(null);
   const [masteredWords, setMasteredWords] = useState<number[]>(getStorage(STORAGE_KEYS.masteredWords, []));
   const [searchQuery, setSearchQuery] = useState('');
   const soundEnabled = getStorage(STORAGE_KEYS.settings, { soundEnabled: true }).soundEnabled;
@@ -1222,6 +1371,13 @@ const Vocabulary = ({ onBack, onXpChange }: { onBack: () => void, onXpChange: (x
       setStorage(STORAGE_KEYS.studyTime, current + elapsed);
     };
   }, []);
+
+  useEffect(() => {
+    if (globalSearch && globalSearch.length > 0) {
+      setView('list');
+      setSearchQuery(globalSearch);
+    }
+  }, [globalSearch]);
 
   const currentWord = GRE_WORDS[currentIndex];
 
@@ -1259,6 +1415,49 @@ const Vocabulary = ({ onBack, onXpChange }: { onBack: () => void, onXpChange: (x
   const prevWord = () => {
     setIsFlipped(false);
     setCurrentIndex((prev) => (prev - 1 + GRE_WORDS.length) % GRE_WORDS.length);
+    playSound('flip', soundEnabled);
+  };
+
+  const startPractice = () => {
+    setView('practice');
+    generatePracticeOptions(currentIndex);
+  };
+
+  const generatePracticeOptions = (index: number) => {
+    const correct = GRE_WORDS[index].definition;
+    const others = GRE_WORDS
+      .filter((_, i) => i !== index)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3)
+      .map(w => w.definition);
+    
+    setPracticeOptions([correct, ...others].sort(() => 0.5 - Math.random()));
+    setSelectedPracticeOption(null);
+    setShowPracticeExplanation(false);
+    setIsPracticeCorrect(null);
+  };
+
+  const handlePracticeAnswer = (opt: string) => {
+    if (showPracticeExplanation) return;
+    setSelectedPracticeOption(opt);
+    const correct = opt === currentWord.definition;
+    setIsPracticeCorrect(correct);
+    setShowPracticeExplanation(true);
+    
+    if (correct) {
+      playSound('correct', soundEnabled);
+      fireConfetti();
+      const newXp = awardXP(XP_REWARDS.correctVerbal);
+      onXpChange(newXp);
+    } else {
+      playSound('wrong', soundEnabled);
+    }
+  };
+
+  const nextPracticeWord = () => {
+    const nextIdx = (currentIndex + 1) % GRE_WORDS.length;
+    setCurrentIndex(nextIdx);
+    generatePracticeOptions(nextIdx);
     playSound('flip', soundEnabled);
   };
 
@@ -1314,6 +1513,146 @@ const Vocabulary = ({ onBack, onXpChange }: { onBack: () => void, onXpChange: (x
               Browse Repository <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
             </div>
           </button>
+
+          <button 
+            onClick={startPractice}
+            className="group text-left space-y-6"
+          >
+            <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+              <Target size={24} />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Practice Quiz</h3>
+              <p className="text-sm font-sans text-ink/60 leading-relaxed">Test your recall with definition-matching challenges and detailed feedback.</p>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+              Initiate Quiz <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (view === 'practice') {
+    return (
+      <div className="space-y-12 max-w-4xl mx-auto">
+        <div className="flex items-center justify-between border-b border-ink/5 pb-8">
+          <button 
+            onClick={() => setView('menu')} 
+            className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+          >
+            <X size={14} /> Terminate Quiz
+          </button>
+          <div className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
+            Word {currentIndex + 1} of {GRE_WORDS.length}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="lg:col-span-8 space-y-12">
+            <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-sm relative">
+              <div className="absolute top-0 left-0 w-1 h-full bg-accent-gold" />
+              <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em] mb-8">
+                Identify the Definition
+              </p>
+              <h2 className="text-6xl font-serif font-bold text-ink mb-4">{currentWord.word}</h2>
+              <p className="text-lg font-serif italic text-ink/30 mb-12">{currentWord.pronunciation}</p>
+
+              <div className="grid grid-cols-1 gap-4">
+                {practiceOptions.map((opt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handlePracticeAnswer(opt)}
+                    className={`
+                      group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
+                      ${selectedPracticeOption === opt 
+                        ? (opt === currentWord.definition ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
+                        : (showPracticeExplanation && opt === currentWord.definition ? 'bg-teal-50 border-teal-200 text-teal-900' : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60')}
+                    `}
+                  >
+                    <span className={`
+                      w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
+                      ${selectedPracticeOption === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
+                    `}>
+                      {String.fromCharCode(65 + idx)}
+                    </span>
+                    <span className="text-lg font-sans font-medium leading-tight">{opt}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <aside className="lg:col-span-4 space-y-12">
+            <AnimatePresence mode="wait">
+              {showPracticeExplanation ? (
+                <motion.div 
+                  key="explanation"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-8"
+                >
+                  <div className="p-8 bg-white rounded-sm border border-ink/5 shadow-sm space-y-6">
+                    <div className={`flex items-center gap-3 ${isPracticeCorrect ? 'text-teal-500' : 'text-red-500'}`}>
+                      {isPracticeCorrect ? <CheckCircle2 size={20} /> : <X size={20} />}
+                      <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.2em]">
+                        {isPracticeCorrect ? 'Lexical Accuracy' : 'Lexical Error'}
+                      </h3>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Dictionary Meaning</h4>
+                        <p className="text-lg font-sans text-ink/60 leading-relaxed italic">
+                          {currentWord.definition}
+                        </p>
+                      </div>
+
+                      <div className="p-6 bg-bg-primary rounded-sm border border-ink/5">
+                        <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-3">Contextual Usage</h4>
+                        <p className="text-sm font-sans text-ink/60 leading-relaxed italic">
+                          "{currentWord.example}"
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Mnemonic Aid</h4>
+                        <p className="text-sm font-sans text-ink/60 leading-relaxed">
+                          {currentWord.mnemonic}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={nextPracticeWord}
+                    className="w-full py-6 bg-accent-gold text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-accent-gold/90 transition-all shadow-xl flex items-center justify-center gap-3"
+                  >
+                    Next Word <ArrowRight size={14} />
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="tips"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="p-8 bg-bg-primary rounded-sm border border-ink/5 space-y-8"
+                >
+                  <h3 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Practice Tips</h3>
+                  <ul className="space-y-6">
+                    <li className="space-y-2">
+                      <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest">Active Recall</span>
+                      <p className="text-sm font-sans text-ink/60 leading-relaxed">Try to define the word in your own head before looking at the options.</p>
+                    </li>
+                    <li className="space-y-2">
+                      <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest">Etymology</span>
+                      <p className="text-sm font-sans text-ink/60 leading-relaxed">Look for Latin or Greek roots that might hint at the word's meaning.</p>
+                    </li>
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </aside>
         </div>
       </div>
     );
@@ -1426,7 +1765,10 @@ const Vocabulary = ({ onBack, onXpChange }: { onBack: () => void, onXpChange: (x
             <input 
               type="text" 
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (e.target.value === '') onSearchClear?.();
+              }}
               placeholder="Search the lexicon..."
               className="w-full pl-12 pr-12 py-4 bg-white border border-ink/5 rounded-sm text-sm font-sans focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/20"
             />
@@ -1523,6 +1865,37 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;
   };
+
+  const behaviorWords = GRE_WORDS.filter(w => w.category === 'behavior');
+  const masteredBehavior = behaviorWords.filter(w => masteredWords.includes(w.id)).length;
+  const quizHistoryData = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
+
+  const goals = [
+    {
+      text: 'Master 10 vocabulary words',
+      done: masteredWords.length >= 10,
+      progress: Math.min(masteredWords.length, 10),
+      target: 10
+    },
+    {
+      text: `Master all "behavior" words (${masteredBehavior}/${behaviorWords.length})`,
+      done: masteredBehavior >= behaviorWords.length,
+      progress: masteredBehavior,
+      target: behaviorWords.length
+    },
+    {
+      text: 'Complete your first verbal session',
+      done: quizHistoryData.some((q: any) => q.type === 'Verbal'),
+      progress: quizHistoryData.some((q: any) => q.type === 'Verbal') ? 1 : 0,
+      target: 1
+    },
+    {
+      text: 'Reach a 3-day study streak',
+      done: streak >= 3,
+      progress: Math.min(streak, 3),
+      target: 3
+    },
+  ];
   
   return (
     <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -1649,14 +2022,20 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
           <section className="space-y-8">
             <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Upcoming Goals</h2>
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-bg-primary rounded-sm border border-ink/5">
-                <div className="w-1.5 h-1.5 bg-accent-gold rounded-full" />
-                <span className="text-xs font-sans text-ink/60 uppercase tracking-widest">Complete 10 Quant QC problems</span>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-bg-primary rounded-sm border border-ink/5">
-                <div className="w-1.5 h-1.5 bg-accent-gold rounded-full" />
-                <span className="text-xs font-sans text-ink/60 uppercase tracking-widest">Master 5 new 'Behavior' words</span>
-              </div>
+              {goals.map(goal => (
+                <div key={goal.text} className={`flex flex-col gap-2 p-4 bg-bg-primary rounded-sm border border-ink/5 ${goal.done ? 'opacity-40' : ''}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${goal.done ? 'bg-ink/20' : 'bg-accent-gold'}`} />
+                    <span className={`text-xs font-sans text-ink/60 uppercase tracking-widest ${goal.done ? 'line-through' : ''}`}>{goal.text}</span>
+                    {goal.done && <span className="ml-auto text-[10px] text-accent-gold font-bold">✓ Done</span>}
+                  </div>
+                  {!goal.done && (
+                    <div className="w-full h-0.5 bg-ink/5 rounded-full overflow-hidden ml-4">
+                      <div className="h-full bg-accent-gold/50 transition-all duration-700" style={{ width: `${(goal.progress / goal.target) * 100}%` }} />
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </section>
         </aside>
@@ -1669,6 +2048,7 @@ const App = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [globalSearch, setGlobalSearch] = useState('');
   const [settings, setSettings] = useState<UserSettings>(getStorage(STORAGE_KEYS.settings, {
     name: 'Scholar',
     dailyGoal: 50,
@@ -1741,7 +2121,7 @@ const App = () => {
       case 'dashboard':
         return <Dashboard onNavigate={setActiveSection} />;
       case 'vocabulary':
-        return <Vocabulary onBack={() => setActiveSection('dashboard')} onXpChange={handleXpChange} />;
+        return <Vocabulary onBack={() => setActiveSection('dashboard')} onXpChange={handleXpChange} globalSearch={globalSearch} onSearchClear={() => setGlobalSearch('')} />;
       case 'quantitative':
         return <Quantitative onXpChange={handleXpChange} />;
       case 'verbal':
@@ -1873,6 +2253,16 @@ const App = () => {
               <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-ink/20" size={16} />
               <input 
                 type="text" 
+                value={globalSearch}
+                onChange={(e) => {
+                  setGlobalSearch(e.target.value);
+                  if (e.target.value.length > 0 && activeSection !== 'vocabulary') {
+                    setActiveSection('vocabulary');
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setGlobalSearch('');
+                }}
                 placeholder="SEARCH LEXICON..."
                 className="w-full pl-8 pr-4 py-2 bg-transparent border-none text-[10px] font-sans font-bold uppercase tracking-[0.2em] focus:ring-0 placeholder:text-ink/10 transition-all"
               />

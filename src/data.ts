@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Word, QuantQuestion, VerbalQuestion } from './types';
+import { Word, QuantQuestion, VerbalQuestion, Achievement, UserStats } from './types';
 
 export const GRE_WORDS: Word[] = [
   {
@@ -5594,4 +5594,136 @@ export const GRE_VERBAL: VerbalQuestion[] = [
     answers: ["complaisance", "agreeableness"],
     explanation: "The sentence suggests the manager was willing to please or agree. 'Complaisance' and 'agreeableness' fit this description."
   }
+];
+
+export const ETYMOLOGY_ROOTS = [
+  {
+    root: 'EGO', language: 'Latin', meaning: 'I, self',
+    words: ['egoist','egotist','egocentric','egomaniac','alter ego'],
+    mnemonic: 'Ego = "I" — all about the self'
+  },
+  {
+    root: 'LOGOS', language: 'Greek', meaning: 'word, reason, study',
+    words: ['analogy','prologue','epilogue','eloquent','eulogy','tautology','neologism'],
+    mnemonic: 'Logos = word — forms the "-logy" suffix in every science'
+  },
+  {
+    root: 'ANIMUS', language: 'Latin', meaning: 'mind, spirit, feeling',
+    words: ['equanimity','magnanimous','pusillanimous','unanimous','animosity','animus'],
+    mnemonic: 'Animus = spirit — the emotional/mental state'
+  },
+  {
+    root: 'CHRON', language: 'Greek', meaning: 'time',
+    words: ['anachronism','chronic','synchronous','chronological','ephemeral'],
+    mnemonic: 'Chron = time — think "chronometer" (time measurer)'
+  },
+  {
+    root: 'PHON', language: 'Greek', meaning: 'sound, voice',
+    words: ['cacophony','euphony','dissonance','eloquent','vociferous'],
+    mnemonic: 'Phon = sound — phones carry your voice'
+  },
+  {
+    root: 'GAMY / GAMOS', language: 'Greek', meaning: 'marriage',
+    words: ['misogamist','monogamy','bigamy','polygamy'],
+    mnemonic: 'Gamos = marriage — "polygamy" = many marriages'
+  },
+  {
+    root: 'ANTHROPOS', language: 'Greek', meaning: 'human, mankind',
+    words: ['misanthrope','philanthropy','anthropology','egregious'],
+    mnemonic: 'Anthropos = human — philanthropy = love of humans'
+  },
+  {
+    root: 'GYNE / GYNO', language: 'Greek', meaning: 'woman',
+    words: ['misogynist','gynecology','androgynous'],
+    mnemonic: 'Gyne = woman — misogynist = woman-hater'
+  },
+  {
+    root: 'VERTO / VERTERE', language: 'Latin', meaning: 'to turn',
+    words: ['introvert','extrovert','ambivert','avert','divert','revert','subvert'],
+    mnemonic: 'Vert = turn — introvert turns inward, extrovert turns outward'
+  },
+  {
+    root: 'LOQU / LOQUI', language: 'Latin', meaning: 'to speak',
+    words: ['loquacious','eloquent','grandiloquent','soliloquy','colloquial','equivocate'],
+    mnemonic: 'Loqu = speak — "eloquent" = speaking well'
+  },
+  {
+    root: 'DICT / DICTUM', language: 'Latin', meaning: 'to say, proclaim',
+    words: ['dictum','malediction','abdicate','edict','contradict','vindicate'],
+    mnemonic: 'Dict = say — dictator = one who dictates (commands)'
+  },
+  {
+    root: 'BENE / BONUS', language: 'Latin', meaning: 'good, well',
+    words: ['beneficent','benign','benefactor','benevolent'],
+    mnemonic: 'Bene = good — "benefit" = good effect'
+  },
+  {
+    root: 'MAL / MALE', language: 'Latin', meaning: 'bad, evil',
+    words: ['malediction','malevolent','malign','malignant','malfeasance'],
+    mnemonic: 'Mal = bad — "malfunction" = bad function'
+  },
+  {
+    root: 'MISER / MISEIN', language: 'Greek/Latin', meaning: 'to hate',
+    words: ['misanthrope','misogynist','misogamist'],
+    mnemonic: 'Misein = to hate — these all describe hatred of something'
+  },
+  {
+    root: 'PHIL / PHILE', language: 'Greek', meaning: 'love, fondness',
+    words: ['philanthropy','bibliophile','philosopher','philistine'],
+    mnemonic: 'Phil = love — "philosopher" = lover of wisdom'
+  },
+  {
+    root: 'GREG / GREGIS', language: 'Latin', meaning: 'flock, herd, group',
+    words: ['gregarious','egregious','aggregate','congregate','segregate'],
+    mnemonic: 'Greg = group — gregarious = loves being in a group'
+  },
+  {
+    root: 'CULPA', language: 'Latin', meaning: 'blame, fault',
+    words: ['exculpate','culpable','inculcate'],
+    mnemonic: 'Culpa = blame — "mea culpa" = my fault'
+  },
+  {
+    root: 'ACER / ACERB', language: 'Latin', meaning: 'sharp, sour, bitter',
+    words: ['acerbic','acidulous','exacerbate'],
+    mnemonic: 'Acer = sharp — "exacerbate" = make sharper/worse'
+  },
+  {
+    root: 'DEXT / DEXTER', language: 'Latin', meaning: 'right hand, skillful',
+    words: ['dexterous','adroit','ambidextrous'],
+    mnemonic: 'Dexter = right hand — right-handed = skillful in tradition'
+  },
+  {
+    root: 'GAUCH / GAUCHE', language: 'French/Latin', meaning: 'left, awkward',
+    words: ['gauche','gaucherie'],
+    mnemonic: 'Gauche = left (left-handed was seen as awkward)'
+  },
+  {
+    root: 'TEMPOR', language: 'Latin', meaning: 'time',
+    words: ['extemporaneous','contemporary','temporal','transitory'],
+    mnemonic: 'Tempor = time — "extemporaneous" = done without time to prepare'
+  },
+  {
+    root: 'FERV', language: 'Latin', meaning: 'boil, glow',
+    words: ['fervid','fervent','effervescent'],
+    mnemonic: 'Ferv = boil — fervid passion = boiling with enthusiasm'
+  },
+];
+
+export const ACHIEVEMENTS: Achievement[] = [
+  { id: 'first_word', title: 'First Steps', description: 'Master your first word', icon: '🌱', condition: s => s.masteredWords >= 1, xpReward: 25 },
+  { id: 'word_10', title: 'Getting Started', description: 'Master 10 words', icon: '📖', condition: s => s.masteredWords >= 10, xpReward: 50 },
+  { id: 'word_50', title: 'Word Enthusiast', description: 'Master 50 words', icon: '📚', condition: s => s.masteredWords >= 50, xpReward: 100 },
+  { id: 'word_100', title: 'Vocabulary Builder', description: 'Master 100 words', icon: '🏆', condition: s => s.masteredWords >= 100, xpReward: 200 },
+  { id: 'word_200', title: 'Lexical Master', description: 'Master 200 words', icon: '👑', condition: s => s.masteredWords >= 200, xpReward: 500 },
+  { id: 'streak_3', title: 'On a Roll', description: 'Maintain a 3-day streak', icon: '🔥', condition: s => s.streakDays >= 3, xpReward: 30 },
+  { id: 'streak_7', title: 'Week Warrior', description: 'Maintain a 7-day streak', icon: '⚡', condition: s => s.streakDays >= 7, xpReward: 75 },
+  { id: 'streak_30', title: 'Unstoppable', description: 'Maintain a 30-day streak', icon: '🌟', condition: s => s.streakDays >= 30, xpReward: 300 },
+  { id: 'quiz_1', title: 'Test Taker', description: 'Complete your first quiz', icon: '✏️', condition: s => s.quizzesTaken >= 1, xpReward: 20 },
+  { id: 'quiz_10', title: 'Quiz Veteran', description: 'Complete 10 quizzes', icon: '🎓', condition: s => s.quizzesTaken >= 10, xpReward: 75 },
+  { id: 'perfect_quiz', title: 'Perfectionist', description: 'Get a perfect score on a quiz', icon: '💯', condition: s => s.perfectQuizzes >= 1, xpReward: 100 },
+  { id: 'xp_500', title: 'Rising Star', description: 'Earn 500 XP', icon: '⭐', condition: s => s.totalXP >= 500, xpReward: 50 },
+  { id: 'xp_2000', title: 'Scholar', description: 'Earn 2000 XP', icon: '🎖️', condition: s => s.totalXP >= 2000, xpReward: 150 },
+  { id: 'xp_5000', title: 'GRE Champion', description: 'Earn 5000 XP', icon: '🏅', condition: s => s.totalXP >= 5000, xpReward: 400 },
+  { id: 'games_5', title: 'Game On', description: 'Play 5 mind games', icon: '🎮', condition: s => s.gamesPlayed >= 5, xpReward: 40 },
+  { id: 'games_20', title: 'Game Master', description: 'Play 20 mind games', icon: '🕹️', condition: s => s.gamesPlayed >= 20, xpReward: 100 },
 ];

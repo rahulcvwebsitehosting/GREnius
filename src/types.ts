@@ -58,3 +58,48 @@ export interface UserSettings {
   soundEnabled: boolean;
   theme: 'light' | 'dark';
 }
+
+export type UserStats = {
+  totalXP: number;
+  masteredWords: number;
+  quizzesTaken: number;
+  streakDays: number;
+  gamesPlayed: number;
+  perfectQuizzes: number;
+  wordsStudied: number;
+};
+
+export interface NewsCard {
+  id: string;
+  title: string;
+  summary: string;
+  source: {
+    name: string;
+    url: string;
+    favicon?: string;
+  };
+  author?: string;
+  publishedAt: string;
+  imageUrl?: string;
+  category: string;
+  country: string;
+  vocabularyHighlight?: {
+    word: string;
+    definition: string;
+    context: string;
+  }[];
+  readTime: number;
+  originalUrl: string;
+  content?: string;
+}
+
+export type NewsCategory = 'India' | 'World' | 'Education' | 'Business' | 'Science';
+
+export type Achievement = {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  condition: (stats: UserStats) => boolean;
+  xpReward: number;
+};

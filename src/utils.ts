@@ -3,6 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Word } from './types';
+import { GRE_WORDS } from './data';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 // Audio System (Web Audio API)
 let audioCtx: AudioContext | null = null;
 
@@ -104,7 +113,10 @@ export const STORAGE_KEYS = {
   quizHistory: 'grenius_quiz_history',
   settings: 'grenius_settings',
   dailyGoals: 'grenius_daily_goals',
-  studyTime: 'grenius_study_time'
+  studyTime: 'grenius_study_time',
+  gamesPlayed: 'grenius_games_played',
+  wordsStudied: 'grenius_words_studied',
+  unlockedAchievements: 'grenius_unlocked_achievements'
 };
 
 export function getStorage<T>(key: string, defaultValue: T): T {
@@ -159,11 +171,12 @@ export function updateStreak(): number {
   return newStreak;
 }
 
-export function recordQuizResult(type: string, correct: number, total: number) {
+export function recordQuizResult(type: string, correct: number, total: number): number {
   const history = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
+  const score = Math.round((correct / total) * 100);
   const entry = {
     type,
-    score: Math.round((correct / total) * 100),
+    score,
     correct,
     total,
     date: new Date().toISOString()
@@ -171,6 +184,11 @@ export function recordQuizResult(type: string, correct: number, total: number) {
   // Keep only last 50 results
   const updated = [...history, entry].slice(-50);
   setStorage(STORAGE_KEYS.quizHistory, updated);
+
+  if (score === 100) {
+    return awardXP(XP_REWARDS.perfectQuiz);
+  }
+  return getStorage(STORAGE_KEYS.xp, 0);
 }
 
 export function trackWeakWord(wordId: number) {
@@ -192,7 +210,8 @@ export const XP_REWARDS = {
   correctVerbal: 12,
   flashcardMastered: 5,
   dailyStreak: 20,
-  perfectQuiz: 50
+  perfectQuiz: 50,
+  dailyChallenge: 50
 };
 
 export const LEVELS = [
@@ -226,4 +245,53 @@ export function getLevelInfo(xp: number) {
   const progress = isMaxLevel ? 100 : ((xp - prevXP) / (nextXP - prevXP)) * 100;
 
   return { level, title, progress, nextXP };
+}
+
+export function getDailyChallenge(): Word[] {
+  const today = new Date();
+  const seed = today.getUTCFullYear() * 10000 + (today.getUTCMonth() + 1) * 100 + today.getUTCDate();
+  // Seeded shuffle
+  let s = seed;
+  const rng = () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+  const shuffled = [...GRE_WORDS].sort(() => rng() - 0.5);
+  return shuffled.slice(0, 10);
+}
+
+export function getDailyChallengeKey(): string {
+  const today = new Date();
+  return `daily_${today.getUTCFullYear()}_${today.getUTCMonth() + 1}_${today.getUTCDate()}`;
+}
+
+export function hasDoneToday(): boolean {
+  return !!localStorage.getItem(getDailyChallengeKey());
+}
+
+export function markDailyDone(score: number): void {
+  localStorage.setItem(getDailyChallengeKey(), JSON.stringify({ score, ts: Date.now() }));
+}
+
+export function getUserStats() {
+  const xp = getStorage(STORAGE_KEYS.xp, 0);
+  const masteredWords = getStorage(STORAGE_KEYS.masteredWords, []).length;
+  const quizHistory = getStorage(STORAGE_KEYS.quizHistory, []);
+  const quizzesTaken = quizHistory.length;
+  const perfectQuizzes = quizHistory.filter((q: any) => q.score === 100).length;
+  const streakDays = getStorage(STORAGE_KEYS.streak, 0);
+  const gamesPlayed = getStorage(STORAGE_KEYS.gamesPlayed, 0);
+  const wordsStudied = getStorage(STORAGE_KEYS.wordsStudied, 0);
+
+  return {
+    totalXP: xp,
+    masteredWords,
+    quizzesTaken,
+    streakDays,
+    gamesPlayed,
+    perfectQuizzes,
+    wordsStudied
+  };
+}
+
+export function incrementStat(key: keyof typeof STORAGE_KEYS, amount = 1) {
+  const current = getStorage(STORAGE_KEYS[key], 0) as number;
+  setStorage(STORAGE_KEYS[key], current + amount);
 }

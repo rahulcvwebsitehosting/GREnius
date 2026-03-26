@@ -25,16 +25,24 @@ import {
   X,
   Search,
   BookMarked,
+  ChevronDown,
   CheckCircle2,
   Clock,
   ArrowRight,
   Trash2,
-  Target
+  Target,
+  Volume2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult } from './utils';
 import { GRE_WORDS, GRE_QUANT, GRE_VERBAL } from './data';
 import { QuizResult, UserSettings } from './types';
+import { 
+  StatCard, 
+  AccoladeItem, 
+  GoalItem, 
+  StudySectionCard 
+} from './components/DashboardComponents';
 
 // Components for different sections
 const Settings = () => {
@@ -182,7 +190,7 @@ const Progress = () => {
   
   const { level, title, progress, nextXP } = getLevelInfo(xp);
 
-  const categories = ['Behavior', 'Intellect', 'Emotion', 'Speech', 'Morality', 'Change', 'Opposition', 'Perception'];
+  const categories = ['Action', 'Art', 'Behavior', 'Change', 'Emotion', 'Intellect', 'Logic', 'Morality', 'Quantity', 'Speech'];
   
   const percentile = Math.min(99, Math.floor((xp / 8000) * 100) + 10);
 
@@ -309,6 +317,774 @@ const Progress = () => {
   );
 };
 
+// ─── CHESS GAME ────────────────────────────────────────────────────────────────
+
+type Piece = { type: 'K'|'Q'|'R'|'B'|'N'|'P', color: 'w'|'b' } | null;
+type Board = Piece[][];
+type ChessPos = { row: number; col: number };
+
+const INIT_BOARD: Board = (() => {
+  const b: Board = Array(8).fill(null).map(() => Array(8).fill(null));
+  const order: Piece['type'][] = ['R','N','B','Q','K','B','N','R'];
+  order.forEach((t, c) => {
+    b[0][c] = { type: t, color: 'b' };
+    b[1][c] = { type: 'P', color: 'b' };
+    b[6][c] = { type: 'P', color: 'w' };
+    b[7][c] = { type: t, color: 'w' };
+  });
+  return b;
+})();
+
+const PIECE_UNICODE: Record<string, string> = {
+  wK:'♔', wQ:'♕', wR:'♖', wB:'♗', wN:'♘', wP:'♙',
+  bK:'♚', bQ:'♛', bR:'♜', bB:'♝', bN:'♞', bP:'♟'
+};
+
+function cloneBoard(b: Board): Board {
+  return b.map(row => row.map(p => p ? {...p} : null));
+}
+
+function isInBounds(r: number, c: number): boolean {
+  return r >= 0 && r < 8 && c >= 0 && c < 8;
+}
+
+function getLegalMoves(board: Board, row: number, col: number, lastMove?: {from: ChessPos, to: ChessPos, piece: Piece}): ChessPos[] {
+  const piece = board[row][col];
+  if (!piece) return [];
+  const moves: ChessPos[] = [];
+  const { type, color } = piece;
+  const dir = color === 'w' ? -1 : 1;
+  const enemy = color === 'w' ? 'b' : 'w';
+
+  const addIfValid = (r: number, c: number, captureOnly = false, moveOnly = false) => {
+    if (!isInBounds(r, c)) return false;
+    const target = board[r][c];
+    if (target) {
+      if (!moveOnly && target.color === enemy) moves.push({ row: r, col: c });
+      return false; // blocked
+    }
+    if (!captureOnly) moves.push({ row: r, col: c });
+    return true; // empty, keep going
+  };
+
+  const slide = (dr: number, dc: number) => {
+    let r = row + dr, c = col + dc;
+    while (isInBounds(r, c)) {
+      const cont = addIfValid(r, c);
+      if (!cont) break;
+      r += dr; c += dc;
+    }
+  };
+
+  if (type === 'P') {
+    // Forward
+    if (addIfValid(row + dir, col, false, true)) {
+      // Double push from start
+      const startRow = color === 'w' ? 6 : 1;
+      if (row === startRow) addIfValid(row + 2 * dir, col, false, true);
+    }
+    // Captures
+    [-1, 1].forEach(dc => {
+      const tr = row + dir, tc = col + dc;
+      if (isInBounds(tr, tc) && board[tr][tc]?.color === enemy) moves.push({ row: tr, col: tc });
+      // En passant
+      if (lastMove && lastMove.piece?.type === 'P' && Math.abs(lastMove.from.row - lastMove.to.row) === 2) {
+        if (lastMove.to.row === row && lastMove.to.col === tc) {
+          moves.push({ row: tr, col: tc });
+        }
+      }
+    });
+  }
+
+  if (type === 'N') {
+    [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc]) => addIfValid(row+dr, col+dc));
+  }
+  if (type === 'B' || type === 'Q') { [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([dr,dc]) => slide(dr,dc)); }
+  if (type === 'R' || type === 'Q') { [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc]) => slide(dr,dc)); }
+  if (type === 'K') {
+    [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr,dc]) => addIfValid(row+dr, col+dc));
+  }
+  return moves;
+}
+
+function findKing(board: Board, color: 'w'|'b'): ChessPos | null {
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    if (board[r][c]?.type === 'K' && board[r][c]?.color === color) return { row: r, col: c };
+  }
+  return null;
+}
+
+function isSquareAttacked(board: Board, row: number, col: number, byColor: 'w'|'b'): boolean {
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const p = board[r][c];
+    if (p?.color === byColor) {
+      const moves = getLegalMoves(board, r, c);
+      if (moves.some(m => m.row === row && m.col === col)) return true;
+    }
+  }
+  return false;
+}
+
+function isInCheck(board: Board, color: 'w'|'b'): boolean {
+  const king = findKing(board, color);
+  if (!king) return false;
+  const enemy = color === 'w' ? 'b' : 'w';
+  return isSquareAttacked(board, king.row, king.col, enemy);
+}
+
+function simulateMove(board: Board, from: ChessPos, to: ChessPos): Board {
+  const nb = cloneBoard(board);
+  const piece = nb[from.row][from.col];
+  if (piece?.type === 'P') {
+    const promRow = piece.color === 'w' ? 0 : 7;
+    if (to.row === promRow) {
+      nb[to.row][to.col] = { type: 'Q', color: piece.color };
+      nb[from.row][from.col] = null;
+      return nb;
+    }
+    // En passant capture
+    if (from.col !== to.col && !board[to.row][to.col]) {
+      nb[from.row][to.col] = null;
+    }
+  }
+  nb[to.row][to.col] = piece;
+  nb[from.row][from.col] = null;
+  return nb;
+}
+
+const PIECE_VALUES: Record<string, number> = { P: 100, N: 320, B: 330, R: 500, Q: 900, K: 20000 };
+
+function evaluateBoard(board: Board): number {
+  let score = 0;
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const p = board[r][c];
+      if (p) {
+        let val = PIECE_VALUES[p.type];
+        if (p.type === 'P') {
+          val += (p.color === 'w' ? (6 - r) : (r - 1)) * 10;
+        } else if (p.type === 'N' || p.type === 'B') {
+          const centerDist = Math.abs(r - 3.5) + Math.abs(c - 3.5);
+          val += (7 - centerDist) * 5;
+        }
+        score += p.color === 'b' ? val : -val;
+      }
+    }
+  }
+  return score;
+}
+
+function getAllLegalMoves(board: Board, color: 'w'|'b'): {from: ChessPos, to: ChessPos}[] {
+  const moves: {from: ChessPos, to: ChessPos}[] = [];
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      if (board[r][c]?.color === color) {
+        const pieceMoves = getLegalMoves(board, r, c);
+        for (const to of pieceMoves) {
+          moves.push({ from: {row: r, col: c}, to });
+        }
+      }
+    }
+  }
+  return moves;
+}
+
+function minimax(board: Board, depth: number, alpha: number, beta: number, isMaximizing: boolean): number {
+  if (depth === 0) return evaluateBoard(board);
+  
+  const color = isMaximizing ? 'b' : 'w';
+  const moves = getAllLegalMoves(board, color);
+  
+  let hasValidMove = false;
+  
+  if (isMaximizing) {
+    let maxEval = -Infinity;
+    for (const move of moves) {
+      const nb = simulateMove(board, move.from, move.to);
+      if (isInCheck(nb, 'b')) continue;
+      hasValidMove = true;
+      const ev = minimax(nb, depth - 1, alpha, beta, false);
+      maxEval = Math.max(maxEval, ev);
+      alpha = Math.max(alpha, ev);
+      if (beta <= alpha) break;
+    }
+    if (!hasValidMove) return isInCheck(board, 'b') ? -99999 : 0;
+    return maxEval;
+  } else {
+    let minEval = Infinity;
+    for (const move of moves) {
+      const nb = simulateMove(board, move.from, move.to);
+      if (isInCheck(nb, 'w')) continue;
+      hasValidMove = true;
+      const ev = minimax(nb, depth - 1, alpha, beta, true);
+      minEval = Math.min(minEval, ev);
+      beta = Math.min(beta, ev);
+      if (beta <= alpha) break;
+    }
+    if (!hasValidMove) return isInCheck(board, 'w') ? 99999 : 0;
+    return minEval;
+  }
+}
+
+function aiMove(board: Board, lastMove?: {from: ChessPos, to: ChessPos, piece: Piece}): { from: ChessPos; to: ChessPos } | null {
+  const moves: {from: ChessPos, to: ChessPos}[] = [];
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      if (board[r][c]?.color === 'b') {
+        const pieceMoves = getLegalMoves(board, r, c, lastMove);
+        for (const to of pieceMoves) {
+          moves.push({ from: {row: r, col: c}, to });
+        }
+      }
+    }
+  }
+  let bestMove = null;
+  let bestValue = -Infinity;
+  
+  moves.sort((a, b) => {
+     const scoreA = board[a.to.row][a.to.col] ? 10 : 0;
+     const scoreB = board[b.to.row][b.to.col] ? 10 : 0;
+     return scoreB - scoreA;
+  });
+
+  for (const move of moves) {
+    const nb = simulateMove(board, move.from, move.to);
+    if (isInCheck(nb, 'b')) continue; 
+    
+    const boardValue = minimax(nb, 2, -Infinity, Infinity, false); 
+    const randomizedValue = boardValue + (Math.random() * 10 - 5);
+    
+    if (randomizedValue > bestValue) {
+      bestValue = randomizedValue;
+      bestMove = move;
+    }
+  }
+  
+  if (!bestMove) {
+     for(const m of moves) {
+        const nb = simulateMove(board, m.from, m.to);
+        if (!isInCheck(nb, 'b')) return m;
+     }
+  }
+  
+  return bestMove;
+}
+
+function hasLegalMoves(board: Board, color: 'w'|'b', lastMove?: {from: ChessPos, to: ChessPos, piece: Piece}): boolean {
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      if (board[r][c]?.color === color) {
+        const moves = getLegalMoves(board, r, c, lastMove);
+        for (const m of moves) {
+          const nb = simulateMove(board, {row: r, col: c}, m);
+          if (!isInCheck(nb, color)) return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function ChessGame() {
+  const [board, setBoard] = useState<Board>(INIT_BOARD.map(r => r.map(p => p ? {...p} : null)));
+  const [selected, setSelected] = useState<ChessPos | null>(null);
+  const [legalMoves, setLegalMoves] = useState<ChessPos[]>([]);
+  const [turn, setTurn] = useState<'w'|'b'>('w');
+  const [status, setStatus] = useState<string>('Your turn (White)');
+  const [gameOver, setGameOver] = useState(false);
+  const [lastMove, setLastMove] = useState<{from: ChessPos, to: ChessPos, piece: Piece} | undefined>();
+  const [capturedW, setCapturedW] = useState<Piece[]>([]);
+  const [capturedB, setCapturedB] = useState<Piece[]>([]);
+
+  const doMove = (board: Board, from: ChessPos, to: ChessPos): Board => {
+    return simulateMove(board, from, to);
+  };
+
+  const handleSquareClick = (row: number, col: number) => {
+    if (gameOver || turn !== 'w') return;
+    const piece = board[row][col];
+
+    if (selected) {
+      const isLegal = legalMoves.some(m => m.row === row && m.col === col);
+      if (isLegal) {
+        let captured = board[row][col];
+        if (!captured && board[selected.row][selected.col]?.type === 'P' && selected.col !== col) {
+          captured = board[selected.row][col];
+        }
+        if (captured) setCapturedW(prev => [...prev, captured]);
+        const nb = doMove(board, selected, { row, col });
+        setBoard(nb);
+        setLastMove({ from: selected, to: { row, col }, piece: board[selected.row][selected.col] });
+        setSelected(null);
+        setLegalMoves([]);
+        setTurn('b');
+        setStatus('AI is thinking...');
+
+        // Check if AI is in check/mate
+        setTimeout(() => {
+          const aiMv = aiMove(nb, { from: selected, to: { row, col }, piece: board[selected.row][selected.col] });
+          if (!aiMv) {
+            setStatus(isInCheck(nb, 'b') ? '🏆 Checkmate! You win!' : '🤝 Stalemate!');
+            setGameOver(true);
+            return;
+          }
+          let aiCaptured = nb[aiMv.to.row][aiMv.to.col];
+          if (!aiCaptured && nb[aiMv.from.row][aiMv.from.col]?.type === 'P' && aiMv.from.col !== aiMv.to.col) {
+            aiCaptured = nb[aiMv.from.row][aiMv.to.col];
+          }
+          if (aiCaptured) setCapturedB(prev => [...prev, aiCaptured]);
+          const nb2 = doMove(nb, aiMv.from, aiMv.to);
+          setBoard(nb2);
+          setLastMove({ from: aiMv.from, to: aiMv.to, piece: nb[aiMv.from.row][aiMv.from.col] });
+
+          if (isInCheck(nb2, 'w')) {
+            // Check for checkmate
+            if (!hasLegalMoves(nb2, 'w', { from: aiMv.from, to: aiMv.to, piece: nb[aiMv.from.row][aiMv.from.col] })) {
+              setStatus('💀 Checkmate! AI wins.'); setGameOver(true); return;
+            }
+            setStatus('⚠️ You are in check! Your turn (White)');
+          } else {
+            if (!hasLegalMoves(nb2, 'w', { from: aiMv.from, to: aiMv.to, piece: nb[aiMv.from.row][aiMv.from.col] })) {
+              setStatus('🤝 Stalemate!'); setGameOver(true); return;
+            }
+            setStatus('Your turn (White)');
+          }
+          setTurn('w');
+        }, 400);
+        return;
+      }
+      setSelected(null);
+      setLegalMoves([]);
+    }
+
+    if (piece?.color === 'w') {
+      setSelected({ row, col });
+      const pseudoMoves = getLegalMoves(board, row, col, lastMove);
+      const validMoves = pseudoMoves.filter(m => {
+        const nb = simulateMove(board, {row, col}, m);
+        return !isInCheck(nb, 'w');
+      });
+      setLegalMoves(validMoves);
+    }
+  };
+
+  const resetGame = () => {
+    setBoard(INIT_BOARD.map(r => r.map(p => p ? {...p} : null)));
+    setSelected(null); setLegalMoves([]); setTurn('w');
+    setStatus('Your turn (White)'); setGameOver(false);
+    setCapturedW([]); setCapturedB([]);
+  };
+
+  const inCheck = !gameOver && isInCheck(board, 'w');
+
+  return (
+    <div className="flex flex-col items-center gap-4 p-4">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-accent-gold font-serif mb-1">Chess</h2>
+        <p className={`text-sm font-medium ${inCheck ? 'text-red-500' : 'text-ink/70 dark:text-ink-dark/70'}`}>{status}</p>
+      </div>
+
+      {/* Captured pieces */}
+      <div className="w-full max-w-xs text-xs text-ink/60 dark:text-ink-dark/60 flex justify-between">
+        <span>AI captured: {capturedB.map((p,i) => <span key={i}>{p ? PIECE_UNICODE[p.color+p.type] : ''}</span>)}</span>
+        <span>You captured: {capturedW.map((p,i) => <span key={i}>{p ? PIECE_UNICODE[p.color+p.type] : ''}</span>)}</span>
+      </div>
+
+      {/* Board */}
+      <div className="border-2 border-accent-gold/40 rounded-lg overflow-hidden shadow-xl">
+        {board.map((rowArr, row) => (
+          <div key={row} className="flex">
+            {rowArr.map((piece, col) => {
+              const isLight = (row + col) % 2 === 0;
+              const isSelected = selected?.row === row && selected?.col === col;
+              const isLegal = legalMoves.some(m => m.row === row && m.col === col);
+              const isLastMove = lastMove && ((lastMove.from.row===row&&lastMove.from.col===col)||(lastMove.to.row===row&&lastMove.to.col===col));
+              const isKingInCheck = inCheck && piece?.type === 'K' && piece?.color === 'w';
+
+              let bg = isLight ? 'bg-amber-100' : 'bg-amber-800';
+              if (isSelected) bg = 'bg-yellow-400';
+              else if (isKingInCheck) bg = 'bg-red-400';
+              else if (isLastMove) bg = isLight ? 'bg-yellow-200' : 'bg-yellow-600';
+
+              return (
+                <div
+                  key={col}
+                  onClick={() => handleSquareClick(row, col)}
+                  className={`w-9 h-9 flex items-center justify-center cursor-pointer relative select-none ${bg} hover:brightness-110 transition-all`}
+                >
+                  {isLegal && (
+                    <div className={`absolute inset-0 flex items-center justify-center ${piece ? 'ring-2 ring-inset ring-green-500' : ''}`}>
+                      {!piece && <div className="w-3 h-3 rounded-full bg-green-500/50" />}
+                    </div>
+                  )}
+                  {piece && (
+                    <span className={`text-xl leading-none z-10 drop-shadow ${piece.color === 'w' ? 'text-white' : 'text-gray-900'}`} style={{textShadow: piece.color==='w' ? '0 0 2px #000,0 0 2px #000' : '0 0 2px #fff'}}>
+                      {PIECE_UNICODE[piece.color + piece.type]}
+                    </span>
+                  )}
+                  {/* Coordinates */}
+                  {col === 0 && <span className="absolute top-0 left-0.5 text-[8px] opacity-40 font-mono">{8-row}</span>}
+                  {row === 7 && <span className="absolute bottom-0 right-0.5 text-[8px] opacity-40 font-mono">{'abcdefgh'[col]}</span>}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <button onClick={resetGame} className="px-6 py-2 bg-accent-gold text-white rounded-lg font-semibold hover:opacity-90 transition-all text-sm">
+        New Game
+      </button>
+    </div>
+  );
+}
+
+// ─── WORD SCRAMBLE 
+
+function scrambleWord(word: string): string {
+  const letters = word.toUpperCase().split('');
+  // Fisher-Yates shuffle — ensure not same as original
+  let result = [...letters];
+  let attempts = 0;
+  do {
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    attempts++;
+  } while (result.join('') === letters.join('') && attempts < 20);
+  return result.join('');
+}
+
+function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
+  const wordPool = GRE_WORDS.filter(w => w.word.length >= 5 && w.word.length <= 10 && !w.word.includes(' '));
+  const [currentWord, setCurrentWord] = useState(() => wordPool[Math.floor(Math.random() * wordPool.length)]);
+  const [scrambled, setScrambled] = useState(() => scrambleWord(currentWord.word));
+  const [input, setInput] = useState('');
+  const [feedback, setFeedback] = useState<'correct'|'wrong'|null>(null);
+  const [showHint, setShowHint] = useState(false);
+  const [showDef, setShowDef] = useState(false);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [letters, setLetters] = useState<{char: string; used: boolean}[]>(() =>
+    scrambleWord(currentWord.word).split('').map(c => ({ char: c, used: false }))
+  );
+  const [assembled, setAssembled] = useState<string[]>([]);
+
+  const loadNew = () => {
+    const w = wordPool[Math.floor(Math.random() * wordPool.length)];
+    setCurrentWord(w);
+    const sc = scrambleWord(w.word);
+    setScrambled(sc);
+    setLetters(sc.split('').map(c => ({ char: c, used: false })));
+    setAssembled([]);
+    setInput('');
+    setFeedback(null);
+    setShowHint(false);
+    setShowDef(false);
+  };
+
+  const handleLetterClick = (idx: number) => {
+    if (letters[idx].used || feedback === 'correct') return;
+    const newLetters = [...letters];
+    newLetters[idx] = { ...newLetters[idx], used: true };
+    setLetters(newLetters);
+    setAssembled(prev => [...prev, letters[idx].char]);
+  };
+
+  const handleAssembledClick = (idx: number) => {
+    if (feedback === 'correct') return;
+    const char = assembled[idx];
+    const newAssembled = assembled.filter((_, i) => i !== idx);
+    setAssembled(newAssembled);
+    // Un-use the letter
+    const newLetters = [...letters];
+    for (let i = 0; i < newLetters.length; i++) {
+      if (newLetters[i].char === char && newLetters[i].used) {
+        // Find which occurrence to un-use (match usage state)
+        const usedCount = newAssembled.filter(c => c === char).length;
+        const totalCount = newLetters.filter(l => l.char === char).length;
+        // Un-use last used one
+        if (newLetters[i].used) { newLetters[i] = { ...newLetters[i], used: false }; break; }
+      }
+    }
+    setLetters(newLetters);
+  };
+
+  const handleSubmit = () => {
+    const guess = assembled.join('').toUpperCase();
+    const target = currentWord.word.toUpperCase();
+    setAttempts(a => a + 1);
+    if (guess === target) {
+      setFeedback('correct');
+      const pts = showHint ? 5 : 10;
+      setScore(s => s + pts);
+      setStreak(s => s + 1);
+      playSound('correct', soundEnabled);
+      const newXp = awardXP(10);
+      onXpChange(newXp);
+      setTimeout(loadNew, 1800);
+    } else {
+      setFeedback('wrong');
+      setStreak(0);
+      playSound('wrong', soundEnabled);
+      setTimeout(() => setFeedback(null), 800);
+    }
+  };
+
+  const handleSkip = () => { setShowDef(true); setTimeout(loadNew, 2500); };
+
+  return (
+    <div className="flex flex-col items-center gap-5 p-4 max-w-sm mx-auto">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-accent-gold font-serif mb-1">Word Scramble</h2>
+        <p className="text-sm text-ink/60 dark:text-ink-dark/60">Unscramble the GRE word</p>
+      </div>
+
+      {/* Score bar */}
+      <div className="flex gap-6 text-sm">
+        <div className="text-center"><div className="text-2xl font-bold text-accent-gold">{score}</div><div className="text-ink/50 dark:text-ink-dark/50 text-xs">Score</div></div>
+        <div className="text-center"><div className="text-2xl font-bold text-green-500">{streak}</div><div className="text-ink/50 dark:text-ink-dark/50 text-xs">Streak</div></div>
+        <div className="text-center"><div className="text-2xl font-bold text-blue-500">{attempts}</div><div className="text-ink/50 dark:text-ink-dark/50 text-xs">Attempts</div></div>
+      </div>
+
+      {/* Word info */}
+      <div className="text-center">
+        <div className="text-xs text-ink/50 dark:text-ink-dark/50 mb-1">{currentWord.word.length} letters · {currentWord.pos} · {currentWord.category}</div>
+        {showHint && <p className="text-xs text-accent-gold italic max-w-xs">{currentWord.definition}</p>}
+        {showDef && <p className="text-sm text-green-600 font-medium">✓ {currentWord.word} — {currentWord.definition}</p>}
+      </div>
+
+      {/* Assembled word display */}
+      <div className="flex gap-2 min-h-[48px] items-center flex-wrap justify-center">
+        {currentWord.word.split('').map((_, i) => (
+          <div
+            key={i}
+            onClick={() => assembled[i] && handleAssembledClick(i)}
+            className={`w-10 h-10 border-b-2 flex items-center justify-center text-lg font-bold cursor-pointer transition-all
+              ${assembled[i] ? 'border-accent-gold text-ink dark:text-ink-dark' : 'border-ink/20 dark:border-ink-dark/20'}
+              ${feedback === 'correct' ? 'border-green-500 text-green-500' : ''}
+              ${feedback === 'wrong' ? 'border-red-500 text-red-500 animate-shake' : ''}
+            `}
+          >
+            {assembled[i] || ''}
+          </div>
+        ))}
+      </div>
+
+      {/* Scrambled letters */}
+      <div className="flex gap-2 flex-wrap justify-center">
+        {letters.map((l, i) => (
+          <button
+            key={i}
+            onClick={() => handleLetterClick(i)}
+            disabled={l.used}
+            className={`w-10 h-10 rounded-lg text-lg font-bold font-mono transition-all
+              ${l.used
+                ? 'bg-ink/10 dark:bg-ink-dark/10 text-ink/20 dark:text-ink-dark/20 cursor-not-allowed'
+                : 'bg-accent-gold/20 border border-accent-gold/50 text-ink dark:text-ink-dark hover:bg-accent-gold/40 cursor-pointer'
+              }`}
+          >
+            {l.used ? '' : l.char}
+          </button>
+        ))}
+      </div>
+
+      {/* Actions */}
+      <div className="flex gap-3">
+        <button
+          onClick={handleSubmit}
+          disabled={assembled.length !== currentWord.word.length}
+          className="px-5 py-2 bg-accent-gold text-white rounded-lg font-semibold text-sm disabled:opacity-40 hover:opacity-90 transition-all"
+        >
+          Submit
+        </button>
+        <button
+          onClick={() => setShowHint(true)}
+          className="px-4 py-2 border border-accent-gold/40 text-accent-gold rounded-lg text-sm hover:bg-accent-gold/10 transition-all"
+        >
+          Hint (-5pts)
+        </button>
+        <button
+          onClick={handleSkip}
+          className="px-4 py-2 border border-ink/20 dark:border-ink-dark/20 text-ink/50 dark:text-ink-dark/50 rounded-lg text-sm hover:bg-ink/5 transition-all"
+        >
+          Skip
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── SPEED BLITZ ───────────────────────────────────────────────────────────────
+
+function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
+  const TOTAL_TIME = 90;
+  const [gameState, setGameState] = useState<'idle'|'playing'|'over'>('idle');
+  const [timeLeft, setTimeLeft] = useState(TOTAL_TIME);
+  const [score, setScore] = useState(0);
+  const [current, setCurrent] = useState<typeof GRE_WORDS[0] | null>(null);
+  const [choices, setChoices] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState<'correct'|'wrong'|null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string|null>(null);
+  const [combo, setCombo] = useState(0);
+  const [totalAnswered, setTotalAnswered] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const pickQuestion = () => {
+    const word = GRE_WORDS[Math.floor(Math.random() * GRE_WORDS.length)];
+    const wrong = GRE_WORDS
+      .filter(w => w.id !== word.id)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3)
+      .map(w => w.word);
+    const opts = [...wrong, word.word].sort(() => Math.random() - 0.5);
+    setCurrent(word);
+    setChoices(opts);
+    setFeedback(null);
+    setSelectedAnswer(null);
+  };
+
+  const startGame = () => {
+    setGameState('playing');
+    setScore(0); setTimeLeft(TOTAL_TIME); setCombo(0);
+    setTotalAnswered(0); setCorrectCount(0);
+    pickQuestion();
+  };
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          clearInterval(timerRef.current!);
+          setGameState('over');
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current!);
+  }, [gameState]);
+
+  const handleAnswer = (answer: string) => {
+    if (feedback || !current) return;
+    setSelectedAnswer(answer);
+    setTotalAnswered(n => n + 1);
+    const correct = answer === current.word;
+    setFeedback(correct ? 'correct' : 'wrong');
+
+    if (correct) {
+      const pts = 10 + combo * 5; // combo bonus
+      setScore(s => s + pts);
+      setCombo(c => c + 1);
+      setCorrectCount(n => n + 1);
+      setTimeLeft(t => Math.min(t + 2, 120));
+      playSound('correct', soundEnabled);
+      const newXp = awardXP(2);
+      onXpChange(newXp);
+    } else {
+      setCombo(0);
+      setTimeLeft(t => Math.max(t - 3, 0));
+      playSound('wrong', soundEnabled);
+    }
+    setTimeout(() => { if (gameState === 'playing') pickQuestion(); }, 500);
+  };
+
+  const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+  const timerColor = timeLeft > 30 ? 'text-green-500' : timeLeft > 10 ? 'text-yellow-500' : 'text-red-500';
+  const timerWidth = (timeLeft / TOTAL_TIME) * 100;
+  const timerBarColor = timeLeft > 30 ? 'bg-green-500' : timeLeft > 10 ? 'bg-yellow-500' : 'bg-red-500';
+
+  if (gameState === 'idle') return (
+    <div className="flex flex-col items-center gap-6 p-6 text-center">
+      <h2 className="text-2xl font-bold text-accent-gold font-serif">Speed Blitz ⚡</h2>
+      <p className="text-ink/70 dark:text-ink-dark/70 max-w-xs">You have 90 seconds. Match definitions to GRE words as fast as you can. Correct = +2s, Wrong = -3s. Build combos for bonus points!</p>
+      <div className="grid grid-cols-3 gap-4 text-center">
+        {[['⏱️','90 sec','Start time'],['✅','+2s','Per correct'],['❌','-3s','Per wrong']].map(([icon,val,lbl]) => (
+          <div key={lbl} className="bg-bg-primary rounded-xl p-3 border border-ink/5">
+            <div className="text-2xl">{icon}</div>
+            <div className="font-bold text-accent-gold">{val}</div>
+            <div className="text-xs text-ink/50 dark:text-ink-dark/50">{lbl}</div>
+          </div>
+        ))}
+      </div>
+      <button onClick={startGame} className="px-8 py-3 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
+        Start Blitz!
+      </button>
+    </div>
+  );
+
+  if (gameState === 'over') return (
+    <div className="flex flex-col items-center gap-5 p-6 text-center">
+      <h2 className="text-2xl font-bold text-accent-gold font-serif">Time's Up! ⏱️</h2>
+      <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
+        {[['Score', score, 'text-accent-gold'],['Accuracy', `${accuracy}%`, 'text-blue-500'],['Correct', correctCount, 'text-green-500'],['Answered', totalAnswered, 'text-ink dark:text-ink-dark']].map(([lbl,val,cls]) => (
+          <div key={lbl as string} className="bg-bg-primary rounded-xl p-4 border border-ink/5">
+            <div className={`text-3xl font-bold ${cls}`}>{val}</div>
+            <div className="text-xs text-ink/50 dark:text-ink-dark/50 mt-1">{lbl}</div>
+          </div>
+        ))}
+      </div>
+      <div className="text-sm text-ink/60 dark:text-ink-dark/60">
+        {score >= 200 ? '🏆 Exceptional! GRE master!' : score >= 100 ? '🌟 Great performance!' : score >= 50 ? '📚 Good effort, keep practicing!' : '💪 Keep studying those definitions!'}
+      </div>
+      <button onClick={startGame} className="px-8 py-3 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
+        Play Again
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-4 p-4 max-w-sm mx-auto">
+      {/* Timer bar */}
+      <div className="flex items-center gap-3">
+        <span className={`text-2xl font-mono font-bold w-12 ${timerColor}`}>{timeLeft}s</span>
+        <div className="flex-1 h-3 bg-ink/10 dark:bg-ink-dark/10 rounded-full overflow-hidden">
+          <div className={`h-full transition-all duration-1000 ${timerBarColor}`} style={{width:`${timerWidth}%`}} />
+        </div>
+        <span className="text-accent-gold font-bold w-16 text-right">{score}pts</span>
+      </div>
+
+      {combo >= 2 && (
+        <div className="text-center text-sm font-bold text-orange-500 animate-pulse">🔥 {combo}x Combo!</div>
+      )}
+
+      {/* Definition card */}
+      {current && (
+        <div className="bg-bg-primary rounded-2xl p-5 border border-ink/5 shadow-lg min-h-[100px] flex flex-col items-center justify-center text-center gap-2">
+          <div className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{current.pos} · {current.category}</div>
+          <p className="text-ink font-serif text-lg font-bold leading-snug">{current.definition}</p>
+          {current.example && <p className="text-xs text-ink/50 italic">"{current.example}"</p>}
+        </div>
+      )}
+
+      {/* Answer choices */}
+      <div className="grid grid-cols-2 gap-3">
+        {choices.map(choice => {
+          let btnClass = 'border border-ink/10 text-ink hover:bg-accent-gold/5 hover:border-accent-gold/20';
+          if (selectedAnswer === choice) {
+            btnClass = feedback === 'correct' ? 'bg-green-50 border-green-500 text-green-700' : 'bg-red-50 border-red-500 text-red-700';
+          } else if (feedback === 'wrong' && choice === current?.word) {
+            btnClass = 'bg-green-50 border-green-500/30 text-green-700';
+          }
+          return (
+            <button
+              key={choice}
+              onClick={() => handleAnswer(choice)}
+              className={`p-4 rounded-sm border font-serif font-bold text-sm transition-all ${btnClass}`}
+            >
+              {choice}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 const MindGames = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [activeGame, setActiveGame] = useState<string | null>(null);
   const [gameState, setGameState] = useState<'start' | 'playing' | 'end'>('start');
@@ -353,6 +1129,12 @@ const MindGames = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
   const renderGame = () => {
     switch (activeGame) {
+      case 'chess':
+        return <ChessGame />;
+      case 'wordscramble':
+        return <WordScramble onXpChange={onXpChange} soundEnabled={soundEnabled} />;
+      case 'speedblitz':
+        return <SpeedBlitz onXpChange={onXpChange} soundEnabled={soundEnabled} />;
       case 'number-memory':
         return (
           <div className="max-w-2xl mx-auto w-full text-center space-y-12">
@@ -487,6 +1269,54 @@ const MindGames = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 <div className="space-y-2">
                   <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Number Memory</h3>
                   <p className="text-sm font-sans text-ink/60 leading-relaxed">Expand your working memory capacity through progressive digit recall sequences.</p>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+                  Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setActiveGame('chess'); }}
+                className="group text-left space-y-6"
+              >
+                <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+                  <span className="text-2xl">♟️</span>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Chess</h3>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Play chess against an AI opponent. Sharpen your strategic thinking — a core GRE skill.</p>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+                  Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setActiveGame('wordscramble'); }}
+                className="group text-left space-y-6"
+              >
+                <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+                  <span className="text-2xl">🔤</span>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Word Scramble</h3>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Unscramble GRE vocabulary words against the clock. Tests spelling and word recognition.</p>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+                  Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setActiveGame('speedblitz'); }}
+                className="group text-left space-y-6"
+              >
+                <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+                  <span className="text-2xl">⚡</span>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Speed Blitz</h3>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">90 seconds. Match definitions to words as fast as possible. Build combos for bonus points!</p>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
                   Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
@@ -1379,6 +2209,7 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
 
 const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBack: () => void, onXpChange: (xp: number) => void, globalSearch?: string, onSearchClear?: () => void }) => {
   const [view, setView] = useState<'menu' | 'flashcards' | 'list' | 'practice'>('menu');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [practiceOptions, setPracticeOptions] = useState<string[]>([]);
@@ -1407,11 +2238,27 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
 
   const currentWord = GRE_WORDS[currentIndex];
 
-  const filteredWords = GRE_WORDS.filter(word =>
-    word.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    word.definition.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    word.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredWords = GRE_WORDS.filter(word => {
+    const queryTerms = searchQuery.toLowerCase().split(' ').filter(Boolean);
+    const matchesSearch = queryTerms.length === 0 || queryTerms.every(term => 
+      word.word.toLowerCase().includes(term) ||
+      word.definition.toLowerCase().includes(term) ||
+      word.category.toLowerCase().includes(term) ||
+      word.mnemonic.toLowerCase().includes(term)
+    );
+    const matchesCategory = selectedCategory === 'All' || word.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const playPronunciation = (text: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Cancel any ongoing speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.85; // Slightly slower for better pronunciation clarity
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   const toggleMastered = (id: number) => {
     const isNowMastered = !masteredWords.includes(id);
@@ -1699,18 +2546,31 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
           </div>
         </div>
 
-        <div className="perspective-1000 h-[500px] relative cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+        <div className="h-[500px] relative cursor-pointer" style={{ perspective: '1000px' }} onClick={() => setIsFlipped(!isFlipped)}>
           <motion.div 
-            className="w-full h-full relative transition-all duration-700 preserve-3d shadow-2xl"
+            className="w-full h-full relative shadow-2xl"
+            style={{ transformStyle: 'preserve-3d' }}
             animate={{ rotateY: isFlipped ? 180 : 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
           >
             {/* Front */}
-            <div className="absolute inset-0 backface-hidden bg-white rounded-sm border border-ink/5 flex flex-col items-center justify-center p-16 text-center">
+            <div 
+              className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col items-center justify-center p-16 text-center"
+              style={{ backfaceVisibility: 'hidden' }}
+            >
               <p className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em] mb-8">
                 {currentWord.category}
               </p>
-              <h2 className="text-8xl font-serif font-bold text-ink mb-6 tracking-tight">{currentWord.word}</h2>
+              <div className="relative mb-6">
+                <h2 className="text-8xl font-serif font-bold text-ink tracking-tight px-16">{currentWord.word}</h2>
+                <button 
+                  onClick={(e) => playPronunciation(currentWord.word, e)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 p-3 rounded-full bg-ink/5 text-ink/40 hover:bg-ink/10 hover:text-ink transition-colors"
+                  title="Play pronunciation"
+                >
+                  <Volume2 size={24} />
+                </button>
+              </div>
               <p className="text-xl font-serif italic text-ink/30">{currentWord.pronunciation}</p>
               <div className="mt-16 flex items-center gap-2 text-[10px] font-sans font-bold text-ink/10 uppercase tracking-[0.2em]">
                 Click to reveal definition
@@ -1718,7 +2578,10 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
             </div>
 
             {/* Back */}
-            <div className="absolute inset-0 backface-hidden bg-white rounded-sm border border-ink/5 flex flex-col p-16 rotate-y-180 overflow-y-auto">
+            <div 
+              className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col p-16 overflow-y-auto"
+              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            >
               <div className="flex items-center justify-between mb-12">
                 <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{currentWord.pos}</span>
                 <button 
@@ -1786,26 +2649,40 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
             </button>
             <h1 className="text-6xl font-serif font-bold text-ink">Repository.</h1>
           </div>
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/20" size={16} />
-            <input 
-              type="text" 
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                if (e.target.value === '') onSearchClear?.();
-              }}
-              placeholder="Search the lexicon..."
-              className="w-full pl-12 pr-12 py-4 bg-white border border-ink/5 rounded-sm text-sm font-sans focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/20"
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/20 hover:text-ink transition-colors p-1"
+          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="appearance-none pl-4 pr-10 py-4 bg-white border border-ink/5 rounded-sm text-[10px] font-sans font-bold uppercase tracking-widest focus:ring-1 focus:ring-accent-gold/20 transition-all cursor-pointer"
               >
-                <X size={16} />
-              </button>
-            )}
+                {['All', 'Action', 'Art', 'Behavior', 'Change', 'Emotion', 'Intellect', 'Logic', 'Morality', 'Quantity', 'Speech'].map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/20 pointer-events-none" size={12} />
+            </div>
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/20" size={16} />
+              <input 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value === '') onSearchClear?.();
+                }}
+                placeholder="Search the lexicon..."
+                className="w-full pl-12 pr-12 py-4 bg-white border border-ink/5 rounded-sm text-sm font-sans focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/20"
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/20 hover:text-ink transition-colors p-1"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
           </div>
         </header>
 
@@ -1831,8 +2708,19 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
                   filteredWords.map((word) => (
                     <tr key={word.id} className="hover:bg-bg-primary transition-colors group cursor-pointer">
                       <td className="px-8 py-6">
-                        <p className="text-xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">{word.word}</p>
-                        <p className="text-xs font-serif italic text-ink/30">{word.pronunciation}</p>
+                        <div className="flex items-center gap-3">
+                          <div>
+                            <p className="text-xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">{word.word}</p>
+                            <p className="text-xs font-serif italic text-ink/30">{word.pronunciation}</p>
+                          </div>
+                          <button 
+                            onClick={(e) => playPronunciation(word.word, e)}
+                            className="p-2 rounded-full bg-ink/5 text-ink/40 hover:bg-ink/10 hover:text-ink transition-colors opacity-0 group-hover:opacity-100"
+                            title="Play pronunciation"
+                          >
+                            <Volume2 size={16} />
+                          </button>
+                        </div>
                       </td>
                       <td className="px-8 py-6">
                         <span className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest">
@@ -1864,6 +2752,308 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
   return null;
 };
 
+const VocabularyNotes = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [viewMode, setViewMode] = useState<'lexicon' | 'flashcards'>('lexicon');
+  const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const filteredWords = GRE_WORDS.filter(word => {
+    const queryTerms = searchQuery.toLowerCase().split(' ').filter(Boolean);
+    const matchesSearch = queryTerms.length === 0 || queryTerms.every(term => 
+      word.word.toLowerCase().includes(term) ||
+      word.definition.toLowerCase().includes(term) ||
+      word.category.toLowerCase().includes(term) ||
+      word.mnemonic.toLowerCase().includes(term)
+    );
+    const matchesCategory = selectedCategory === 'All' || word.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const playPronunciation = (text: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const categories = ['All', ...Array.from(new Set(GRE_WORDS.map(w => w.category)))].sort();
+
+  const nextFlashcard = () => {
+    setIsFlipped(false);
+    setCurrentFlashcardIndex((prev) => (prev + 1) % filteredWords.length);
+  };
+
+  const prevFlashcard = () => {
+    setIsFlipped(false);
+    setCurrentFlashcardIndex((prev) => (prev - 1 + filteredWords.length) % filteredWords.length);
+  };
+
+  return (
+    <div className="space-y-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <header className="space-y-8 border-b border-ink/5 pb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="space-y-4">
+            <h1 className="text-7xl font-serif font-bold text-ink leading-none tracking-tight">
+              Scholarly<br />Lexicon.
+            </h1>
+            <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl italic">
+              A curated compendium of high-frequency GRE terminology, 
+              meticulously annotated for the discerning academic.
+            </p>
+          </div>
+          
+          <div className="flex bg-bg-primary p-1 rounded-sm border border-ink/5">
+            <button 
+              onClick={() => setViewMode('lexicon')}
+              className={`px-6 py-3 text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${viewMode === 'lexicon' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
+            >
+              Lexicon
+            </button>
+            <button 
+              onClick={() => {
+                setViewMode('flashcards');
+                setCurrentFlashcardIndex(0);
+                setIsFlipped(false);
+              }}
+              className={`px-6 py-3 text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${viewMode === 'flashcards' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
+            >
+              Flashcards
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-6 pt-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/20" size={18} />
+            <input 
+              type="text" 
+              placeholder="Filter by keyword or concept..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentFlashcardIndex(0);
+              }}
+              className="w-full pl-12 pr-4 py-4 bg-white border border-ink/5 rounded-sm font-sans text-sm focus:outline-none focus:border-accent-gold transition-colors placeholder:text-ink/10"
+            />
+          </div>
+          <div className="relative min-w-[200px]">
+            <select 
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentFlashcardIndex(0);
+              }}
+              className="w-full appearance-none pl-4 pr-10 py-4 bg-white border border-ink/5 rounded-sm font-sans text-[10px] font-bold uppercase tracking-[0.2em] focus:outline-none focus:border-accent-gold transition-colors cursor-pointer"
+            >
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat.toUpperCase()}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/20 pointer-events-none" size={14} />
+          </div>
+        </div>
+      </header>
+
+      {viewMode === 'lexicon' ? (
+        <div className="space-y-24">
+          {filteredWords.map((word, index) => (
+            <motion.article 
+              key={word.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="group relative grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16"
+            >
+              <div className="md:col-span-4 space-y-4">
+                <div className="flex items-baseline gap-4">
+                  <span className="text-xs font-mono text-ink/20">{(index + 1).toString().padStart(3, '0')}</span>
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-4xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors duration-500">
+                      {word.word}
+                    </h2>
+                    <button 
+                      onClick={(e) => playPronunciation(word.word, e)}
+                      className="p-2 rounded-full bg-ink/5 text-ink/40 hover:bg-ink/10 hover:text-ink transition-colors opacity-0 group-hover:opacity-100"
+                      title="Play pronunciation"
+                    >
+                      <Volume2 size={18} />
+                    </button>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <span className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest border border-ink/10 px-2 py-1 rounded-sm">
+                    {word.pos}
+                  </span>
+                  <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest bg-accent-gold/5 px-2 py-1 rounded-sm">
+                    {word.category}
+                  </span>
+                </div>
+                <p className="text-sm font-serif italic text-ink/40">{word.pronunciation}</p>
+              </div>
+
+              <div className="md:col-span-8 space-y-8">
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-sans font-bold text-ink/20 uppercase tracking-[0.3em]">Definition</h3>
+                  <p className="text-xl font-sans text-ink/80 leading-relaxed font-medium">
+                    {word.definition}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4 border-t border-ink/5">
+                  <div className="space-y-3">
+                    <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em]">Mnemonic Aid</h4>
+                    <p className="text-sm font-sans text-ink/60 leading-relaxed italic">
+                      {word.mnemonic}
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Contextual Usage</h4>
+                    <p className="text-sm font-sans text-ink/60 leading-relaxed italic">
+                      "{word.example}"
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Decorative line */}
+              <div className="absolute -bottom-12 left-0 w-full h-px bg-gradient-to-r from-ink/5 via-ink/5 to-transparent" />
+            </motion.article>
+          ))}
+          
+          {filteredWords.length === 0 && (
+            <div className="py-24 text-center space-y-4">
+              <div className="text-4xl font-serif italic text-ink/10">No matches found in the lexicon.</div>
+              <button 
+                onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
+                className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest hover:text-ink transition-colors"
+              >
+                Reset Filters
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-12">
+          {filteredWords.length > 0 ? (
+            <div className="max-w-2xl mx-auto space-y-12">
+              <div className="flex items-center justify-between text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em]">
+                <span>Word {currentFlashcardIndex + 1} of {filteredWords.length}</span>
+                <span>{filteredWords[currentFlashcardIndex].category}</span>
+              </div>
+
+              <div 
+                className="h-[450px] relative cursor-pointer" 
+                style={{ perspective: '1000px' }}
+                onClick={() => setIsFlipped(!isFlipped)}
+              >
+                <motion.div 
+                  className="w-full h-full relative"
+                  style={{ transformStyle: 'preserve-3d' }}
+                  animate={{ rotateY: isFlipped ? 180 : 0 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                >
+                  {/* Front */}
+                  <div 
+                    className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col items-center justify-center p-12 text-center shadow-2xl shadow-ink/5"
+                    style={{ backfaceVisibility: 'hidden' }}
+                  >
+                    <div className="absolute top-8 left-8 w-12 h-px bg-accent-gold" />
+                    <div className="relative mb-4">
+                      <h2 className="text-6xl font-serif font-bold text-ink tracking-tight px-12">
+                        {filteredWords[currentFlashcardIndex].word}
+                      </h2>
+                      <button 
+                        onClick={(e) => playPronunciation(filteredWords[currentFlashcardIndex].word, e)}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-ink/5 text-ink/40 hover:bg-ink/10 hover:text-ink transition-colors"
+                        title="Play pronunciation"
+                      >
+                        <Volume2 size={18} />
+                      </button>
+                    </div>
+                    <p className="text-lg font-serif italic text-ink/30">
+                      {filteredWords[currentFlashcardIndex].pronunciation}
+                    </p>
+                    <div className="mt-12 flex items-center gap-2 text-[8px] font-sans font-bold text-ink/10 uppercase tracking-[0.3em]">
+                      Click to reveal definition
+                    </div>
+                  </div>
+
+                  {/* Back */}
+                  <div 
+                    className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col p-12 overflow-y-auto shadow-2xl shadow-ink/5"
+                    style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                  >
+                    <div className="flex items-center justify-between mb-8">
+                      <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
+                        {filteredWords[currentFlashcardIndex].pos}
+                      </span>
+                      <div className="w-8 h-px bg-accent-gold" />
+                    </div>
+                    
+                    <div className="space-y-8">
+                      <div className="space-y-3">
+                        <h4 className="text-[10px] font-sans font-bold text-ink/20 uppercase tracking-[0.3em]">Definition</h4>
+                        <p className="text-2xl font-serif font-bold text-ink leading-tight">
+                          {filteredWords[currentFlashcardIndex].definition}
+                        </p>
+                      </div>
+                      
+                      <div className="p-6 bg-bg-primary rounded-sm border-l-2 border-accent-gold">
+                        <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-3">Mnemonic</h4>
+                        <p className="text-sm font-sans text-ink/60 italic leading-relaxed">
+                          {filteredWords[currentFlashcardIndex].mnemonic}
+                        </p>
+                      </div>
+
+                      <div className="space-y-3">
+                        <h4 className="text-[10px] font-sans font-bold text-ink/20 uppercase tracking-[0.3em]">Usage</h4>
+                        <p className="text-sm font-sans text-ink/60 leading-relaxed italic">
+                          "{filteredWords[currentFlashcardIndex].example}"
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              <div className="flex items-center justify-center gap-12 pt-4">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); prevFlashcard(); }}
+                  className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+                >
+                  <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> Previous
+                </button>
+                <div className="w-px h-4 bg-ink/10" />
+                <button 
+                  onClick={(e) => { e.stopPropagation(); nextFlashcard(); }}
+                  className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+                >
+                  Next <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="py-24 text-center space-y-4">
+              <div className="text-4xl font-serif italic text-ink/10">No words available for flashcards.</div>
+              <button 
+                onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
+                className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest hover:text-ink transition-colors"
+              >
+                Reset Filters
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) => {
   const xp = getStorage(STORAGE_KEYS.xp, 0);
   const streak = getStorage(STORAGE_KEYS.streak, 0);
@@ -1892,9 +3082,10 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
     return `${minutes}m`;
   };
 
-  const behaviorWords = GRE_WORDS.filter(w => w.category === 'behavior');
+  const behaviorWords = GRE_WORDS.filter(w => w.category?.toLowerCase() === 'behavior');
   const masteredBehavior = behaviorWords.filter(w => masteredWords.includes(w.id)).length;
   const quizHistoryData = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
+  const quantCorrect = getStorage('grenius_quant_correct', 0);
 
   const goals = [
     {
@@ -1916,10 +3107,22 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
       target: 1
     },
     {
+      text: 'Complete your first quant session',
+      done: quizHistoryData.some((q: any) => q.type === 'Quantitative'),
+      progress: quizHistoryData.some((q: any) => q.type === 'Quantitative') ? 1 : 0,
+      target: 1
+    },
+    {
       text: 'Reach a 3-day study streak',
       done: streak >= 3,
       progress: Math.min(streak, 3),
       target: 3
+    },
+    {
+      text: 'Answer 50 quant questions correctly',
+      done: quantCorrect >= 50,
+      progress: Math.min(quantCorrect, 50),
+      target: 50
     },
   ];
   
@@ -1936,32 +3139,22 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-y border-ink/5 py-12">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 text-ink/40 mb-4">
-            <BookMarked size={20} />
-          </div>
-          <p className="text-5xl font-serif font-bold text-ink">{masteredWords.length.toLocaleString()}</p>
-          <p className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em]">Words Mastered</p>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 text-ink/40 mb-4">
-            <CheckCircle2 size={20} />
-          </div>
-          <p className="text-5xl font-serif font-bold text-ink">
-            {avgScore !== null ? `${avgScore}%` : '—'}
-          </p>
-          <p className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em]">Average Quiz Score</p>
-          {avgScore === null && (
-            <p className="text-[8px] font-sans text-ink/20 italic mt-1">Complete quizzes to see score</p>
-          )}
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 text-ink/40 mb-4">
-            <Clock size={20} />
-          </div>
-          <p className="text-5xl font-serif font-bold text-ink">{formatStudyTime(totalSeconds)}</p>
-          <p className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em]">Total Study Time</p>
-        </div>
+        <StatCard 
+          icon={BookMarked} 
+          value={masteredWords.length.toLocaleString()} 
+          label="Words Mastered" 
+        />
+        <StatCard 
+          icon={CheckCircle2} 
+          value={avgScore !== null ? `${avgScore}%` : '—'} 
+          label="Average Quiz Score" 
+          subtitle={avgScore === null ? "Complete quizzes to see score" : undefined}
+        />
+        <StatCard 
+          icon={Clock} 
+          value={formatStudyTime(totalSeconds)} 
+          label="Total Study Time" 
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
@@ -1988,79 +3181,50 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
           </section>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
-            <button 
+            <StudySectionCard 
+              icon={BookOpen}
+              title="Vocabulary"
+              description="Master the nuances of 995 authentic Manhattan Prep GRE terms with scholarly mnemonics."
+              actionText="Initiate Study"
               onClick={() => onNavigate('vocabulary')}
-              className="group text-left space-y-6"
-            >
-              <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
-                <BookOpen size={24} />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Vocabulary</h3>
-                <p className="text-sm font-sans text-ink/60 leading-relaxed">Master the nuances of 90+ high-frequency terms with scholarly mnemonics.</p>
-              </div>
-              <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
-                Initiate Study <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </button>
-
-            <button 
+            />
+            <StudySectionCard 
+              icon={Calculator}
+              title="Quantitative"
+              description="Rigorous practice across arithmetic, algebra, and geometric analysis."
+              actionText="Solve Problems"
               onClick={() => onNavigate('quantitative')}
-              className="group text-left space-y-6"
-            >
-              <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
-                <Calculator size={24} />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Quantitative</h3>
-                <p className="text-sm font-sans text-ink/60 leading-relaxed">Rigorous practice across arithmetic, algebra, and geometric analysis.</p>
-              </div>
-              <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
-                Solve Problems <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </button>
+            />
           </div>
         </div>
 
-          <aside className="space-y-12">
-            <section className="space-y-8">
-              <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Academic Accolades</h2>
-              <div className="space-y-6">
-                {ACCOLADES.map(accolade => {
-                  const unlocked = accolade.condition(accoladeData);
-                  return (
-                    <div key={accolade.id} className={`flex items-center gap-4 transition-all ${unlocked ? 'opacity-100' : 'opacity-25 grayscale'}`}>
-                      <div className={`w-12 h-12 rounded-full border flex items-center justify-center ${unlocked ? 'border-accent-gold text-accent-gold' : 'border-ink/10 text-ink/20'}`}>
-                        <accolade.icon size={20} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-serif font-bold text-ink">{accolade.title}</p>
-                        <p className="text-[10px] font-sans text-ink/40 uppercase tracking-widest">
-                          {unlocked ? accolade.subtitle : `🔒 ${accolade.subtitle}`}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+        <aside className="space-y-12">
+          <section className="space-y-8">
+            <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Academic Accolades</h2>
+            <div className="space-y-6">
+              {ACCOLADES.map(accolade => (
+                <AccoladeItem 
+                  key={accolade.id}
+                  icon={accolade.icon}
+                  title={accolade.title}
+                  subtitle={accolade.subtitle}
+                  unlocked={accolade.condition(accoladeData)}
+                />
+              ))}
+            </div>
+          </section>
 
           <section className="space-y-8">
             <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Upcoming Goals</h2>
             <div className="space-y-4">
               {goals.map(goal => (
-                <div key={goal.text} className={`flex flex-col gap-2 p-4 bg-bg-primary rounded-sm border border-ink/5 ${goal.done ? 'opacity-40' : ''}`}>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${goal.done ? 'bg-ink/20' : 'bg-accent-gold'}`} />
-                    <span className={`text-xs font-sans text-ink/60 uppercase tracking-widest ${goal.done ? 'line-through' : ''}`}>{goal.text}</span>
-                    {goal.done && <span className="ml-auto text-[10px] text-accent-gold font-bold">✓ Done</span>}
-                  </div>
-                  {!goal.done && (
-                    <div className="w-full h-0.5 bg-ink/5 rounded-full overflow-hidden ml-4">
-                      <div className="h-full bg-accent-gold/50 transition-all duration-700" style={{ width: `${(goal.progress / goal.target) * 100}%` }} />
-                    </div>
-                  )}
-                </div>
+                <GoalItem 
+                  key={goal.text}
+                  text={goal.text}
+                  done={goal.done}
+                  progress={goal.progress}
+                  target={goal.target}
+                />
               ))}
             </div>
           </section>
@@ -2135,6 +3299,7 @@ const App = () => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'vocabulary', label: 'Vocabulary', icon: BookOpen },
+    { id: 'notes', label: 'Notes', icon: BookMarked },
     { id: 'quantitative', label: 'Quantitative', icon: Calculator },
     { id: 'verbal', label: 'Verbal Practice', icon: MessageSquare },
     { id: 'mindgames', label: 'Mind Games', icon: Gamepad2 },
@@ -2148,6 +3313,8 @@ const App = () => {
         return <Dashboard onNavigate={setActiveSection} />;
       case 'vocabulary':
         return <Vocabulary onBack={() => setActiveSection('dashboard')} onXpChange={handleXpChange} globalSearch={globalSearch} onSearchClear={() => setGlobalSearch('')} />;
+      case 'notes':
+        return <VocabularyNotes />;
       case 'quantitative':
         return <Quantitative onXpChange={handleXpChange} />;
       case 'verbal':
@@ -2168,7 +3335,7 @@ const App = () => {
       {/* Sidebar */}
       <aside 
         className={`
-          fixed md:static inset-y-0 left-0 z-50
+          fixed md:sticky top-0 h-screen inset-y-0 left-0 z-50
           bg-white border-r border-ink/5 transition-all duration-500 ease-in-out overflow-hidden
           ${isMobile 
             ? (isSidebarOpen ? 'w-72 translate-x-0' : 'w-72 -translate-x-full')

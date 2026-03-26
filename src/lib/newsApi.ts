@@ -1,8 +1,15 @@
 import { NewsCard, NewsCategory } from '../types';
 
-const GNEWS_KEY = process.env.NEXT_PUBLIC_GNEWS_API_KEY || '762c3df44daeb44814a314cc2d2f6092';
-const NEWSDATA_KEY = process.env.NEXT_PUBLIC_NEWSDATA_API_KEY || 'pub_498b18ed0ba44a79a9808554a9b78f81';
-const THENEWSAPI_KEY = process.env.NEXT_PUBLIC_THENEWSAPI_KEY || '8rJEVScDpCbPop4kdpa5BbZOEqIzToVWAejRBBfF';
+// Helper to safely access environment variables in Vite
+const getEnv = (key: string, defaultValue: string): string => {
+  // @ts-ignore
+  const env = import.meta.env;
+  return env[`VITE_${key}`] || env[`NEXT_PUBLIC_${key}`] || defaultValue;
+};
+
+const GNEWS_KEY = getEnv('GNEWS_API_KEY', '762c3df44daeb44814a314cc2d2f6092');
+const NEWSDATA_KEY = getEnv('NEWSDATA_API_KEY', 'pub_498b18ed0ba44a79a9808554a9b78f81');
+const THENEWSAPI_KEY = getEnv('THENEWSAPI_KEY', '8rJEVScDpCbPop4kdpa5BbZOEqIzToVWAejRBBfF');
 
 const CATEGORY_MAP: Record<NewsCategory, string> = {
   'India': 'general',
@@ -16,13 +23,17 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
   const country = category === 'India' ? 'in' : 'us';
   const gnewsCategory = CATEGORY_MAP[category];
 
+  console.log(`Fetching news for category: ${category}, country: ${country}`);
+
   // 1. Try GNews
   try {
+    console.log('Trying GNews...');
     const res = await fetch(
       `https://gnews.io/api/v4/top-headlines?category=${gnewsCategory}&country=${country}&lang=en&apikey=${GNEWS_KEY}`
     );
     if (res.ok) {
       const data = await res.json();
+      console.log(`GNews success: ${data.articles?.length || 0} articles`);
       return data.articles.map((a: any, i: number) => ({
         id: `gnews-${i}-${a.publishedAt}`,
         title: a.title,
@@ -39,6 +50,8 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         readTime: Math.ceil((a.content?.length || 500) / 1000) + 1,
         originalUrl: a.url
       }));
+    } else {
+      console.warn(`GNews returned status ${res.status}: ${res.statusText}`);
     }
   } catch (e) {
     console.error('GNews failed:', e);
@@ -46,11 +59,13 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
 
   // 2. Fallback to NewsData.io
   try {
+    console.log('GNews failed or returned no data, trying NewsData.io...');
     const res = await fetch(
       `https://newsdata.io/api/1/news?apikey=${NEWSDATA_KEY}&category=${gnewsCategory}&country=${country}&language=en`
     );
     if (res.ok) {
       const data = await res.json();
+      console.log(`NewsData success: ${data.results?.length || 0} articles`);
       return data.results.map((a: any) => ({
         id: `newsdata-${a.article_id}`,
         title: a.title,
@@ -67,6 +82,8 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         readTime: Math.ceil((a.content?.length || 500) / 1000) + 1,
         originalUrl: a.link
       }));
+    } else {
+      console.warn(`NewsData returned status ${res.status}: ${res.statusText}`);
     }
   } catch (e) {
     console.error('NewsData failed:', e);
@@ -74,11 +91,13 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
 
   // 3. Fallback to TheNewsAPI
   try {
+    console.log('NewsData failed or returned no data, trying TheNewsAPI...');
     const res = await fetch(
       `https://api.thenewsapi.com/v1/news/top?api_token=${THENEWSAPI_KEY}&categories=${gnewsCategory}&locale=${country}&language=en`
     );
     if (res.ok) {
       const data = await res.json();
+      console.log(`TheNewsAPI success: ${data.data?.length || 0} articles`);
       return data.data.map((a: any) => ({
         id: `thenews-${a.uuid}`,
         title: a.title,
@@ -95,6 +114,8 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         readTime: 3,
         originalUrl: a.url
       }));
+    } else {
+      console.warn(`TheNewsAPI returned status ${res.status}: ${res.statusText}`);
     }
   } catch (e) {
     console.error('TheNewsAPI failed:', e);

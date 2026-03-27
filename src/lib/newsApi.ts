@@ -34,103 +34,71 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
 
   console.log(`Fetching news for category: ${category}, country: ${country}`);
 
-  // 1. Try GNews
   try {
-    console.log('Trying GNews...');
-    const res = await fetch(
-      `https://gnews.io/api/v4/top-headlines?category=${gnewsCategory}&country=${country}&lang=en&apikey=${GNEWS_KEY}`
-    );
+    const res = await fetch(`/api/news?category=${gnewsCategory}&country=${country}`);
     if (res.ok) {
       const data = await res.json();
-      console.log(`GNews success: ${data.articles?.length || 0} articles`);
-      return data.articles.map((a: any, i: number) => ({
-        id: `gnews-${i}-${a.publishedAt}`,
-        title: a.title,
-        summary: a.description,
-        content: a.content,
-        source: {
-          name: a.source.name,
-          url: a.source.url,
-          favicon: getFavicon(a.source.url),
-        },
-        publishedAt: a.publishedAt,
-        imageUrl: a.image,
-        category,
-        country: country.toUpperCase(),
-        readTime: Math.ceil((a.content?.length || 500) / 1000) + 1,
-        originalUrl: a.url
-      }));
+      
+      if (data.source === 'gnews') {
+        return data.articles.map((a: any, i: number) => ({
+          id: `gnews-${i}-${a.publishedAt}`,
+          title: a.title,
+          summary: a.description,
+          content: a.content,
+          source: {
+            name: a.source.name,
+            url: a.source.url,
+            favicon: getFavicon(a.source.url),
+          },
+          publishedAt: a.publishedAt,
+          imageUrl: a.image,
+          category,
+          country: country.toUpperCase(),
+          readTime: Math.ceil((a.content?.length || 500) / 1000) + 1,
+          originalUrl: a.url
+        }));
+      } else if (data.source === 'newsdata') {
+        return data.results.map((a: any) => ({
+          id: `newsdata-${a.article_id}`,
+          title: a.title,
+          summary: a.description || a.content?.substring(0, 200),
+          content: a.content,
+          source: {
+            name: a.source_id,
+            url: a.link,
+            favicon: getFavicon(a.link),
+          },
+          publishedAt: a.pubDate,
+          imageUrl: a.image_url,
+          category,
+          country: country.toUpperCase(),
+          readTime: Math.ceil((a.content?.length || 500) / 1000) + 1,
+          originalUrl: a.link
+        }));
+      } else if (data.source === 'thenewsapi') {
+        return data.data.map((a: any) => ({
+          id: `thenews-${a.uuid}`,
+          title: a.title,
+          summary: a.description,
+          content: a.snippet,
+          source: {
+            name: a.source,
+            url: a.url,
+            favicon: getFavicon(a.url),
+          },
+          publishedAt: a.published_at,
+          imageUrl: a.image_url,
+          category,
+          country: country.toUpperCase(),
+          readTime: 3,
+          originalUrl: a.url
+        }));
+      }
     } else {
-      console.warn(`GNews returned status ${res.status}: ${res.statusText}`);
+      console.warn(`News proxy returned status ${res.status}: ${res.statusText}`);
     }
   } catch (e) {
-    console.error('GNews failed:', e);
-  }
-
-  // 2. Fallback to NewsData.io
-  try {
-    console.log('GNews failed or returned no data, trying NewsData.io...');
-    const res = await fetch(
-      `https://newsdata.io/api/1/news?apikey=${NEWSDATA_KEY}&category=${gnewsCategory}&country=${country}&language=en`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      console.log(`NewsData success: ${data.results?.length || 0} articles`);
-      return data.results.map((a: any) => ({
-        id: `newsdata-${a.article_id}`,
-        title: a.title,
-        summary: a.description || a.content?.substring(0, 200),
-        content: a.content,
-        source: {
-          name: a.source_id,
-          url: a.link,
-          favicon: getFavicon(a.link),
-        },
-        publishedAt: a.pubDate,
-        imageUrl: a.image_url,
-        category,
-        country: country.toUpperCase(),
-        readTime: Math.ceil((a.content?.length || 500) / 1000) + 1,
-        originalUrl: a.link
-      }));
-    } else {
-      console.warn(`NewsData returned status ${res.status}: ${res.statusText}`);
-    }
-  } catch (e) {
-    console.error('NewsData failed:', e);
-  }
-
-  // 3. Fallback to TheNewsAPI
-  try {
-    console.log('NewsData failed or returned no data, trying TheNewsAPI...');
-    const res = await fetch(
-      `https://api.thenewsapi.com/v1/news/top?api_token=${THENEWSAPI_KEY}&categories=${gnewsCategory}&locale=${country}&language=en`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      console.log(`TheNewsAPI success: ${data.data?.length || 0} articles`);
-      return data.data.map((a: any) => ({
-        id: `thenews-${a.uuid}`,
-        title: a.title,
-        summary: a.description,
-        content: a.snippet,
-        source: {
-          name: a.source,
-          url: a.url,
-          favicon: getFavicon(a.url),
-        },
-        publishedAt: a.published_at,
-        imageUrl: a.image_url,
-        category,
-        country: country.toUpperCase(),
-        readTime: 3,
-        originalUrl: a.url
-      }));
-    } else {
-      console.warn(`TheNewsAPI returned status ${res.status}: ${res.statusText}`);
-    }
-  } catch (e) {
-    console.error('TheNewsAPI failed:', e);
+    console.error('News proxy failed:', e);
   }
 
   return [];

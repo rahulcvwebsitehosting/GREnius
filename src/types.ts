@@ -114,5 +114,6 @@ export type WorldDay = {
   icon: string;
   description: string;
   greWord?: string;     // optional GRE word linked
+  greWordDef?: string;  // optional definition for the GRE word
   greWordId?: number;   // optional ID to link to vocabulary section
 };

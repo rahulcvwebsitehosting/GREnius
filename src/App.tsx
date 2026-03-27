@@ -40,13 +40,14 @@ import {
   ChevronLeft,
   Info,
   AlertTriangle,
-  Newspaper
+  Newspaper,
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NewsContainer } from './components/news/NewsContainer';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
-import { GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS } from './data';
-import { QuizResult, UserSettings, Word, Achievement, UserStats } from './types';
+import { GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
+import { QuizResult, UserSettings, Word, Achievement, UserStats, WorldDay } from './types';
 import { 
   StatCard, 
   AccoladeItem, 
@@ -4401,6 +4402,552 @@ const VocabularyNotes = () => {
   );
 };
 
+// ─── WORLD DAYS COMPONENT ──────────────────────────────────────────────────────
+// Paste this into src/App.tsx before the main App() function,
+// OR save as src/components/WorldDays.tsx and import it.
+//
+// DEPENDENCIES (must already exist in your project):
+//   - WORLD_DAYS array from data.ts (paste WorldDays_data.ts content into data.ts)
+//   - GRE_WORDS array from data.ts
+//   - useState from React (already imported)
+//
+// WIRING (add to App.tsx section renderer):
+//   {activeSection === 'worlddays' && <WorldDays />}
+//
+// SIDEBAR (add to nav items):
+//   { id: 'worlddays', label: 'World Days', icon: '🌍' }
+
+// ─── HELPER FUNCTIONS ──────────────────────────────────────────────────────────
+
+const MONTH_NAMES_FULL = [
+  'January','February','March','April','May','June',
+  'July','August','September','October','November','December'
+];
+const MONTH_NAMES_SHORT = [
+  'Jan','Feb','Mar','Apr','May','Jun',
+  'Jul','Aug','Sep','Oct','Nov','Dec'
+];
+
+const CATEGORY_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  health:      { label:'Health',       color:'text-red-600 dark:text-red-400',      bg:'bg-red-50 dark:bg-red-900/20',      border:'border-red-200 dark:border-red-800' },
+  environment: { label:'Environment',  color:'text-green-700 dark:text-green-400',  bg:'bg-green-50 dark:bg-green-900/20',  border:'border-green-200 dark:border-green-800' },
+  education:   { label:'Education',    color:'text-blue-600 dark:text-blue-400',    bg:'bg-blue-50 dark:bg-blue-900/20',    border:'border-blue-200 dark:border-blue-800' },
+  science:     { label:'Science',      color:'text-purple-600 dark:text-purple-400',bg:'bg-purple-50 dark:bg-purple-900/20',border:'border-purple-200 dark:border-purple-800' },
+  culture:     { label:'Culture',      color:'text-orange-600 dark:text-orange-400',bg:'bg-orange-50 dark:bg-orange-900/20',border:'border-orange-200 dark:border-orange-800' },
+  civic:       { label:'Civic',        color:'text-indigo-600 dark:text-indigo-400',bg:'bg-indigo-50 dark:bg-indigo-900/20',border:'border-indigo-200 dark:border-indigo-800' },
+  awareness:   { label:'Awareness',    color:'text-pink-600 dark:text-pink-400',    bg:'bg-pink-50 dark:bg-pink-900/20',    border:'border-pink-200 dark:border-pink-800' },
+  national:    { label:'National',     color:'text-amber-700 dark:text-amber-400',  bg:'bg-amber-50 dark:bg-amber-900/20',  border:'border-amber-200 dark:border-amber-800' },
+  global:      { label:'Global',       color:'text-teal-600 dark:text-teal-400',    bg:'bg-teal-50 dark:bg-teal-900/20',    border:'border-teal-200 dark:border-teal-800' },
+  food:        { label:'Food',         color:'text-lime-700 dark:text-lime-400',    bg:'bg-lime-50 dark:bg-lime-900/20',    border:'border-lime-200 dark:border-lime-800' },
+  technology:  { label:'Technology',   color:'text-cyan-600 dark:text-cyan-400',    bg:'bg-cyan-50 dark:bg-cyan-900/20',    border:'border-cyan-200 dark:border-cyan-800' },
+  memorial:    { label:'Memorial',     color:'text-gray-600 dark:text-gray-400',    bg:'bg-gray-50 dark:bg-gray-900/20',    border:'border-gray-200 dark:border-gray-700' },
+  media:       { label:'Media',        color:'text-yellow-700 dark:text-yellow-400',bg:'bg-yellow-50 dark:bg-yellow-900/20',border:'border-yellow-200 dark:border-yellow-800' },
+  cultural:    { label:'Cultural',     color:'text-rose-600 dark:text-rose-400',    bg:'bg-rose-50 dark:bg-rose-900/20',    border:'border-rose-200 dark:border-rose-800' },
+  sports:      { label:'Sports',       color:'text-emerald-600 dark:text-emerald-400',bg:'bg-emerald-50 dark:bg-emerald-900/20',border:'border-emerald-200 dark:border-emerald-800' },
+};
+
+function getDaysUntilEvent(month: number, day: number): number {
+  const now = new Date();
+  const thisYear = new Date(now.getFullYear(), month - 1, day);
+  if (thisYear.getTime() <= now.getTime()) {
+    thisYear.setFullYear(now.getFullYear() + 1);
+  }
+  return Math.ceil((thisYear.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function isTodayCheck(month: number, day: number): boolean {
+  const now = new Date();
+  return now.getMonth() + 1 === month && now.getDate() === day;
+}
+
+function isThisMonthCheck(month: number): boolean {
+  return new Date().getMonth() + 1 === month;
+}
+
+// ─── DAY CARD SUB-COMPONENT ────────────────────────────────────────────────────
+
+interface DayCardProps {
+  day: WorldDay & { daysUntil?: number };
+  showCountdown?: boolean;
+  defaultExpanded?: boolean;
+  key?: string | number;
+}
+
+const DayCard = ({
+  day,
+  showCountdown = false,
+  defaultExpanded = false,
+}: DayCardProps) => {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const todayBadge = isTodayCheck(day.month, day.day);
+  const cfg = CATEGORY_CONFIG[day.category] ?? CATEGORY_CONFIG.global;
+
+  // Find linked GRE word in the word list
+  const linkedWord = day.greWordId
+    ? GRE_WORDS.find(w => w.id === day.greWordId) ?? null
+    : GRE_WORDS.find(w => w.word.toLowerCase() === day.greWord?.toLowerCase()) ?? null;
+
+  return (
+    <div
+      className={`rounded-2xl border overflow-hidden transition-all duration-200 cursor-pointer select-none
+        ${todayBadge
+          ? 'border-accent-gold bg-accent-gold/5 shadow-md shadow-accent-gold/15'
+          : 'border-ink/8 dark:border-ink-dark/10 bg-secondary dark:bg-secondary-dark hover:border-accent-gold/40 hover:shadow-sm'
+        }`}
+      onClick={() => setExpanded(e => !e)}
+    >
+      {/* ── CARD HEADER ── */}
+      <div className="flex items-start gap-3 p-4">
+        {/* Icon */}
+        <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0 border ${cfg.bg} ${cfg.border}`}>
+          {day.icon}
+        </div>
+
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          {/* Badges row */}
+          <div className="flex flex-wrap items-center gap-1.5 mb-1">
+            {todayBadge && (
+              <span className="px-2 py-0.5 bg-accent-gold text-white text-[10px] font-bold rounded-full tracking-wide">
+                TODAY
+              </span>
+            )}
+            {showCountdown && day.daysUntil !== undefined && day.daysUntil > 0 && (
+              <span className="px-2 py-0.5 bg-accent-gold/15 text-accent-gold text-[10px] font-bold rounded-full">
+                in {day.daysUntil} day{day.daysUntil !== 1 ? 's' : ''}
+              </span>
+            )}
+            <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${cfg.bg} ${cfg.border} ${cfg.color}`}>
+              {cfg.label}
+            </span>
+          </div>
+
+          {/* Name */}
+          <h3 className="font-semibold text-ink dark:text-ink-dark leading-snug text-sm">
+            {day.name}
+          </h3>
+
+          {/* Date */}
+          <p className="text-[11px] text-ink/40 dark:text-ink-dark/40 mt-0.5">
+            {MONTH_NAMES_SHORT[day.month - 1]} {day.day}
+            {day.greWord && (
+              <span className="text-accent-gold ml-2">· {day.greWord}</span>
+            )}
+          </p>
+        </div>
+
+        {/* Chevron */}
+        <span
+          className={`text-ink/25 dark:text-ink-dark/25 text-xs mt-1 transition-transform duration-200 flex-shrink-0 ${expanded ? 'rotate-180' : ''}`}
+        >
+          ▼
+        </span>
+      </div>
+
+      {/* ── EXPANDED BODY ── */}
+      {expanded && (
+        <div
+          className="px-4 pb-4 flex flex-col gap-3 border-t border-ink/6 dark:border-ink-dark/8 pt-3"
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Description */}
+          <p className="text-sm text-ink/80 dark:text-ink-dark/75 leading-relaxed">
+            {day.description}
+          </p>
+
+          {/* GRE Word Connection */}
+          {day.greWord && (
+            <div className="rounded-xl border border-accent-gold/25 bg-accent-gold/8 p-3 flex gap-3 items-start">
+              <span className="text-lg flex-shrink-0">📝</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] text-accent-gold/70 uppercase tracking-widest font-semibold mb-1">
+                  GRE Word Connection
+                </p>
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <span className="text-accent-gold font-bold text-base">
+                    {day.greWord}
+                  </span>
+                  <span className="text-xs text-ink/50 dark:text-ink-dark/50 italic">
+                    {linkedWord
+                      ? `— ${linkedWord.definition.slice(0, 70)}${linkedWord.definition.length > 70 ? '...' : ''}`
+                      : day.greWordDef
+                        ? `— ${day.greWordDef}`
+                        : ''}
+                  </span>
+                </div>
+                {linkedWord && (
+                  <p className="text-[11px] text-ink/45 dark:text-ink-dark/45 mt-1.5 leading-relaxed">
+                    💡 This day embodies what <em>{day.greWord}</em> means — a real-world anchor to remember it.
+                  </p>
+                )}
+                {!linkedWord && day.greWordDef && (
+                  <p className="text-[11px] text-ink/45 dark:text-ink-dark/45 mt-1.5 leading-relaxed">
+                    💡 This word will appear in GRE verbal questions — today is a great time to learn it.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── MAIN WORLD DAYS COMPONENT ─────────────────────────────────────────────────
+
+function WorldDays() {
+  const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+
+  const [view, setView] = useState<'today' | 'upcoming' | 'browse'>('today');
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [search, setSearch] = useState('');
+
+  // ── Derived data ──────────────────────────────────────────────────────────────
+
+  const todaysDays = WORLD_DAYS.filter(d => isTodayCheck(d.month, d.day));
+
+  const upcomingDays = WORLD_DAYS
+    .map(d => ({ ...d, daysUntil: getDaysUntilEvent(d.month, d.day) }))
+    .filter(d => d.daysUntil >= 1 && d.daysUntil <= 7)
+    .sort((a, b) => a.daysUntil - b.daysUntil);
+
+  const browseDays = WORLD_DAYS
+    .filter(d => d.month === selectedMonth)
+    .filter(d => selectedCategory === 'all' || d.category === selectedCategory)
+    .sort((a, b) => a.day - b.day);
+
+  const searchResults = search.trim().length >= 2
+    ? WORLD_DAYS.filter(d => {
+        const q = search.toLowerCase();
+        return (
+          d.name.toLowerCase().includes(q) ||
+          d.description.toLowerCase().includes(q) ||
+          (d.greWord ?? '').toLowerCase().includes(q) ||
+          (d.greWordDef ?? '').toLowerCase().includes(q) ||
+          d.category.toLowerCase().includes(q)
+        );
+      }).sort((a, b) => a.month - b.month || a.day - b.day)
+    : null;
+
+  const allCategories = ['all', ...Object.keys(CATEGORY_CONFIG)];
+
+  // Month counts for the grid
+  const monthCounts = MONTH_NAMES_SHORT.map((_, i) =>
+    WORLD_DAYS.filter(d => d.month === i + 1).length
+  );
+
+  // ── Render ────────────────────────────────────────────────────────────────────
+
+  return (
+    <div className="flex flex-col gap-5 pb-8">
+
+      {/* ── HEADER ── */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold text-ink dark:text-ink-dark font-serif flex items-center gap-2">
+          🌍 World Days
+        </h1>
+        <p className="text-sm text-ink/50 dark:text-ink-dark/50">
+          {WORLD_DAYS.length} observances · Each linked to a GRE vocabulary word
+        </p>
+      </div>
+
+      {/* ── SEARCH BAR ── */}
+      <div className="relative">
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search days, descriptions, or GRE words…"
+          className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-ink/15 dark:border-ink-dark/15
+            bg-secondary dark:bg-secondary-dark text-sm text-ink dark:text-ink-dark
+            placeholder-ink/35 dark:placeholder-ink-dark/35
+            focus:outline-none focus:border-accent-gold transition-colors"
+        />
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/30 dark:text-ink-dark/30 text-sm pointer-events-none">
+          🔍
+        </span>
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/30 dark:text-ink-dark/30
+              hover:text-ink/60 dark:hover:text-ink-dark/60 text-lg leading-none"
+          >
+            ×
+          </button>
+        )}
+      </div>
+
+      {/* ── SEARCH RESULTS ── */}
+      {searchResults !== null ? (
+        <div className="flex flex-col gap-3">
+          <p className="text-xs text-ink/45 dark:text-ink-dark/45">
+            {searchResults.length === 0
+              ? `No results for "${search}"`
+              : `${searchResults.length} result${searchResults.length !== 1 ? 's' : ''} for "${search}"`}
+          </p>
+          {searchResults.map(d => (
+            <DayCard key={`${d.month}-${d.day}-${d.name}`} day={d} />
+          ))}
+        </div>
+      ) : (
+        <>
+          {/* ── VIEW TABS ── */}
+          <div className="flex gap-2 p-1 bg-ink/5 dark:bg-ink-dark/5 rounded-xl">
+            {([
+              { id: 'today',    label: "Today" },
+              { id: 'upcoming', label: "Next 7 Days" },
+              { id: 'browse',   label: "Browse" },
+            ] as const).map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setView(tab.id)}
+                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all
+                  ${view === tab.id
+                    ? 'bg-white dark:bg-secondary-dark text-ink dark:text-ink-dark shadow-sm'
+                    : 'text-ink/50 dark:text-ink-dark/50 hover:text-ink/80 dark:hover:text-ink-dark/80'
+                  }`}
+              >
+                {tab.label}
+                {tab.id === 'today' && todaysDays.length > 0 && (
+                  <span className="ml-1.5 px-1.5 py-0.5 bg-accent-gold text-white text-[9px] rounded-full">
+                    {todaysDays.length}
+                  </span>
+                )}
+                {tab.id === 'upcoming' && upcomingDays.length > 0 && (
+                  <span className="ml-1.5 px-1.5 py-0.5 bg-accent-gold/20 text-accent-gold text-[9px] rounded-full">
+                    {upcomingDays.length}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* ── TODAY VIEW ── */}
+          {view === 'today' && (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-accent-gold">
+                  {today.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' })}
+                </p>
+                {todaysDays.length > 0 && (
+                  <span className="text-xs text-ink/40 dark:text-ink-dark/40">
+                    {todaysDays.length} observance{todaysDays.length !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+
+              {todaysDays.length === 0 ? (
+                <div className="flex flex-col items-center gap-4 py-12 text-center">
+                  <span className="text-5xl">📅</span>
+                  <div>
+                    <p className="font-semibold text-ink/60 dark:text-ink-dark/60">
+                      No major observances today
+                    </p>
+                    <p className="text-sm text-ink/40 dark:text-ink-dark/40 mt-1">
+                      Check upcoming days or browse by month
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setView('upcoming')}
+                    className="px-4 py-2 bg-accent-gold/15 text-accent-gold rounded-xl text-sm font-semibold hover:bg-accent-gold/25 transition-colors"
+                  >
+                    See next 7 days →
+                  </button>
+                </div>
+              ) : (
+                todaysDays.map(d => (
+                  <DayCard key={`${d.month}-${d.day}-${d.name}`} day={d} defaultExpanded={true} />
+                ))
+              )}
+            </div>
+          )}
+
+          {/* ── UPCOMING VIEW ── */}
+          {view === 'upcoming' && (
+            <div className="flex flex-col gap-3">
+              <p className="text-xs text-ink/45 dark:text-ink-dark/45">
+                {upcomingDays.length === 0
+                  ? 'No major observances in the next 7 days'
+                  : `${upcomingDays.length} observance${upcomingDays.length !== 1 ? 's' : ''} coming up`}
+              </p>
+              {upcomingDays.map(d => (
+                <DayCard
+                  key={`${d.month}-${d.day}-${d.name}`}
+                  day={d}
+                  showCountdown
+                />
+              ))}
+            </div>
+          )}
+
+          {/* ── BROWSE VIEW ── */}
+          {view === 'browse' && (
+            <div className="flex flex-col gap-4">
+
+              {/* Month grid */}
+              <div>
+                <p className="text-[11px] text-ink/40 dark:text-ink-dark/40 uppercase tracking-wider font-semibold mb-2">
+                  Select Month
+                </p>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {MONTH_NAMES_SHORT.map((name, i) => {
+                    const mNum = i + 1;
+                    const isSelected = selectedMonth === mNum;
+                    const isCurrent = isThisMonthCheck(mNum);
+                    return (
+                      <button
+                        key={name}
+                        onClick={() => setSelectedMonth(mNum)}
+                        className={`py-2 px-1 rounded-xl text-[11px] font-semibold transition-all
+                          ${isSelected
+                            ? 'bg-accent-gold text-white shadow-sm'
+                            : isCurrent
+                              ? 'bg-accent-gold/15 text-accent-gold border border-accent-gold/30'
+                              : 'bg-secondary dark:bg-secondary-dark text-ink/55 dark:text-ink-dark/55 hover:bg-accent-gold/10 border border-transparent'
+                          }`}
+                      >
+                        {name}
+                        <span className="block text-[9px] font-normal opacity-60 mt-0.5">
+                          {monthCounts[i]}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Category filter */}
+              <div>
+                <p className="text-[11px] text-ink/40 dark:text-ink-dark/40 uppercase tracking-wider font-semibold mb-2">
+                  Filter by Category
+                </p>
+                <div className="flex gap-1.5 flex-wrap">
+                  {allCategories.map(cat => {
+                    const isActive = selectedCategory === cat;
+                    const cfg = CATEGORY_CONFIG[cat];
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all border
+                          ${isActive
+                            ? cat === 'all'
+                              ? 'bg-accent-gold text-white border-accent-gold'
+                              : `${cfg.bg} ${cfg.color} ${cfg.border} opacity-100`
+                            : cat === 'all'
+                              ? 'bg-transparent text-ink/50 dark:text-ink-dark/50 border-ink/15 dark:border-ink-dark/15 hover:border-accent-gold/40'
+                              : `${cfg.bg} ${cfg.color} ${cfg.border} opacity-60 hover:opacity-100`
+                          }`}
+                      >
+                        {cat === 'all' ? 'All' : cfg.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Month heading */}
+              <div className="flex items-center justify-between">
+                <h2 className="font-bold text-ink dark:text-ink-dark">
+                  {MONTH_NAMES_FULL[selectedMonth - 1]}
+                </h2>
+                <span className="text-xs text-ink/40 dark:text-ink-dark/40">
+                  {browseDays.length} observance{browseDays.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+
+              {/* Days */}
+              {browseDays.length === 0 ? (
+                <div className="text-center py-10 text-ink/40 dark:text-ink-dark/40 text-sm">
+                  No observances match this filter.
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {browseDays.map(d => (
+                    <DayCard key={`${d.month}-${d.day}-${d.name}`} day={d} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── DASHBOARD PREVIEW CARD ────────────────────────────────────────────────────
+// Add this inside your Dashboard component where you want the card to appear.
+// It needs setActiveSection to be in scope.
+
+function WorldDaysDashboardCard({ onNavigate }: { onNavigate: () => void }) {
+  const todaysDays = WORLD_DAYS.filter(d => isTodayCheck(d.month, d.day));
+  const nextUp = WORLD_DAYS
+    .map(d => ({ ...d, daysUntil: getDaysUntilEvent(d.month, d.day) }))
+    .filter(d => d.daysUntil >= 1)
+    .sort((a, b) => a.daysUntil - b.daysUntil)[0];
+
+  return (
+    <div
+      onClick={onNavigate}
+      className="bg-secondary dark:bg-secondary-dark rounded-2xl p-5 cursor-pointer border
+        border-ink/6 dark:border-ink-dark/10 hover:border-accent-gold/40 hover:shadow-md transition-all"
+    >
+      {/* Header row */}
+      <div className="flex items-center justify-between mb-3">
+        <span className="font-semibold text-ink dark:text-ink-dark text-sm flex items-center gap-2">
+          🌍 World Days
+        </span>
+        <span className="text-xs text-accent-gold font-semibold">View all →</span>
+      </div>
+
+      {todaysDays.length > 0 ? (
+        <div className="flex flex-col gap-2.5">
+          {todaysDays.slice(0, 2).map(d => (
+            <div key={d.name} className="flex items-start gap-2.5">
+              <span className="text-xl leading-none mt-0.5">{d.icon}</span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-ink dark:text-ink-dark truncate">{d.name}</p>
+                {d.greWord && (
+                  <p className="text-xs text-accent-gold mt-0.5">
+                    GRE word: <span className="font-semibold">{d.greWord}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+          {todaysDays.length > 2 && (
+            <p className="text-xs text-ink/35 dark:text-ink-dark/35">
+              +{todaysDays.length - 2} more today
+            </p>
+          )}
+        </div>
+      ) : nextUp ? (
+        <div className="flex items-start gap-3">
+          <span className="text-2xl leading-none mt-0.5">{nextUp.icon}</span>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-ink dark:text-ink-dark">{nextUp.name}</p>
+            <p className="text-xs text-ink/45 dark:text-ink-dark/45 mt-0.5">
+              {MONTH_NAMES_SHORT[nextUp.month - 1]} {nextUp.day} · in {nextUp.daysUntil} day{nextUp.daysUntil !== 1 ? 's' : ''}
+            </p>
+            {nextUp.greWord && (
+              <p className="text-xs text-accent-gold mt-0.5">
+                GRE word: <span className="font-semibold">{nextUp.greWord}</span>
+              </p>
+            )}
+          </div>
+        </div>
+      ) : (
+        <p className="text-sm text-ink/40 dark:text-ink-dark/40">
+          Explore {WORLD_DAYS.length} world observances →
+        </p>
+      )}
+    </div>
+  );
+}
+
 const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) => {
   const xp = getStorage(STORAGE_KEYS.xp, 0);
   const streak = getStorage(STORAGE_KEYS.streak, 0);
@@ -4611,6 +5158,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
         </div>
 
         <aside className="space-y-12">
+          <WorldDaysDashboardCard onNavigate={() => onNavigate('worlddays')} />
           <RecentAchievements />
 
           <section className="space-y-8">
@@ -4945,6 +5493,7 @@ const App = () => {
     { id: 'verbal', label: 'Verbal Practice', icon: MessageSquare },
     { id: 'mindgames', label: 'Mind Games', icon: Gamepad2 },
     { id: 'news', label: 'News & Affairs', icon: Newspaper },
+    { id: 'worlddays', label: 'World Days', icon: Globe },
     { id: 'achievements', label: 'Achievements', icon: Trophy, badge: unlockedAchievementsCount },
     { id: 'leaderboard', label: 'Leaderboard', icon: Medal },
     { id: 'progress', label: 'My Progress', icon: BarChart3 },
@@ -4967,6 +5516,8 @@ const App = () => {
         return <MindGames onXpChange={handleXpChange} currentXp={xp} />;
       case 'news':
         return <NewsContainer />;
+      case 'worlddays':
+        return <WorldDays />;
       case 'achievements':
         return <Achievements onXpChange={handleXpChange} />;
       case 'leaderboard':

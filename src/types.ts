@@ -103,3 +103,16 @@ export type Achievement = {
   condition: (stats: UserStats) => boolean;
   xpReward: number;
 };
+
+export type WorldDay = {
+  month: number;        // 1–12
+  day: number;          // 1–31
+  name: string;
+  category: 'health' | 'environment' | 'education' | 'science' | 'culture' | 'civic' | 
+            'awareness' | 'national' | 'global' | 'food' | 'technology' | 'memorial' | 
+            'media' | 'cultural' | 'sports';
+  icon: string;
+  description: string;
+  greWord?: string;     // optional GRE word linked
+  greWordId?: number;   // optional ID to link to vocabulary section
+};

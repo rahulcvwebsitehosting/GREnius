@@ -36,9 +36,19 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-ink/5 bg-white/50 backdrop-blur-md sticky top-0 z-10">
             <div className="flex items-center gap-4">
-              <span className="px-3 py-1 bg-ink text-white text-[10px] font-sans font-bold uppercase tracking-[0.2em] rounded-sm">
-                {article.source.name}
-              </span>
+              <div className="flex items-center gap-2 px-3 py-1 bg-ink rounded-sm">
+                {article.source.favicon && (
+                  <img 
+                    src={article.source.favicon} 
+                    alt="" 
+                    className="w-4 h-4 rounded-full"
+                    referrerPolicy="no-referrer"
+                  />
+                )}
+                <span className="text-white text-[10px] font-sans font-bold uppercase tracking-[0.2em]">
+                  {article.source.name}
+                </span>
+              </div>
               <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] flex items-center gap-1">
                 <Clock size={12} /> {article.readTime} min read
               </span>

@@ -48,9 +48,19 @@ export const NewsCard = ({ article, onClick, isHero = false }: NewsCardProps) =>
           </div>
         )}
         <div className="absolute top-3 left-3 flex gap-2">
-          <span className="px-2 py-1 bg-ink/80 backdrop-blur-sm text-white text-[8px] font-sans font-bold uppercase tracking-widest rounded-sm">
-            {article.source.name}
-          </span>
+          <div className="flex items-center gap-2 px-2 py-1 bg-ink/80 backdrop-blur-sm rounded-sm">
+            {article.source.favicon && (
+              <img 
+                src={article.source.favicon} 
+                alt="" 
+                className="w-3 h-3 rounded-full"
+                referrerPolicy="no-referrer"
+              />
+            )}
+            <span className="text-white text-[8px] font-sans font-bold uppercase tracking-widest">
+              {article.source.name}
+            </span>
+          </div>
           {hasVocab && (
             <span className="px-2 py-1 bg-accent-gold text-white text-[8px] font-sans font-bold uppercase tracking-widest rounded-sm flex items-center gap-1">
               🎯 GRE Word

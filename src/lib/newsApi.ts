@@ -11,6 +11,15 @@ const GNEWS_KEY = getEnv('GNEWS_API_KEY', '762c3df44daeb44814a314cc2d2f6092');
 const NEWSDATA_KEY = getEnv('NEWSDATA_API_KEY', 'pub_498b18ed0ba44a79a9808554a9b78f81');
 const THENEWSAPI_KEY = getEnv('THENEWSAPI_KEY', '8rJEVScDpCbPop4kdpa5BbZOEqIzToVWAejRBBfF');
 
+const getFavicon = (url: string) => {
+  try {
+    const domain = new URL(url).hostname;
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  } catch (e) {
+    return undefined;
+  }
+};
+
 const CATEGORY_MAP: Record<NewsCategory, string> = {
   'India': 'general',
   'World': 'world',
@@ -42,6 +51,7 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         source: {
           name: a.source.name,
           url: a.source.url,
+          favicon: getFavicon(a.source.url),
         },
         publishedAt: a.publishedAt,
         imageUrl: a.image,
@@ -74,6 +84,7 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         source: {
           name: a.source_id,
           url: a.link,
+          favicon: getFavicon(a.link),
         },
         publishedAt: a.pubDate,
         imageUrl: a.image_url,
@@ -106,6 +117,7 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         source: {
           name: a.source,
           url: a.url,
+          favicon: getFavicon(a.url),
         },
         publishedAt: a.published_at,
         imageUrl: a.image_url,

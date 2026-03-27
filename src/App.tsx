@@ -41,7 +41,9 @@ import {
   Info,
   AlertTriangle,
   Newspaper,
-  Globe
+  Globe,
+  Linkedin,
+  ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NewsContainer } from './components/news/NewsContainer';
@@ -184,6 +186,81 @@ const Settings = () => {
             </motion.div>
           )}
         </div>
+
+        <div className="pt-16 border-t border-ink/5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-2">
+              <label className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em]">Project Genesis</label>
+              <p className="text-xs font-sans text-ink/30 italic leading-relaxed">The engineering mind behind this cognitive environment.</p>
+            </div>
+            <div className="md:col-span-2">
+              <motion.a 
+                href="https://www.linkedin.com/in/rahulshyamcivil/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="group relative block overflow-hidden rounded-sm border border-ink/10 bg-bg-primary p-0 transition-all hover:border-accent-gold/40 hover:shadow-2xl hover:shadow-accent-gold/10"
+              >
+                {/* Blueprint Grid Background */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                     style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                
+                <div className="relative p-6 md:p-8 flex flex-col md:flex-row items-center md:items-stretch gap-0">
+                  {/* Left Section: Identity */}
+                  <div className="flex-1 flex items-center gap-4 md:gap-6 pb-6 md:pb-0 md:pr-8 md:border-r md:border-ink/5">
+                    <div className="relative">
+                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-sm bg-ink text-bg-primary flex items-center justify-center font-serif text-2xl md:text-3xl font-bold relative z-10">
+                        RS
+                      </div>
+                      {/* Technical Measurement Lines */}
+                      <div className="absolute -top-2 -left-2 w-4 h-[1px] bg-accent-gold/40" />
+                      <div className="absolute -top-2 -left-2 w-[1px] h-4 bg-accent-gold/40" />
+                      <div className="absolute -bottom-2 -right-2 w-4 h-[1px] bg-accent-gold/40" />
+                      <div className="absolute -bottom-2 -right-2 w-[1px] h-4 bg-accent-gold/40" />
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <h3 className="text-2xl md:text-3xl font-serif font-bold text-ink tracking-tight group-hover:text-accent-gold transition-colors">Rahul S</h3>
+                      <div className="flex items-center gap-2">
+                        <span className="h-[1px] w-4 bg-accent-gold/30" />
+                        <p className="text-[9px] md:text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em] md:tracking-[0.3em]">Civil Engineer & Developer</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Section: Interactive Button */}
+                  <div className="w-full md:w-auto flex items-center justify-center md:pl-8 pt-8 md:pt-0 border-t md:border-t-0 border-ink/5">
+                    <div className="relative group/btn">
+                      <div className="absolute -inset-4 bg-accent-gold/5 rounded-full scale-0 group-hover/btn:scale-100 transition-transform duration-500" />
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="w-14 h-14 rounded-full border border-ink/10 flex items-center justify-center text-ink group-hover/btn:border-accent-gold group-hover/btn:text-accent-gold transition-all duration-300 group-hover/btn:rotate-12">
+                          <Linkedin size={24} strokeWidth={1.5} />
+                        </div>
+                        <div className="flex items-center gap-2 overflow-hidden h-4">
+                          <span className="text-[9px] font-sans font-black uppercase tracking-[0.2em] text-ink/30 group-hover/btn:text-accent-gold transition-colors whitespace-nowrap">
+                            Establish Connection
+                          </span>
+                          <ArrowRight size={10} className="text-accent-gold opacity-0 -translate-x-4 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Technical Bar */}
+                <div className="h-1 w-full bg-ink/5 relative overflow-hidden">
+                  <motion.div 
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-accent-gold/40"
+                  />
+                </div>
+              </motion.a>
+            </div>
+          </div>
+        </div>
       </div>
 
       <footer className="pt-16 text-center">
@@ -206,18 +283,18 @@ const Progress = () => {
   const percentile = Math.min(99, Math.floor((xp / 8000) * 100) + 10);
 
   return (
-    <div className="space-y-16 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8 md:space-y-16 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="max-w-3xl">
-        <h1 className="text-6xl md:text-7xl font-serif font-bold text-ink leading-[0.9] mb-8">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold text-ink leading-[0.9] mb-6 md:mb-8">
           Scholarly<br />Progression.
         </h1>
-        <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
+        <p className="text-lg md:text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
           An analytical breakdown of your academic milestones. 
           Your current standing reflects a disciplined approach to the Digital Lexicon.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-y border-ink/5 py-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 border-y border-ink/5 py-8 md:py-12">
         <div className="space-y-4 text-center md:text-left">
           <div className="w-16 h-16 bg-bg-primary rounded-full border border-ink/5 flex items-center justify-center text-accent-gold mx-auto md:mx-0">
             <Trophy size={24} />
@@ -2397,7 +2474,7 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-ink/5 pb-12">
         <div className="space-y-4">
           <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Verbal Reasoning</span>
-          <h1 className="text-6xl font-serif font-bold text-ink">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-ink leading-tight">
             {currentQuestion.type === 'TC' ? 'Text Completion.' : currentQuestion.type === 'SE' ? 'Sentence Equivalence.' : 'Reading Comprehension.'}
           </h1>
         </div>
@@ -2790,33 +2867,33 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   };
 
   return (
-    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-ink/5 pb-12">
+    <div className="space-y-8 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-ink/5 pb-8 md:pb-12">
         <div className="space-y-4">
           <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Quantitative Reasoning</span>
-          <h1 className="text-6xl font-serif font-bold text-ink">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-ink leading-tight">
             Mathematical Analysis.
           </h1>
         </div>
-        <div className="flex items-center gap-8">
-          <div className="text-right">
+        <div className="flex items-center justify-between md:justify-end gap-8">
+          <div className="text-left md:text-right">
             <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Time Elapsed</span>
-            <p className="text-2xl font-serif font-bold text-ink">{formatTime(timer)}</p>
+            <p className="text-xl md:text-2xl font-serif font-bold text-ink">{formatTime(timer)}</p>
           </div>
           <button 
             onClick={() => setShowCalculator(!showCalculator)}
-            className={`w-12 h-12 rounded-sm border flex items-center justify-center transition-all ${showCalculator ? 'bg-ink text-white border-ink' : 'bg-white text-ink/40 border-ink/5 hover:border-ink/20'}`}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-sm border flex items-center justify-center transition-all ${showCalculator ? 'bg-ink text-white border-ink' : 'bg-white text-ink/40 border-ink/5 hover:border-ink/20'}`}
           >
-            <Calculator size={20} />
+            <Calculator size={18} className="md:w-5 md:h-5" />
           </button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-        <div className="lg:col-span-8 space-y-12">
-          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-sm relative">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
+        <div className="lg:col-span-8 space-y-8 md:space-y-12">
+          <div className="p-6 md:p-12 bg-white rounded-sm border border-ink/5 shadow-sm relative">
             <div className="absolute top-0 left-0 w-1 h-full bg-accent-gold" />
-            <div className="flex items-center justify-between mb-12">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 md:mb-12">
               <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em]">
                 Problem {currentIndex + 1} of {GRE_QUANT.length}
               </span>
@@ -2826,15 +2903,15 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
             </div>
 
             {currentQuestion.type === 'QC' && (
-              <div className="space-y-12">
-                <div className="grid grid-cols-2 gap-12">
+              <div className="space-y-8 md:space-y-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
                   <div className="space-y-4">
                     <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Quantity A</h4>
-                    <p className="text-3xl font-serif font-bold text-ink">{currentQuestion.colA}</p>
+                    <p className="text-2xl md:text-3xl font-serif font-bold text-ink">{currentQuestion.colA}</p>
                   </div>
                   <div className="space-y-4">
                     <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Quantity B</h4>
-                    <p className="text-3xl font-serif font-bold text-ink">{currentQuestion.colB}</p>
+                    <p className="text-2xl md:text-3xl font-serif font-bold text-ink">{currentQuestion.colB}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-ink/5">
@@ -2843,7 +2920,7 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       key={opt}
                       onClick={() => handleAnswer(opt)}
                       className={`
-                        group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
+                        group flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-sm border transition-all text-left
                         ${showExplanation && opt === currentQuestion.answer
                           ? 'bg-ink text-white border-ink'
                           : selectedAnswer === opt && opt !== currentQuestion.answer
@@ -2852,12 +2929,12 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       `}
                     >
                       <span className={`
-                        w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
+                        w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors shrink-0
                         ${(showExplanation && opt === currentQuestion.answer) || selectedAnswer === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
                       `}>
                         {opt}
                       </span>
-                      <span className="text-sm font-sans font-medium">
+                      <span className="text-xs md:text-sm font-sans font-medium">
                         {opt === 'A' && 'Quantity A is greater'}
                         {opt === 'B' && 'Quantity B is greater'}
                         {opt === 'C' && 'The two quantities are equal'}
@@ -2870,15 +2947,15 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
             )}
 
             {currentQuestion.type === 'MC' && (
-              <div className="space-y-12">
-                <p className="text-3xl font-serif font-bold text-ink leading-relaxed">{currentQuestion.question}</p>
+              <div className="space-y-8 md:space-y-12">
+                <p className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-ink leading-relaxed">{currentQuestion.question}</p>
                 <div className="grid grid-cols-1 gap-4">
                   {currentQuestion.options?.map((opt, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleAnswer(opt)}
                       className={`
-                        group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
+                        group flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-sm border transition-all text-left
                         ${showExplanation && opt === currentQuestion.answer
                           ? 'bg-ink text-white border-ink'
                           : selectedAnswer === opt && opt !== currentQuestion.answer
@@ -2887,12 +2964,12 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       `}
                     >
                       <span className={`
-                        w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
+                        w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors shrink-0
                         ${(showExplanation && opt === currentQuestion.answer) || selectedAnswer === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
                       `}>
                         {String.fromCharCode(65 + idx)}
                       </span>
-                      <span className="text-lg font-sans font-medium">{opt}</span>
+                      <span className="text-base md:text-lg font-sans font-medium">{opt}</span>
                     </button>
                   ))}
                 </div>
@@ -2900,9 +2977,9 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
             )}
 
             {currentQuestion.type === 'NE' && (
-              <div className="space-y-12">
-                <p className="text-3xl font-serif font-bold text-ink leading-relaxed">{currentQuestion.question}</p>
-                <div className="flex items-center gap-6">
+              <div className="space-y-8 md:space-y-12">
+                <p className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-ink leading-relaxed">{currentQuestion.question}</p>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 md:gap-6">
                   <div className="flex-1 space-y-2">
                     <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Numeric Entry</span>
                     <input 
@@ -2910,14 +2987,14 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                       value={neInput}
                       onChange={(e) => setNeInput(e.target.value)}
                       placeholder="ENTER VALUE..."
-                      className="w-full p-6 bg-bg-primary border border-ink/5 rounded-sm font-serif font-bold text-3xl text-ink focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/10"
+                      className="w-full p-4 md:p-6 bg-bg-primary border border-ink/5 rounded-sm font-serif font-bold text-2xl md:text-3xl text-ink focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/10"
                       onKeyDown={(e) => e.key === 'Enter' && handleAnswer(neInput.trim())}
                     />
                   </div>
                   <button 
                     onClick={() => handleAnswer(neInput.trim())}
                     disabled={!neInput.trim()}
-                    className="mt-6 px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="sm:mt-6 px-8 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     Validate
                   </button>
@@ -3122,18 +3199,18 @@ function MemoryPalace({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
   const gridCols = GRID_SIZES[difficulty] === 6 ? 'grid-cols-3' : GRID_SIZES[difficulty] === 9 ? 'grid-cols-3' : 'grid-cols-4';
 
   if (phase === 'setup') return (
-    <div className="flex flex-col items-center gap-8 p-12 text-center max-w-xl mx-auto">
-      <div className="w-20 h-20 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold mx-auto">
-        <span className="text-4xl">🏛️</span>
+    <div className="flex flex-col items-center gap-6 md:gap-8 p-6 md:p-12 text-center max-w-xl mx-auto">
+      <div className="w-16 h-16 md:w-20 md:h-20 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold mx-auto">
+        <span className="text-3xl md:text-4xl">🏛️</span>
       </div>
-      <div className="space-y-4">
-        <h2 className="text-5xl font-serif font-bold text-ink">Memory Palace.</h2>
-        <p className="text-lg font-sans text-ink/60">Memorize the positions of GRE words in a grid, then recall them from memory. Builds spatial memory.</p>
+      <div className="space-y-2 md:space-y-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Memory Palace.</h2>
+        <p className="text-base md:text-lg font-sans text-ink/60">Memorize the positions of GRE words in a grid, then recall them from memory. Builds spatial memory.</p>
       </div>
-      <div className="flex flex-col gap-4 w-full max-w-xs">
+      <div className="flex flex-col gap-3 md:gap-4 w-full max-w-xs">
         {(['Easy (6 slots)','Medium (9 slots)','Hard (12 slots)'] as const).map((label, i) => (
           <button key={i} onClick={() => startGame(i as 0|1|2)}
-            className="py-4 rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] border border-ink/10 hover:border-ink hover:bg-ink hover:text-white transition-all text-ink">
+            className="py-3 md:py-4 rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] border border-ink/10 hover:border-ink hover:bg-ink hover:text-white transition-all text-ink">
             {label}
           </button>
         ))}
@@ -3142,42 +3219,42 @@ function MemoryPalace({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
   );
 
   if (phase === 'result') return (
-    <div className="flex flex-col items-center gap-8 p-12 text-center max-w-xl mx-auto">
-      <div className="space-y-4">
-        <h2 className="text-5xl font-serif font-bold text-ink">Result.</h2>
-        <div className="text-8xl font-serif font-bold text-accent-gold">{score}/{allSlots.length}</div>
-        <p className="text-lg font-sans text-ink/60">positions correctly recalled</p>
+    <div className="flex flex-col items-center gap-6 md:gap-8 p-6 md:p-12 text-center max-w-xl mx-auto">
+      <div className="space-y-2 md:space-y-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Result.</h2>
+        <div className="text-5xl sm:text-7xl md:text-8xl font-serif font-bold text-accent-gold">{score}/{allSlots.length}</div>
+        <p className="text-base md:text-lg font-sans text-ink/60">positions correctly recalled</p>
       </div>
-      <button onClick={() => setPhase('setup')} className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
+      <button onClick={() => setPhase('setup')} className="px-8 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
         Restart Protocol
       </button>
     </div>
   );
 
   return (
-    <div className="flex flex-col gap-12 p-8 max-w-4xl mx-auto w-full">
-      <div className="flex justify-between items-end border-b border-ink/5 pb-8">
+    <div className="flex flex-col gap-8 md:gap-12 p-4 md:p-8 max-w-4xl mx-auto w-full">
+      <div className="flex justify-between items-end border-b border-ink/5 pb-6 md:pb-8">
         <div className="space-y-1">
-          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Current Phase</span>
-          <h2 className="text-3xl font-serif font-bold text-ink">
+          <span className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Current Phase</span>
+          <h2 className="text-2xl md:text-3xl font-serif font-bold text-ink">
             {phase === 'study' ? '👁️ Memorize!' : '🧠 Recall!'}
           </h2>
         </div>
         {phase === 'study' && (
-          <div className="text-4xl font-serif font-bold text-accent-gold">{timeLeft}s</div>
+          <div className="text-2xl md:text-4xl font-serif font-bold text-accent-gold">{timeLeft}s</div>
         )}
       </div>
 
       {phase === 'study' && (
-        <p className="text-sm font-sans text-ink/40 italic text-center">Remember which word is in which position!</p>
+        <p className="text-xs md:text-sm font-sans text-ink/40 italic text-center">Remember which word is in which position!</p>
       )}
 
-      <div className={`grid ${gridCols} gap-6`}>
+      <div className={`grid ${GRID_SIZES[difficulty] === 6 ? 'grid-cols-2 sm:grid-cols-3' : GRID_SIZES[difficulty] === 9 ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-4'} gap-3 md:gap-6`}>
         {allSlots.map((slot, idx) => (
           <div
             key={idx}
             onClick={() => handleRecallClick(idx)}
-            className={`aspect-square rounded-sm flex items-center justify-center text-center p-4 text-sm font-serif font-bold transition-all border
+            className={`aspect-square rounded-sm flex items-center justify-center text-center p-2 md:p-4 text-xs md:text-sm font-serif font-bold transition-all border
               ${phase === 'study'
                 ? slot ? 'bg-white border-accent-gold text-ink shadow-sm' : 'bg-bg-primary border-ink/5 border-dashed'
                 : revealed[idx]
@@ -3290,16 +3367,16 @@ function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange
   if (done && !showResult) {
     const todayResult = JSON.parse(localStorage.getItem(getDailyChallengeKey()) || '{}');
     return (
-      <div className="flex flex-col items-center justify-center gap-8 p-12 text-center h-[60vh]">
-        <div className="w-24 h-24 bg-bg-primary rounded-full border border-ink/5 flex items-center justify-center text-accent-gold mb-4">
-          <CheckCircle2 size={48} />
+      <div className="flex flex-col items-center justify-center gap-6 md:gap-8 p-6 md:p-12 text-center min-h-[60vh] py-12">
+        <div className="w-16 h-16 md:w-24 md:h-24 bg-bg-primary rounded-full border border-ink/5 flex items-center justify-center text-accent-gold mb-2 md:mb-4">
+          <CheckCircle2 size={32} className="md:w-12 md:h-12" />
         </div>
-        <div className="space-y-4">
-          <h2 className="text-5xl font-serif font-bold text-ink">Challenge Complete.</h2>
-          <p className="text-lg font-sans text-ink/60">You've already conquered today's lexical trial.</p>
-          <div className="text-3xl font-serif font-bold text-accent-gold">Score: {todayResult.score}/10</div>
+        <div className="space-y-2 md:space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Challenge Complete.</h2>
+          <p className="text-base md:text-lg font-sans text-ink/60">You've already conquered today's lexical trial.</p>
+          <div className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-accent-gold">Score: {todayResult.score}/10</div>
         </div>
-        <button onClick={onBack} className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
+        <button onClick={onBack} className="px-8 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
           Return to Dashboard
         </button>
       </div>
@@ -3308,19 +3385,19 @@ function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange
 
   if (!started) {
     return (
-      <div className="flex flex-col items-center justify-center gap-8 p-12 text-center h-[60vh] max-w-2xl mx-auto">
-        <div className="w-24 h-24 bg-bg-primary rounded-full border border-ink/5 flex items-center justify-center text-accent-gold mb-4">
-          <Zap size={48} />
+      <div className="flex flex-col items-center justify-center gap-6 md:gap-8 p-6 md:p-12 text-center min-h-[60vh] py-12 max-w-2xl mx-auto">
+        <div className="w-16 h-16 md:w-24 md:h-24 bg-bg-primary rounded-full border border-ink/5 flex items-center justify-center text-accent-gold mb-2 md:mb-4">
+          <Zap size={32} className="md:w-12 md:h-12" />
         </div>
-        <div className="space-y-4">
-          <h2 className="text-5xl font-serif font-bold text-ink">Daily Trial.</h2>
-          <p className="text-lg font-sans text-ink/60">10 words. One chance. Earn bonus XP and maintain your streak. All scholars face the same challenge today.</p>
+        <div className="space-y-2 md:space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Daily Trial.</h2>
+          <p className="text-base md:text-lg font-sans text-ink/60">10 words. One chance. Earn bonus XP and maintain your streak. All scholars face the same challenge today.</p>
         </div>
-        <div className="flex flex-col gap-4 w-full max-w-xs">
-          <button onClick={() => setStarted(true)} className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
+        <div className="flex flex-col gap-3 md:gap-4 w-full max-w-xs">
+          <button onClick={() => setStarted(true)} className="px-8 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
             Begin Challenge
           </button>
-          <button onClick={onBack} className="px-12 py-4 text-ink/40 font-sans font-bold text-[10px] uppercase tracking-widest hover:text-ink transition-colors">
+          <button onClick={onBack} className="px-8 md:px-12 py-3 md:py-4 text-ink/40 font-sans font-bold text-[8px] md:text-[10px] uppercase tracking-widest hover:text-ink transition-colors">
             Maybe Later
           </button>
         </div>
@@ -3330,14 +3407,14 @@ function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange
 
   if (showResult) {
     return (
-      <div className="flex flex-col items-center justify-center gap-8 p-12 text-center h-[60vh]">
-        <div className="space-y-4">
-          <h2 className="text-5xl font-serif font-bold text-ink">Daily Result.</h2>
-          <div className="text-8xl font-serif font-bold text-accent-gold">{score}/10</div>
-          <p className="text-lg font-sans text-ink/60">Scholarly performance recorded.</p>
-          <p className="text-sm font-sans text-accent-gold font-bold uppercase tracking-widest">+50 XP Awarded</p>
+      <div className="flex flex-col items-center justify-center gap-6 md:gap-8 p-6 md:p-12 text-center min-h-[60vh] py-12">
+        <div className="space-y-2 md:space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Daily Result.</h2>
+          <div className="text-5xl sm:text-7xl md:text-8xl font-serif font-bold text-accent-gold">{score}/10</div>
+          <p className="text-base md:text-lg font-sans text-ink/60">Scholarly performance recorded.</p>
+          <p className="text-xs md:text-sm font-sans text-accent-gold font-bold uppercase tracking-widest">+50 XP Awarded</p>
         </div>
-        <button onClick={onBack} className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
+        <button onClick={onBack} className="px-8 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
           Return to Dashboard
         </button>
       </div>
@@ -3349,13 +3426,13 @@ function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange
   const currentWord = words[currentIndex];
 
   return (
-    <div className="max-w-3xl mx-auto w-full space-y-12 p-8">
-      <div className="flex items-center justify-between border-b border-ink/5 pb-8">
+    <div className="max-w-3xl mx-auto w-full space-y-8 md:space-y-12 p-4 md:p-8">
+      <div className="flex items-center justify-between border-b border-ink/5 pb-6 md:pb-8">
         <div className="space-y-1">
-          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Daily Challenge</span>
-          <h2 className="text-3xl font-serif font-bold text-ink">Question {currentIndex + 1}/10</h2>
+          <span className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Daily Challenge</span>
+          <h2 className="text-2xl md:text-3xl font-serif font-bold text-ink">Question {currentIndex + 1}/10</h2>
         </div>
-        <div className="w-48 h-1 bg-ink/5 rounded-full overflow-hidden">
+        <div className="w-32 md:w-48 h-1 bg-ink/5 rounded-full overflow-hidden">
           <div 
             className="h-full bg-accent-gold transition-all duration-500" 
             style={{ width: `${((currentIndex + 1) / 10) * 100}%` }}
@@ -3363,32 +3440,32 @@ function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange
         </div>
       </div>
 
-      <div className="space-y-12">
-        <div className="text-center space-y-4">
-          <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Identify Definition</span>
-          <h3 className="text-6xl font-serif font-bold text-ink">{currentWord.word}</h3>
+      <div className="space-y-8 md:space-y-12">
+        <div className="text-center space-y-2 md:space-y-4">
+          <span className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Identify Definition</span>
+          <h3 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-ink break-words">{currentWord.word}</h3>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3 md:gap-4">
           {options.map((opt, idx) => (
             <button
               key={idx}
               onClick={() => handleAnswer(opt)}
               disabled={!!selectedOption}
               className={`
-                group flex items-center gap-6 p-6 rounded-sm border transition-all text-left
+                group flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-sm border transition-all text-left
                 ${selectedOption === opt 
                   ? (opt === currentWord.definition ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
                   : (selectedOption && opt === currentWord.definition ? 'bg-teal-50 border-teal-200 text-teal-900' : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60')}
               `}
             >
               <span className={`
-                w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-sans font-bold uppercase tracking-widest transition-colors
+                w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-[8px] md:text-[10px] font-sans font-bold uppercase tracking-widest transition-colors shrink-0
                 ${selectedOption === opt ? 'bg-white/20 text-white' : 'bg-bg-primary text-ink/30 group-hover:bg-ink group-hover:text-white'}
               `}>
                 {String.fromCharCode(65 + idx)}
               </span>
-              <span className="text-lg font-sans font-medium leading-tight">{opt}</span>
+              <span className="text-sm md:text-lg font-sans font-medium leading-tight">{opt}</span>
             </button>
           ))}
         </div>
@@ -3409,38 +3486,38 @@ const EtymologyExplorer = ({ onWordClick }: { onWordClick: (word: string) => voi
 
   return (
     <div className="space-y-6">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+      <div className="relative group">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink/20 group-focus-within:text-accent-gold transition-colors" />
         <input
           type="text"
           placeholder="Search roots, meanings, or words..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+          className="w-full pl-12 pr-4 py-4 bg-white border border-ink/5 rounded-sm focus:ring-0 focus:border-accent-gold/20 outline-none transition-all text-xs font-sans font-bold uppercase tracking-widest placeholder:text-ink/10"
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredRoots.map((item) => (
           <motion.div
             key={item.root}
             layout
-            className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow"
+            className="bg-white border border-ink/5 rounded-sm overflow-hidden hover:shadow-xl hover:shadow-ink/5 transition-all"
           >
             <button
               onClick={() => setExpandedRoot(expandedRoot === item.root ? null : item.root)}
-              className="w-full p-5 text-left flex items-start justify-between group"
+              className="w-full p-6 text-left flex items-start justify-between group"
             >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-indigo-600 font-mono tracking-wider">{item.root}</span>
-                  <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase rounded-full tracking-wider">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl font-bold text-ink font-serif tracking-tighter group-hover:text-accent-gold transition-colors">{item.root}</span>
+                  <span className="px-2 py-0.5 bg-accent-gold/10 text-accent-gold text-[8px] font-sans font-bold uppercase rounded-full tracking-widest">
                     {item.language}
                   </span>
                 </div>
-                <p className="text-gray-600 font-medium italic">"{item.meaning}"</p>
+                <p className="text-ink/40 font-serif italic text-sm">"{item.meaning}"</p>
               </div>
-              <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${expandedRoot === item.root ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-5 h-5 text-ink/20 transition-transform duration-500 ${expandedRoot === item.root ? 'rotate-180' : ''}`} />
             </button>
 
             <AnimatePresence>
@@ -3449,11 +3526,11 @@ const EtymologyExplorer = ({ onWordClick }: { onWordClick: (word: string) => voi
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  className="px-5 pb-5 border-t border-gray-50 bg-indigo-50/30"
+                  className="px-6 pb-6 border-t border-ink/5 bg-bg-primary/30"
                 >
-                  <div className="pt-4 space-y-4">
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Associated Words</h4>
+                  <div className="pt-6 space-y-6">
+                    <div className="space-y-3">
+                      <h4 className="text-[10px] font-sans font-bold text-ink/20 uppercase tracking-[0.2em]">Associated Words</h4>
                       <div className="flex flex-wrap gap-2">
                         {item.words.map(word => {
                           const isGreWord = GRE_WORDS.some(w => w.word.toLowerCase() === word.toLowerCase());
@@ -3461,23 +3538,23 @@ const EtymologyExplorer = ({ onWordClick }: { onWordClick: (word: string) => voi
                             <button
                               key={word}
                               onClick={() => isGreWord && onWordClick(word)}
-                              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                              className={`px-4 py-2 rounded-sm text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${
                                 isGreWord 
-                                  ? 'bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-200 shadow-sm' 
-                                  : 'bg-white text-gray-600 border border-gray-100 cursor-default'
+                                  ? 'bg-accent-gold text-white hover:bg-accent-gold/90 shadow-lg shadow-accent-gold/20' 
+                                  : 'bg-white text-ink/40 border border-ink/5 cursor-default'
                               }`}
                             >
                               {word}
-                              {isGreWord && <Zap className="w-3 h-3 inline-block ml-1 fill-current" />}
+                              {isGreWord && <Zap size={10} className="inline-block ml-2 fill-current" />}
                             </button>
                           );
                         })}
                       </div>
                     </div>
                     
-                    <div className="p-3 bg-white/80 rounded-xl border border-indigo-100/50">
-                      <h4 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Mnemonic</h4>
-                      <p className="text-sm text-gray-700 italic leading-relaxed">
+                    <div className="p-4 bg-white rounded-sm border border-ink/5">
+                      <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-2">Mnemonic Aid</h4>
+                      <p className="text-sm text-ink/60 italic leading-relaxed">
                         {item.mnemonic}
                       </p>
                     </div>
@@ -3633,25 +3710,25 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
 
   if (view === 'menu') {
     return (
-      <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-8 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <button
           onClick={onBack}
-          className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors mb-8"
+          className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors mb-4 md:mb-8"
         >
           <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
         </button>
         <header className="max-w-3xl">
-          <h1 className="text-7xl md:text-8xl font-serif font-bold text-ink leading-[0.9] mb-8">
+          <h1 className="text-5xl sm:text-7xl md:text-8xl font-serif font-bold text-ink leading-[0.9] mb-6 md:mb-8">
             Lexical<br />Mastery.
           </h1>
-          <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
+          <p className="text-lg md:text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
             A systematic approach to high-frequency GRE vocabulary. 
             Master the nuances of the Digital Lexicon through focused study.
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-ink/5 pt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 border-t border-ink/5 pt-12">
           <button 
             onClick={() => setView('flashcards')}
             className="group text-left space-y-6"
@@ -3736,8 +3813,8 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
         </div>
 
         <header className="max-w-2xl">
-          <h2 className="text-5xl font-serif font-bold text-ink leading-tight mb-6">Root Origins.</h2>
-          <p className="text-lg font-sans text-ink/60 leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-ink leading-tight mb-6">Root Origins.</h2>
+          <p className="text-base md:text-lg font-sans text-ink/60 leading-relaxed">
             Unlock thousands of words by mastering their Latin and Greek roots. 
             One root family can reveal the meaning of dozens of GRE-level terms.
           </p>
@@ -3777,7 +3854,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
               <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em] mb-8">
                 Identify the Definition
               </p>
-              <h2 className="text-6xl font-serif font-bold text-ink mb-4">{currentWord.word}</h2>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-ink mb-4">{currentWord.word}</h2>
               <p className="text-lg font-serif italic text-ink/30 mb-12">{currentWord.pronunciation}</p>
 
               <div className="grid grid-cols-1 gap-4">
@@ -3881,20 +3958,20 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
 
   if (view === 'flashcards') {
     return (
-      <div className="space-y-12 max-w-4xl mx-auto">
-        <div className="flex items-center justify-between border-b border-ink/5 pb-8">
+      <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto px-4 md:px-0">
+        <div className="flex items-center justify-between border-b border-ink/5 pb-6 md:pb-8">
           <button 
             onClick={() => setView('menu')} 
-            className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+            className="group flex items-center gap-2 md:gap-3 text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
           >
-            <X size={14} /> Terminate Session
+            <X size={12} className="md:w-[14px] md:h-[14px]" /> Terminate Session
           </button>
-          <div className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
+          <div className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
             Card {currentIndex + 1} of {GRE_WORDS.length}
           </div>
         </div>
 
-        <div className="h-[500px] relative cursor-pointer" style={{ perspective: '1000px' }} onClick={() => { setIsFlipped(!isFlipped); if (!isFlipped) incrementStat('wordsStudied'); }}>
+        <div className="h-[400px] md:h-[500px] relative cursor-pointer" style={{ perspective: '1000px' }} onClick={() => { setIsFlipped(!isFlipped); if (!isFlipped) incrementStat('wordsStudied'); }}>
           <motion.div 
             className="w-full h-full relative shadow-2xl"
             style={{ transformStyle: 'preserve-3d' }}
@@ -3903,81 +3980,81 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
           >
             {/* Front */}
             <div 
-              className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col items-center justify-center p-16 text-center"
+              className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col items-center justify-center p-8 md:p-16 text-center"
               style={{ backfaceVisibility: 'hidden' }}
             >
-              <p className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em] mb-8">
+              <p className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em] mb-4 md:mb-8">
                 {currentWord.category}
               </p>
-              <div className="relative mb-6">
-                <h2 className="text-8xl font-serif font-bold text-ink tracking-tight px-16">{currentWord.word}</h2>
+              <div className="relative mb-4 md:mb-6 w-full">
+                <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold text-ink tracking-tight px-4 md:px-16 break-words">{currentWord.word}</h2>
                 <button 
                   onClick={(e) => playPronunciation(currentWord.word, e)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 p-3 rounded-full bg-ink/5 text-ink/40 hover:bg-ink/10 hover:text-ink transition-colors"
+                  className="absolute -right-2 md:right-0 top-1/2 -translate-y-1/2 p-2 md:p-3 rounded-full bg-ink/5 text-ink/40 hover:bg-ink/10 hover:text-ink transition-colors"
                   title="Play pronunciation"
                 >
-                  <Volume2 size={24} />
+                  <Volume2 size={18} className="md:w-6 md:h-6" />
                 </button>
               </div>
-              <p className="text-xl font-serif italic text-ink/30">{currentWord.pronunciation}</p>
-              <div className="mt-16 flex items-center gap-2 text-[10px] font-sans font-bold text-ink/10 uppercase tracking-[0.2em]">
-                Click to reveal definition
+              <p className="text-lg md:text-xl font-serif italic text-ink/30">{currentWord.pronunciation}</p>
+              <div className="mt-8 md:mt-16 flex items-center gap-2 text-[8px] md:text-[10px] font-sans font-bold text-ink/10 uppercase tracking-[0.2em]">
+                Tap to reveal definition
               </div>
             </div>
 
             {/* Back */}
             <div 
-              className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col p-16 overflow-y-auto"
+              className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col p-8 md:p-16 overflow-y-auto"
               style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
             >
-              <div className="flex items-center justify-between mb-12">
-                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{currentWord.pos}</span>
+              <div className="flex items-center justify-between mb-8 md:mb-12">
+                <span className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{currentWord.pos}</span>
                 <button 
                   onClick={(e) => { e.stopPropagation(); toggleMastered(currentWord.id); }}
-                  className={`p-3 rounded-sm transition-all ${masteredWords.includes(currentWord.id) ? 'bg-accent-gold text-white shadow-lg' : 'bg-ink/5 text-ink/20 hover:text-ink/40'}`}
+                  className={`p-2 md:p-3 rounded-sm transition-all ${masteredWords.includes(currentWord.id) ? 'bg-accent-gold text-white shadow-lg' : 'bg-ink/5 text-ink/20 hover:text-ink/40'}`}
                 >
-                  <CheckCircle2 size={24} />
+                  <CheckCircle2 size={18} className="md:w-6 md:h-6" />
                 </button>
               </div>
               
-              <div className="space-y-12">
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Definition</h4>
-                  <p className="text-3xl font-serif font-bold text-ink leading-tight">{currentWord.definition}</p>
+              <div className="space-y-8 md:space-y-12">
+                <div className="space-y-2 md:space-y-4">
+                  <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Definition</h4>
+                  <p className="text-xl md:text-3xl font-serif font-bold text-ink leading-tight">{currentWord.definition}</p>
                 </div>
                 
-                <div className="p-8 bg-bg-primary rounded-sm border border-ink/5 border-l-4 border-l-accent-gold">
-                  <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-4">Mnemonic</h4>
-                  <p className="text-lg font-sans text-ink/60 italic leading-relaxed">"{currentWord.mnemonic}"</p>
+                <div className="p-4 md:p-8 bg-bg-primary rounded-sm border border-ink/5 border-l-4 border-l-accent-gold">
+                  <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-2 md:mb-4">Mnemonic</h4>
+                  <p className="text-base md:text-lg font-sans text-ink/60 italic leading-relaxed">"{currentWord.mnemonic}"</p>
                 </div>
 
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Contextual Usage</h4>
-                  <p className="text-lg font-sans text-ink/60 leading-relaxed italic">"{currentWord.example}"</p>
+                <div className="space-y-2 md:space-y-4">
+                  <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Contextual Usage</h4>
+                  <p className="text-base md:text-lg font-sans text-ink/60 leading-relaxed italic">"{currentWord.example}"</p>
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        <div className="flex items-center justify-center gap-12 pt-8">
+        <div className="flex items-center justify-center gap-6 md:gap-12 pt-6 md:pt-8">
           <button 
             onClick={prevWord}
-            className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+            className="group flex items-center gap-2 md:gap-3 text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
           >
-            <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> Previous
+            <ArrowRight size={12} className="rotate-180 group-hover:-translate-x-1 transition-transform md:w-[14px] md:h-[14px]" /> Previous
           </button>
           <button 
             onClick={() => setIsFlipped(!isFlipped)}
-            className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-colors shadow-xl"
+            className="px-6 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-colors shadow-xl"
           >
             Flip Card
           </button>
           <button 
             onClick={nextWord}
-            className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+            className="group flex items-center gap-2 md:gap-3 text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
           >
-            Next <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            Next <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform md:w-[14px] md:h-[14px]" />
           </button>
         </div>
       </div>
@@ -3986,53 +4063,53 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
 
   if (view === 'list') {
     return (
-      <div className="space-y-12">
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-ink/5 pb-12">
-          <div className="space-y-4">
-            <button 
-              onClick={() => setView('menu')} 
-              className="group flex items-center gap-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+    <div className="space-y-8 md:space-y-12">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-ink/5 pb-8 md:pb-12">
+        <div className="space-y-2 md:space-y-4">
+          <button 
+            onClick={() => setView('menu')} 
+            className="group flex items-center gap-2 md:gap-3 text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] hover:text-ink transition-colors"
+          >
+            <ArrowRight size={12} className="rotate-180 group-hover:-translate-x-1 transition-transform md:w-[14px] md:h-[14px]" /> Back to Menu
+          </button>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-ink">Repository.</h1>
+        </div>
+        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+          <div className="relative">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full appearance-none pl-4 pr-10 py-3 md:py-4 bg-white border border-ink/5 rounded-sm text-[8px] md:text-[10px] font-sans font-bold uppercase tracking-widest focus:ring-1 focus:ring-accent-gold/20 transition-all cursor-pointer"
             >
-              <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> Back to Menu
-            </button>
-            <h1 className="text-6xl font-serif font-bold text-ink">Repository.</h1>
+              {['All', 'Action', 'Art', 'Behavior', 'Change', 'Emotion', 'Intellect', 'Logic', 'Morality', 'Quantity', 'Speech'].map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/20 pointer-events-none" size={12} />
           </div>
-          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-            <div className="relative">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-4 bg-white border border-ink/5 rounded-sm text-[10px] font-sans font-bold uppercase tracking-widest focus:ring-1 focus:ring-accent-gold/20 transition-all cursor-pointer"
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/20" size={16} />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (e.target.value === '') onSearchClear?.();
+              }}
+              placeholder="Search the lexicon..."
+              className="w-full pl-12 pr-12 py-3 md:py-4 bg-white border border-ink/5 rounded-sm text-xs md:text-sm font-sans focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/20"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/20 hover:text-ink transition-colors p-1"
               >
-                {['All', 'Action', 'Art', 'Behavior', 'Change', 'Emotion', 'Intellect', 'Logic', 'Morality', 'Quantity', 'Speech'].map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/20 pointer-events-none" size={12} />
-            </div>
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/20" size={16} />
-              <input 
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  if (e.target.value === '') onSearchClear?.();
-                }}
-                placeholder="Search the lexicon..."
-                className="w-full pl-12 pr-12 py-4 bg-white border border-ink/5 rounded-sm text-sm font-sans focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-ink/20"
-              />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/20 hover:text-ink transition-colors p-1"
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
+                <X size={16} />
+              </button>
+            )}
           </div>
-        </header>
+        </div>
+      </header>
 
         <div className="bg-white rounded-sm border border-ink/5 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
@@ -4143,37 +4220,37 @@ const VocabularyNotes = () => {
 
   return (
     <div className="space-y-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      <header className="space-y-8 border-b border-ink/5 pb-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="space-y-4">
-            <h1 className="text-7xl font-serif font-bold text-ink leading-none tracking-tight">
-              Scholarly<br />Lexicon.
-            </h1>
-            <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl italic">
-              A curated compendium of high-frequency GRE terminology, 
-              meticulously annotated for the discerning academic.
-            </p>
-          </div>
-          
-          <div className="flex bg-bg-primary p-1 rounded-sm border border-ink/5">
-            <button 
-              onClick={() => setViewMode('lexicon')}
-              className={`px-6 py-3 text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${viewMode === 'lexicon' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
-            >
-              Lexicon
-            </button>
-            <button 
-              onClick={() => {
-                setViewMode('flashcards');
-                setCurrentFlashcardIndex(0);
-                setIsFlipped(false);
-              }}
-              className={`px-6 py-3 text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${viewMode === 'flashcards' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
-            >
-              Flashcards
-            </button>
-          </div>
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-ink/5 pb-8 md:pb-12 px-4 md:px-0">
+        <div className="space-y-2 md:space-y-4">
+          <span className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Scholarly Lexicon</span>
+          <h1 className="text-4xl md:text-7xl font-serif font-bold text-ink leading-none tracking-tight">
+            Scholarly<br />Lexicon.
+          </h1>
+          <p className="text-base md:text-xl font-sans text-ink/60 leading-relaxed max-w-2xl italic">
+            A curated compendium of high-frequency GRE terminology, 
+            meticulously annotated for the discerning academic.
+          </p>
         </div>
+        
+        <div className="flex bg-bg-primary p-0.5 md:p-1 rounded-sm border border-ink/5 w-fit">
+          <button 
+            onClick={() => setViewMode('lexicon')}
+            className={`px-4 md:px-6 py-2 md:py-3 text-[8px] md:text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${viewMode === 'lexicon' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
+          >
+            Lexicon
+          </button>
+          <button 
+            onClick={() => {
+              setViewMode('flashcards');
+              setCurrentFlashcardIndex(0);
+              setIsFlipped(false);
+            }}
+            className={`px-4 md:px-6 py-2 md:py-3 text-[8px] md:text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${viewMode === 'flashcards' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
+          >
+            Flashcards
+          </button>
+        </div>
+      </header>
 
         <div className="flex flex-col md:flex-row gap-6 pt-4">
           <div className="relative flex-1">
@@ -4205,7 +4282,6 @@ const VocabularyNotes = () => {
             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-ink/20 pointer-events-none" size={14} />
           </div>
         </div>
-      </header>
 
       {viewMode === 'lexicon' ? (
         <div className="space-y-24">
@@ -4497,9 +4573,9 @@ const DayCard = ({
       onClick={() => setExpanded(e => !e)}
     >
       {/* ── CARD HEADER ── */}
-      <div className="flex items-start gap-3 p-4">
+      <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4">
         {/* Icon */}
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0 border ${cfg.bg} ${cfg.border}`}>
+        <div className={`w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center text-lg md:text-xl flex-shrink-0 border ${cfg.bg} ${cfg.border}`}>
           {day.icon}
         </div>
 
@@ -4642,14 +4718,14 @@ function WorldDays() {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col gap-5 pb-8">
+    <div className="flex flex-col gap-3 md:gap-5 pb-8">
 
       {/* ── HEADER ── */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-ink dark:text-ink-dark font-serif flex items-center gap-2">
+        <h1 className="text-xl md:text-2xl font-bold text-ink dark:text-ink-dark font-serif flex items-center gap-2">
           🌍 World Days
         </h1>
-        <p className="text-sm text-ink/50 dark:text-ink-dark/50">
+        <p className="text-xs md:text-sm text-ink/50 dark:text-ink-dark/50">
           {WORLD_DAYS.length} observances · Each linked to a GRE vocabulary word
         </p>
       </div>
@@ -4954,7 +5030,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
   const masteredWords = getStorage(STORAGE_KEYS.masteredWords, []);
   const quizHistory = getStorage(STORAGE_KEYS.quizHistory, []);
   const totalSeconds = getStorage(STORAGE_KEYS.studyTime, 0);
-  const { level, title, progress } = getLevelInfo(xp);
+  const { level, title, progress, nextXP } = getLevelInfo(xp);
 
   const [timeLeft, setTimeLeft] = useState('');
   const dailyDone = hasDoneToday();
@@ -5049,18 +5125,18 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
   ];
   
   return (
-    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="max-w-3xl">
-        <h1 className="text-7xl md:text-8xl font-serif font-bold text-ink leading-[0.9] mb-8">
+    <div className="space-y-8 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <header className="max-w-4xl">
+        <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-bold text-ink leading-[0.85] mb-8 md:mb-12 tracking-tighter">
           Academic<br />Attainment.
         </h1>
-        <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
+        <p className="text-lg md:text-2xl font-sans text-ink/60 leading-relaxed max-w-2xl font-light">
           A comprehensive audit of your cognitive progression across the Digital Lexicon. 
           Your trajectory indicates a significant mastery of high-frequency verbal patterns.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-y border-ink/5 py-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-16 border-y border-ink/5 py-12 md:py-20">
         <StatCard 
           icon={BookMarked} 
           value={masteredWords.length.toLocaleString()} 
@@ -5079,40 +5155,62 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-        <div className="lg:col-span-2 space-y-16">
-          <section className="space-y-8">
-            <div className="flex items-end justify-between border-b border-ink/5 pb-4">
-              <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em]">Experience Trajectory</h2>
-              <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest">{title}</span>
-            </div>
-            <div className="space-y-6">
-              <div className="flex items-end justify-between">
-                <span className="text-4xl font-serif font-bold text-ink">{xp} <span className="text-lg text-ink/20 italic">XP</span></span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 md:gap-20">
+        <div className="lg:col-span-2 space-y-12 md:space-y-20">
+          <section className="space-y-8 md:space-y-12 bg-white p-6 md:p-12 rounded-sm border border-ink/5 shadow-sm">
+            <div className="flex items-end justify-between border-b border-ink/5 pb-6">
+              <div className="space-y-1">
+                <h2 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.4em]">Experience Trajectory</h2>
+                <p className="text-xs font-sans font-bold text-accent-gold uppercase tracking-widest">{title}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-sans font-bold text-ink/20 uppercase tracking-widest block mb-1">Current Standing</span>
                 <span className="text-xs font-sans font-bold text-ink/40 uppercase tracking-widest">Level {level}</span>
               </div>
-              <div className="w-full h-1 bg-ink/5 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-accent-gold"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 1.5, ease: "circOut" }}
-                />
+            </div>
+            <div className="space-y-6 md:space-y-10">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div className="relative">
+                  <span className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-ink tracking-tighter">
+                    {xp.toLocaleString()}
+                  </span>
+                  <span className="absolute -top-2 -right-8 text-sm md:text-lg text-accent-gold font-serif italic opacity-50">XP</span>
+                </div>
+                <div className="flex items-center gap-3 text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest">
+                  <span className="w-8 h-[1px] bg-ink/10" />
+                  {nextXP - xp} XP TO LEVEL {level + 1}
+                </div>
+              </div>
+              <div className="relative pt-4">
+                <div className="w-full h-[2px] bg-ink/5 rounded-full overflow-hidden">
+                  <motion.div 
+                    className="h-full bg-accent-gold"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </div>
+                {/* Progress Markers */}
+                <div className="absolute top-0 left-0 w-full flex justify-between px-1">
+                  {[0, 25, 50, 75, 100].map(p => (
+                    <div key={p} className={`w-[1px] h-2 ${progress >= p ? 'bg-accent-gold' : 'bg-ink/10'} transition-colors duration-1000`} />
+                  ))}
+                </div>
               </div>
             </div>
           </section>
 
-          <section className="p-12 bg-bg-primary rounded-sm border border-ink/5 relative overflow-hidden group cursor-pointer" onClick={() => onNavigate('daily-challenge')}>
+          <section className="p-6 md:p-12 bg-bg-primary rounded-sm border border-ink/5 relative overflow-hidden group cursor-pointer" onClick={() => onNavigate('daily-challenge')}>
             <div className="absolute top-0 left-0 w-1 h-full bg-accent-gold" />
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-              <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
+              <div className="space-y-4 md:space-y-6">
                 <div className="space-y-2">
                   <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Daily Trial</span>
-                  <h3 className="text-4xl font-serif font-bold text-ink">
+                  <h3 className="text-3xl md:text-4xl font-serif font-bold text-ink">
                     {dailyDone ? '✓ Completed.' : 'Today\'s Challenge.'}
                   </h3>
                 </div>
-                <div className="flex items-center gap-8">
+                <div className="flex flex-wrap items-center gap-6 md:gap-8">
                   <div className="space-y-1">
                     <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Resets In</span>
                     <p className="text-sm font-mono font-bold text-ink">{timeLeft}</p>
@@ -5139,7 +5237,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
             </div>
           </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
             <StudySectionCard 
               icon={BookOpen}
               title="Vocabulary"
@@ -5157,13 +5255,13 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
           </div>
         </div>
 
-        <aside className="space-y-12">
+        <aside className="space-y-8 md:space-y-12">
           <WorldDaysDashboardCard onNavigate={() => onNavigate('worlddays')} />
           <RecentAchievements />
 
-          <section className="space-y-8">
+          <section className="space-y-6 md:space-y-8">
             <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Academic Accolades</h2>
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {ACCOLADES.map(accolade => (
                 <AccoladeItem 
                   key={accolade.id}
@@ -5176,9 +5274,9 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
             </div>
           </section>
 
-          <section className="space-y-8">
+          <section className="space-y-6 md:space-y-8">
             <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Upcoming Goals</h2>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {goals.map(goal => (
                 <GoalItem 
                   key={goal.text}
@@ -5242,28 +5340,28 @@ const Achievements = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   ];
 
   return (
-    <div className="space-y-12">
-      <div className="space-y-4">
-        <h2 className="text-5xl font-serif font-bold text-ink tracking-tight">Achievements</h2>
-        <p className="text-lg font-sans text-ink/60 max-w-2xl">Your journey to GRE mastery, documented in milestones.</p>
+    <div className="space-y-8 md:space-y-12">
+      <div className="space-y-2 md:space-y-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink tracking-tight">Achievements</h2>
+        <p className="text-base md:text-lg font-sans text-ink/60 max-w-2xl">Your journey to GRE mastery, documented in milestones.</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-12">
+      <div className="grid grid-cols-1 gap-8 md:gap-12">
         {categories.map(cat => {
           const catAchievements = ACHIEVEMENTS.filter(cat.filter);
           const unlockedCount = catAchievements.filter(a => unlockedIds.includes(a.id)).length;
           const progress = (unlockedCount / catAchievements.length) * 100;
 
           return (
-            <div key={cat.name} className="space-y-6">
-              <div className="flex items-end justify-between border-b border-ink/5 pb-4">
+            <div key={cat.name} className="space-y-4 md:space-y-6">
+              <div className="flex items-end justify-between border-b border-ink/5 pb-3 md:pb-4">
                 <div className="space-y-1">
-                  <h3 className="text-2xl font-serif font-bold text-ink">{cat.name}</h3>
-                  <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">
+                  <h3 className="text-xl md:text-2xl font-serif font-bold text-ink">{cat.name}</h3>
+                  <p className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">
                     {unlockedCount} of {catAchievements.length} Unlocked
                   </p>
                 </div>
-                <div className="w-48 h-1 bg-bg-primary rounded-full overflow-hidden">
+                <div className="w-32 md:w-48 h-1 bg-bg-primary rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
@@ -5272,37 +5370,37 @@ const Achievements = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                 {catAchievements.map(achievement => {
                   const isUnlocked = unlockedIds.includes(achievement.id);
                   return (
                     <div 
                       key={achievement.id}
                       className={`
-                        p-6 rounded-sm border transition-all duration-500
+                        p-4 md:p-6 rounded-sm border transition-all duration-500
                         ${isUnlocked 
                           ? 'bg-white border-ink/10 shadow-xl shadow-ink/5' 
                           : 'bg-bg-primary/50 border-ink/5 opacity-60 grayscale'}
                       `}
                     >
-                      <div className="flex flex-col items-center text-center space-y-4">
+                      <div className="flex flex-col items-center text-center space-y-3 md:space-y-4">
                         <div className={`
-                          w-16 h-16 rounded-full flex items-center justify-center text-3xl
+                          w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-2xl md:text-3xl
                           ${isUnlocked ? 'bg-accent-gold/10' : 'bg-ink/5'}
                         `}>
                           {achievement.icon}
                         </div>
                         <div className="space-y-1">
-                          <h4 className="font-serif font-bold text-ink">{achievement.title}</h4>
-                          <p className="text-xs font-sans text-ink/60 leading-relaxed">{achievement.description}</p>
+                          <h4 className="text-sm md:text-base font-serif font-bold text-ink">{achievement.title}</h4>
+                          <p className="text-[10px] md:text-xs font-sans text-ink/60 leading-relaxed">{achievement.description}</p>
                         </div>
                         {isUnlocked ? (
-                          <div className="flex items-center gap-1 text-[8px] font-sans font-bold text-teal-600 uppercase tracking-widest">
-                            <CheckCircle2 size={10} /> Unlocked
+                          <div className="flex items-center gap-1 text-[7px] md:text-[8px] font-sans font-bold text-teal-600 uppercase tracking-widest">
+                            <CheckCircle2 size={8} className="md:w-[10px] md:h-[10px]" /> Unlocked
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1 text-[8px] font-sans font-bold text-ink/20 uppercase tracking-widest">
-                            <Clock size={10} /> Locked
+                          <div className="flex items-center gap-1 text-[7px] md:text-[8px] font-sans font-bold text-ink/20 uppercase tracking-widest">
+                            <Clock size={8} className="md:w-[10px] md:h-[10px]" /> Locked
                           </div>
                         )}
                       </div>
@@ -5368,26 +5466,26 @@ const Leaderboard = () => {
   ].sort((a, b) => b.xp - a.xp);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 md:space-y-12">
       <div className="space-y-4">
-        <h2 className="text-5xl font-serif font-bold text-ink tracking-tight">Global Rankings</h2>
-        <p className="text-lg font-sans text-ink/60 max-w-2xl">See how your academic trajectory compares with the global scholar community.</p>
+        <h2 className="text-3xl md:text-5xl font-serif font-bold text-ink tracking-tight">Global Rankings</h2>
+        <p className="text-sm md:text-lg font-sans text-ink/60 max-w-2xl">See how your academic trajectory compares with the global scholar community.</p>
       </div>
 
       <div className="bg-white rounded-sm border border-ink/5 shadow-xl shadow-ink/5 overflow-hidden">
-        <div className="grid grid-cols-12 p-6 border-b border-ink/5 bg-bg-primary/50">
-          <div className="col-span-1 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Rank</div>
-          <div className="col-span-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Scholar</div>
-          <div className="col-span-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Title</div>
-          <div className="col-span-2 text-right text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Total XP</div>
+        <div className="grid grid-cols-12 p-4 md:p-6 border-b border-ink/5 bg-bg-primary/50">
+          <div className="col-span-2 md:col-span-1 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Rank</div>
+          <div className="col-span-10 md:col-span-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Scholar</div>
+          <div className="hidden md:block md:col-span-3 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Title</div>
+          <div className="hidden md:block md:col-span-2 text-right text-[10px] font-sans font-bold text-ink/30 uppercase tracking-widest">Total XP</div>
         </div>
         <div className="divide-y divide-ink/5">
           {allLeaders.map((leader, idx) => (
             <div 
               key={leader.name} 
-              className={`grid grid-cols-12 p-8 items-center transition-colors ${leader.isUser ? 'bg-accent-gold/5' : 'hover:bg-bg-primary/30'}`}
+              className={`grid grid-cols-12 p-4 md:p-6 lg:p-8 items-center transition-colors ${leader.isUser ? 'bg-accent-gold/5' : 'hover:bg-bg-primary/30'}`}
             >
-              <div className="col-span-1">
+              <div className="col-span-2 md:col-span-1">
                 <span className={`
                   w-8 h-8 rounded-full flex items-center justify-center text-xs font-sans font-bold
                   ${idx === 0 ? 'bg-accent-gold text-white' : idx === 1 ? 'bg-ink/20 text-ink' : idx === 2 ? 'bg-ink/10 text-ink' : 'text-ink/30'}
@@ -5395,22 +5493,25 @@ const Leaderboard = () => {
                   {idx + 1}
                 </span>
               </div>
-              <div className="col-span-6 flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${leader.isUser ? 'bg-ink border-ink' : 'bg-bg-primary border-ink/5'}`}>
+              <div className="col-span-10 md:col-span-6 flex items-center gap-4">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center border shrink-0 ${leader.isUser ? 'bg-ink border-ink' : 'bg-bg-primary border-ink/5'}`}>
                   <span className={`text-[10px] font-sans font-bold ${leader.isUser ? 'text-accent-gold' : 'text-ink/30'}`}>
                     {leader.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                   </span>
                 </div>
-                <div className="space-y-0.5">
-                  <div className={`text-lg font-serif font-bold ${leader.isUser ? 'text-ink' : 'text-ink/80'}`}>
-                    {leader.name} {leader.isUser && <span className="text-[10px] font-sans font-bold text-accent-gold uppercase ml-2 tracking-widest">(You)</span>}
+                <div className="space-y-0.5 min-w-0">
+                  <div className={`text-base md:text-lg font-serif font-bold truncate ${leader.isUser ? 'text-ink' : 'text-ink/80'}`}>
+                    {leader.name} {leader.isUser && <span className="text-[10px] font-sans font-bold text-accent-gold uppercase ml-2 tracking-widest inline-block">(You)</span>}
+                  </div>
+                  <div className="md:hidden">
+                    <span className="text-[8px] font-sans font-bold text-ink/40 uppercase tracking-widest">{leader.title} • {leader.xp.toLocaleString()} XP</span>
                   </div>
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="hidden md:block md:col-span-3">
                 <span className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest">{leader.title}</span>
               </div>
-              <div className="col-span-2 text-right">
+              <div className="hidden md:block md:col-span-2 text-right">
                 <span className="text-xl font-serif font-bold text-ink">{leader.xp.toLocaleString()}</span>
               </div>
             </div>
@@ -5541,37 +5642,47 @@ const App = () => {
           fixed md:sticky top-0 h-screen inset-y-0 left-0 z-50
           bg-white border-r border-ink/5 transition-all duration-500 ease-in-out overflow-hidden
           ${isMobile 
-            ? (isSidebarOpen ? 'w-72 translate-x-0' : 'w-72 -translate-x-full')
-            : (isSidebarOpen ? 'w-72' : 'w-20')
+            ? (isSidebarOpen ? 'w-full sm:w-80 translate-x-0' : 'w-full sm:w-80 -translate-x-full')
+            : (isSidebarOpen ? 'w-80' : 'w-20')
           }
         `}
       >
-        <div className={`h-full flex flex-col transition-all duration-500 ${isSidebarOpen ? 'p-6' : 'p-5'}`}>
-          <div className={`flex items-center transition-all duration-500 mb-16 ${isSidebarOpen ? 'gap-3' : 'gap-0 justify-center'}`}>
-            <motion.div 
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-              className="w-10 h-10 bg-accent-gold rounded-sm flex items-center justify-center text-white shrink-0 shadow-lg shadow-accent-gold/20 cursor-pointer"
-              onClick={() => !isMobile && setIsSidebarOpen(!isSidebarOpen)}
-            >
-              <Brain size={20} />
-            </motion.div>
-            <AnimatePresence mode="wait">
-              {isSidebarOpen && (
-                <motion.span 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-2xl font-serif font-bold text-ink whitespace-nowrap"
-                >
-                  GREnius
-                </motion.span>
-              )}
-            </AnimatePresence>
+        <div className={`h-full flex flex-col transition-all duration-500 ${isSidebarOpen ? 'p-8' : 'p-5'}`}>
+          <div className={`flex items-center justify-between transition-all duration-500 mb-16 ${isSidebarOpen ? 'gap-4' : 'gap-0 justify-center'}`}>
+            <div className="flex items-center gap-4">
+              <motion.div 
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+                className="w-12 h-12 bg-accent-gold rounded-sm flex items-center justify-center text-white shrink-0 shadow-xl shadow-accent-gold/20 cursor-pointer"
+                onClick={() => !isMobile && setIsSidebarOpen(!isSidebarOpen)}
+              >
+                <Brain size={24} />
+              </motion.div>
+              <AnimatePresence mode="wait">
+                {isSidebarOpen && (
+                  <motion.span 
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-3xl font-serif font-bold text-ink tracking-tighter whitespace-nowrap"
+                  >
+                    GREnius
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
+            {isMobile && isSidebarOpen && (
+              <button 
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-3 text-ink/40 hover:text-ink bg-ink/5 rounded-full transition-colors"
+              >
+                <X size={24} />
+              </button>
+            )}
           </div>
 
-          <nav className="flex-1 space-y-4">
+          <nav className="flex-1 space-y-2">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -5581,17 +5692,17 @@ const App = () => {
                   const soundEnabled = getStorage(STORAGE_KEYS.settings, { soundEnabled: true }).soundEnabled;
                   playSound('flip', soundEnabled);
                 }}
-                className={`w-full flex items-center transition-all relative
-                  ${isSidebarOpen ? 'gap-4 p-3' : 'gap-0 p-3 justify-center'}
+                className={`w-full flex items-center transition-all relative group
+                  ${isSidebarOpen ? 'gap-4 p-4' : 'gap-0 p-4 justify-center'}
                   ${activeSection === item.id 
-                    ? 'text-accent-gold border-l-2 border-accent-gold bg-accent-gold/5' 
-                    : 'text-ink/40 hover:text-ink border-l-2 border-transparent'}
-                  ${isSidebarOpen && activeSection === item.id ? 'pl-[calc(0.75rem-2px)]' : ''}`}
+                    ? 'text-accent-gold border-l-4 border-accent-gold bg-accent-gold/5' 
+                    : 'text-ink/40 hover:text-ink border-l-4 border-transparent hover:bg-ink/5'}
+                  ${isSidebarOpen && activeSection === item.id ? 'pl-[calc(1rem-4px)]' : ''}`}
               >
                 <div className="shrink-0 relative">
-                  <item.icon size={20} strokeWidth={activeSection === item.id ? 2.5 : 2} />
+                  <item.icon size={22} strokeWidth={activeSection === item.id ? 2.5 : 2} />
                   {item.badge !== undefined && item.badge > 0 && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-gold text-white text-[8px] font-sans font-bold flex items-center justify-center rounded-full border border-white">
+                    <div className="absolute -top-2 -right-2 w-5 h-5 bg-accent-gold text-white text-[9px] font-sans font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm">
                       {item.badge}
                     </div>
                   )}
@@ -5603,7 +5714,7 @@ const App = () => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -5 }}
                       transition={{ duration: 0.2 }}
-                      className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] whitespace-nowrap"
+                      className="text-[11px] font-sans font-bold uppercase tracking-[0.25em] whitespace-nowrap"
                     >
                       {item.label}
                     </motion.span>
@@ -5638,20 +5749,20 @@ const App = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
         {/* Top Header */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-ink/5 flex items-center justify-between px-8 sticky top-0 z-40">
-          <div className="flex items-center gap-8">
+        <header className="h-16 md:h-24 bg-white/90 backdrop-blur-xl border-b border-ink/5 flex items-center justify-between px-4 md:px-12 sticky top-0 z-40">
+          <div className="flex items-center gap-3 md:gap-8">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="text-ink/40 hover:text-ink transition-colors"
+              className="text-ink/60 hover:text-ink transition-all p-2.5 bg-ink/5 rounded-full md:bg-transparent"
             >
-              <Menu size={20} />
+              <Menu size={isMobile ? 24 : 20} />
             </button>
-            <span className="text-2xl font-serif italic text-ink hidden sm:block">GREnius.</span>
+            <span className="text-lg md:text-2xl font-serif italic text-ink tracking-tight">GREnius.</span>
           </div>
 
-          <div className="flex-1 max-w-xl px-8 hidden md:block">
-            <div className="relative">
-              <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-ink/20" size={16} />
+          <div className="flex-1 max-w-xl px-8 hidden lg:block">
+            <div className="relative group">
+              <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-ink/20 group-focus-within:text-accent-gold transition-colors" size={18} />
               <input 
                 type="text" 
                 value={globalSearch}
@@ -5665,40 +5776,40 @@ const App = () => {
                   if (e.key === 'Escape') setGlobalSearch('');
                 }}
                 placeholder="SEARCH LEXICON..."
-                className="w-full pl-8 pr-4 py-2 bg-transparent border-none text-[10px] font-sans font-bold uppercase tracking-[0.2em] focus:ring-0 placeholder:text-ink/10 transition-all"
+                className="w-full pl-10 pr-4 py-3 bg-transparent border-none text-[11px] font-sans font-bold uppercase tracking-[0.3em] focus:ring-0 placeholder:text-ink/10 transition-all"
               />
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
-            <div className="hidden sm:flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-8">
+            <div className="hidden sm:flex items-center gap-6 md:gap-10">
               <div className="flex flex-col items-end">
-                <span className="text-[8px] font-sans font-bold text-ink/30 uppercase tracking-widest">Streak</span>
-                <span className="text-xs font-serif font-bold text-accent-gold">{streak.toString().padStart(2, '0')} Days</span>
+                <span className="text-[9px] font-sans font-bold text-ink/30 uppercase tracking-widest">Streak</span>
+                <span className="text-sm font-serif font-bold text-accent-gold">{streak.toString().padStart(2, '0')}</span>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-[8px] font-sans font-bold text-ink/30 uppercase tracking-widest">Experience</span>
-                <span className="text-xs font-serif font-bold text-ink">{xp.toLocaleString()} XP</span>
+                <span className="text-[9px] font-sans font-bold text-ink/30 uppercase tracking-widest">XP</span>
+                <span className="text-sm font-serif font-bold text-ink">{xp.toLocaleString()}</span>
               </div>
             </div>
             <button 
               onClick={() => setActiveSection('settings')}
-              className="w-10 h-10 rounded-full border border-ink/5 flex items-center justify-center text-ink/40 hover:text-ink hover:border-ink/20 transition-all"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-ink/5 flex items-center justify-center text-ink/40 hover:text-ink hover:border-ink/20 transition-all bg-bg-primary/50"
             >
-              <SettingsIcon size={18} />
+              <SettingsIcon size={18} className="md:w-5 md:h-5" />
             </button>
           </div>
         </header>
 
         {/* Section Content */}
-        <div className="flex-1 p-8 md:p-16 max-w-7xl mx-auto w-full">
+        <div className="flex-1 p-6 sm:p-12 md:p-20 lg:p-24 max-w-7xl mx-auto w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: "circOut" }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               {renderSection()}
             </motion.div>

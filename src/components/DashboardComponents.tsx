@@ -14,7 +14,7 @@ export const StatCard = ({ icon: Icon, value, label, subtitle }: StatCardProps) 
     <div className="flex items-center gap-3 text-ink/40 mb-4">
       <Icon size={20} />
     </div>
-    <p className="text-5xl font-serif font-bold text-ink">{value}</p>
+    <p className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">{value}</p>
     <p className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em]">{label}</p>
     {subtitle && <p className="text-[8px] font-sans text-ink/20 italic mt-1">{subtitle}</p>}
   </div>
@@ -82,7 +82,7 @@ export const StudySectionCard = ({ icon: Icon, title, description, actionText, o
       <Icon size={24} />
     </div>
     <div className="space-y-2">
-      <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">{title}</h3>
+      <h3 className="text-2xl sm:text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">{title}</h3>
       <p className="text-sm font-sans text-ink/60 leading-relaxed">{description}</p>
     </div>
     <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">

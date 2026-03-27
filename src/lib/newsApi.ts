@@ -1,16 +1,5 @@
 import { NewsCard, NewsCategory } from '../types';
 
-// Helper to safely access environment variables in Vite
-const getEnv = (key: string, defaultValue: string): string => {
-  // @ts-ignore
-  const env = import.meta.env;
-  return env[`VITE_${key}`] || env[`NEXT_PUBLIC_${key}`] || defaultValue;
-};
-
-const GNEWS_KEY = getEnv('GNEWS_API_KEY', '762c3df44daeb44814a314cc2d2f6092');
-const NEWSDATA_KEY = getEnv('NEWSDATA_API_KEY', 'pub_498b18ed0ba44a79a9808554a9b78f81');
-const THENEWSAPI_KEY = getEnv('THENEWSAPI_KEY', '8rJEVScDpCbPop4kdpa5BbZOEqIzToVWAejRBBfF');
-
 const getFavicon = (url: string) => {
   try {
     const domain = new URL(url).hostname;
@@ -95,10 +84,12 @@ export async function fetchNews(category: NewsCategory): Promise<NewsCard[]> {
         }));
       }
     } else {
-      console.warn(`News proxy returned status ${res.status}: ${res.statusText}`);
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error || `News proxy returned status ${res.status}`);
     }
   } catch (e) {
-    console.error('News proxy failed:', e);
+    console.error('News fetch failed:', e);
+    throw e;
   }
 
   return [];

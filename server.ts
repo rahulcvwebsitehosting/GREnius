@@ -6,9 +6,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const GNEWS_KEY = process.env.GNEWS_API_KEY || '762c3df44daeb44814a314cc2d2f6092';
-const NEWSDATA_KEY = process.env.NEWSDATA_API_KEY || 'pub_498b18ed0ba44a79a9808554a9b78f81';
-const THENEWSAPI_KEY = process.env.THENEWSAPI_KEY || '8rJEVScDpCbPop4kdpa5BbZOEqIzToVWAejRBBfF';
+const GNEWS_KEY = process.env.VITE_GNEWS_API_KEY || process.env.GNEWS_API_KEY || '762c3df44daeb44814a314cc2d2f6092';
+const NEWSDATA_KEY = process.env.VITE_NEWSDATA_API_KEY || process.env.NEWSDATA_API_KEY || 'pub_498b18ed0ba44a79a9808554a9b78f81';
+const THENEWSAPI_KEY = process.env.VITE_THENEWSAPI_KEY || process.env.THENEWSAPI_KEY || '8rJEVScDpCbPop4kdpa5BbZOEqIzToVWAejRBBfF';
 
 async function startServer() {
   const app = express();
@@ -26,41 +26,58 @@ async function startServer() {
 
     // 1. Try GNews
     try {
+      console.log(`Server: Trying GNews...`);
       const gnewsRes = await fetch(
         `https://gnews.io/api/v4/top-headlines?category=${gnewsCategory}&country=${gnewsCountry}&lang=en&apikey=${GNEWS_KEY}`
       );
       if (gnewsRes.ok) {
         const data = await gnewsRes.json();
+        console.log(`Server: GNews success, found ${data.articles?.length || 0} articles`);
         return res.json({ source: 'gnews', articles: data.articles });
+      } else {
+        console.warn(`Server: GNews failed with status ${gnewsRes.status}`);
       }
     } catch (e) {
-      console.error('Server: GNews failed', e);
+      console.error('Server: GNews exception', e);
     }
 
     // 2. Fallback to NewsData.io
     try {
+      console.log(`Server: Trying NewsData.io...`);
+      const newsDataCategory = gnewsCategory === 'general' ? 'top' : gnewsCategory;
       const newsDataRes = await fetch(
-        `https://newsdata.io/api/1/news?apikey=${NEWSDATA_KEY}&category=${gnewsCategory}&country=${gnewsCountry}&language=en`
+        `https://newsdata.io/api/1/news?apikey=${NEWSDATA_KEY}&category=${newsDataCategory}&country=${gnewsCountry}&language=en`
       );
       if (newsDataRes.ok) {
         const data = await newsDataRes.json();
-        return res.json({ source: 'newsdata', results: data.results });
+        if (data.results && data.results.length > 0) {
+          console.log(`Server: NewsData success, found ${data.results.length} articles`);
+          return res.json({ source: 'newsdata', results: data.results });
+        } else {
+          console.warn(`Server: NewsData returned no results`);
+        }
+      } else {
+        console.warn(`Server: NewsData failed with status ${newsDataRes.status}`);
       }
     } catch (e) {
-      console.error('Server: NewsData failed', e);
+      console.error('Server: NewsData exception', e);
     }
 
     // 3. Fallback to TheNewsAPI
     try {
+      console.log(`Server: Trying TheNewsAPI...`);
       const theNewsRes = await fetch(
         `https://api.thenewsapi.com/v1/news/top?api_token=${THENEWSAPI_KEY}&categories=${gnewsCategory}&locale=${gnewsCountry}&language=en`
       );
       if (theNewsRes.ok) {
         const data = await theNewsRes.json();
+        console.log(`Server: TheNewsAPI success, found ${data.data?.length || 0} articles`);
         return res.json({ source: 'thenewsapi', data: data.data });
+      } else {
+        console.warn(`Server: TheNewsAPI failed with status ${theNewsRes.status}`);
       }
     } catch (e) {
-      console.error('Server: TheNewsAPI failed', e);
+      console.error('Server: TheNewsAPI exception', e);
     }
 
     res.status(500).json({ error: 'All news sources failed' });

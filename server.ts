@@ -17,6 +17,14 @@ async function startServer() {
   app.use(express.json());
 
   // API Proxy for News
+  app.get('/api/news/health', (req, res) => {
+    res.json({ status: 'ok', keys_configured: {
+      gnews: !!GNEWS_KEY,
+      newsdata: !!NEWSDATA_KEY,
+      thenewsapi: !!THENEWSAPI_KEY
+    }});
+  });
+
   app.get('/api/news', async (req, res) => {
     const { category, country } = req.query;
     const gnewsCategory = category as string;

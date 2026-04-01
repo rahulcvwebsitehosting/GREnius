@@ -48,7 +48,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { NewsContainer } from './components/news/NewsContainer';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
-import { GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
+import { ALL_GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
 import { QuizResult, UserSettings, Word, Achievement, UserStats, WorldDay } from './types';
 import { 
   StatCard, 
@@ -368,8 +368,8 @@ const Progress = () => {
             <h2 className="text-xs font-sans font-bold text-ink uppercase tracking-[0.3em] border-b border-ink/5 pb-4">Category Proficiency</h2>
             <div className="space-y-6">
               {categories.map(cat => {
-                const totalInCategory = GRE_WORDS.filter(w => w.category === cat).length;
-                const masteredInCategory = GRE_WORDS.filter(w => w.category === cat && masteredWords.includes(w.id)).length;
+                const totalInCategory = ALL_GRE_WORDS.filter(w => w.category === cat).length;
+                const masteredInCategory = ALL_GRE_WORDS.filter(w => w.category === cat && masteredWords.includes(w.id)).length;
                 const pct = totalInCategory > 0 ? Math.round((masteredInCategory / totalInCategory) * 100) : 0;
                 
                 return (
@@ -1414,7 +1414,7 @@ function scrambleWord(word: string): string {
 }
 
 function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
-  const wordPool = GRE_WORDS.filter(w => w.word.length >= 5 && w.word.length <= 10 && !w.word.includes(' '));
+  const wordPool = ALL_GRE_WORDS.filter(w => w.word.length >= 5 && w.word.length <= 10 && !w.word.includes(' '));
   const [currentWord, setCurrentWord] = useState(() => wordPool[Math.floor(Math.random() * wordPool.length)]);
   const [scrambled, setScrambled] = useState(() => scrambleWord(currentWord.word));
   const [input, setInput] = useState('');
@@ -1611,7 +1611,7 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
   const [gameState, setGameState] = useState<'idle'|'playing'|'over'>('idle');
   const [timeLeft, setTimeLeft] = useState(TOTAL_TIME);
   const [score, setScore] = useState(0);
-  const [current, setCurrent] = useState<typeof GRE_WORDS[0] | null>(null);
+  const [current, setCurrent] = useState<Word | null>(null);
   const [choices, setChoices] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<'correct'|'wrong'|null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string|null>(null);
@@ -1621,8 +1621,8 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const pickQuestion = () => {
-    const word = GRE_WORDS[Math.floor(Math.random() * GRE_WORDS.length)];
-    const wrong = GRE_WORDS
+    const word = ALL_GRE_WORDS[Math.floor(Math.random() * ALL_GRE_WORDS.length)];
+    const wrong = ALL_GRE_WORDS
       .filter(w => w.id !== word.id)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
@@ -1739,12 +1739,17 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
         <div className="text-center text-sm font-bold text-orange-500 animate-pulse">🔥 {combo}x Combo!</div>
       )}
 
-      {/* Definition card */}
+          {/* Definition card */}
       {current && (
-        <div className="bg-bg-primary rounded-2xl p-5 border border-ink/5 shadow-lg min-h-[100px] flex flex-col items-center justify-center text-center gap-2">
+        <div className="bg-white rounded-2xl p-6 border border-ink/5 shadow-lg min-h-[120px] flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-accent-gold/20" />
           <div className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{current.pos} · {current.category}</div>
-          <p className="text-ink font-serif text-lg font-bold leading-snug">{current.definition}</p>
-          {current.example && <p className="text-xs text-ink/50 italic">"{current.example}"</p>}
+          <p className="text-ink font-serif text-xl font-bold leading-tight">{current.definition}</p>
+          {current.example && (
+            <div className="mt-2 p-3 bg-bg-primary rounded-sm border border-ink/5 italic">
+              <p className="text-xs text-ink/60 leading-relaxed">"{current.example}"</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -1829,126 +1834,498 @@ const SYNONYM_PAIRS: { word: string; correct: string; decoy: string; explanation
 ];
 
 function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
-  const [shuffled] = useState(() => {
-    // Implement difficulty escalation: shuffle within blocks of 5
-    const result = [];
-    for (let i = 0; i < SYNONYM_PAIRS.length; i += 5) {
-      const block = SYNONYM_PAIRS.slice(i, i + 5).sort(() => Math.random() - 0.5);
-      result.push(...block);
-    }
-    return result;
-  });
-  const [index, setIndex] = useState(0);
+  const [gameState, setGameState] = useState<'start' | 'playing' | 'end'>('start');
+  const [currentWord, setCurrentWord] = useState<Word | null>(null);
+  const [options, setOptions] = useState<string[]>([]);
   const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [feedback, setFeedback] = useState<'correct'|'wrong'|null>(null);
-  const [selected, setSelected] = useState<string|null>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const current = shuffled[index];
+  // Filter words that have synonyms
+  const wordsWithSynonyms = ALL_GRE_WORDS.filter(w => w.synonyms && w.synonyms.length > 0);
 
-  useEffect(() => {
-    const pair = shuffled[index];
-    if (!pair) return;
-    const opts = Math.random() > 0.5
-      ? [pair.correct, pair.decoy]
-      : [pair.decoy, pair.correct];
-    setShuffledOptions(opts);
-  }, [index, shuffled]);
-
-  const handleAnswer = (answer: string) => {
-    if (feedback) return;
-    setSelected(answer);
-    const isCorrect = answer.toLowerCase() === current.correct.toLowerCase();
-    setFeedback(isCorrect ? 'correct' : 'wrong');
-    setShowExplanation(true);
-    if (isCorrect) { 
-      setScore(s => s + 10); 
-      setStreak(s => s + 1); 
-      playSound('correct', soundEnabled); 
-      onXpChange(awardXP(15));
-    }
-    else { 
-      setStreak(0); 
-      playSound('wrong', soundEnabled); 
-    }
+  const generateQuestion = () => {
+    const word = wordsWithSynonyms[Math.floor(Math.random() * wordsWithSynonyms.length)];
+    const correct = word.synonyms![Math.floor(Math.random() * word.synonyms!.length)];
+    
+    const others = ALL_GRE_WORDS
+      .filter(w => w.id !== word.id && !word.synonyms?.includes(w.word))
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3)
+      .map(w => w.word);
+    
+    setCurrentWord(word);
+    setOptions([correct, ...others].sort(() => 0.5 - Math.random()));
+    setSelectedOption(null);
+    setIsCorrect(null);
   };
 
-  const next = () => {
-    if (index >= shuffled.length - 1) { setGameOver(true); return; }
-    setIndex(i => i + 1);
-    setFeedback(null); setSelected(null); setShowExplanation(false);
+  const startDuel = () => {
+    setGameState('playing');
+    setScore(0);
+    setQuestionCount(0);
+    generateQuestion();
+    incrementStat('gamesPlayed');
   };
 
-  if (gameOver) return (
-    <div className="flex flex-col items-center gap-5 p-6 text-center">
-      <h2 className="text-2xl font-bold text-accent-gold font-serif">Duel Complete! ⚔️</h2>
-      <div className="text-5xl font-bold text-accent-gold">{score}</div>
-      <div className="text-ink/60 dark:text-ink-dark/60">out of {shuffled.length * 10} possible points</div>
-      <div className="text-sm text-ink/70 dark:text-ink-dark/70">
-        {score >= shuffled.length * 8 ? '🏆 Synonym master!' : score >= shuffled.length * 5 ? '📚 Solid vocabulary!' : '💪 Keep studying the nuances!'}
+  const handleAnswer = (opt: string) => {
+    if (selectedOption) return;
+    setSelectedOption(opt);
+    const correct = currentWord?.synonyms?.includes(opt);
+    setIsCorrect(correct);
+    
+    if (correct) {
+      setScore(prev => prev + 1);
+      playSound('correct', soundEnabled);
+      const newXp = awardXP(XP_REWARDS.correctVerbal);
+      onXpChange(newXp);
+    } else {
+      playSound('wrong', soundEnabled);
+    }
+
+    setTimeout(() => {
+      if (questionCount < 9) {
+        setQuestionCount(prev => prev + 1);
+        generateQuestion();
+      } else {
+        setGameState('end');
+        recordQuizResult('Synonym Duel', score + (correct ? 1 : 0), 10);
+      }
+    }, 1500);
+  };
+
+  if (gameState === 'start') return (
+    <div className="flex flex-col items-center gap-8 p-6 text-center animate-in fade-in slide-in-from-bottom-4">
+      <div className="w-20 h-20 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold mx-auto">
+        <Zap size={32} />
       </div>
+      <div className="space-y-4">
+        <h2 className="text-5xl font-serif font-bold text-ink">Synonym Duel.</h2>
+        <p className="text-lg font-sans text-ink/60 max-w-md mx-auto">Can you identify the closest synonym? Master the subtle nuances of the lexicon.</p>
+      </div>
+      <button 
+        onClick={startDuel}
+        className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+      >
+        Initiate Duel
+      </button>
     </div>
   );
 
-  const opts = shuffledOptions;
+  if (gameState === 'end') return (
+    <div className="space-y-12 py-12 text-center animate-in fade-in">
+      <div className="space-y-4">
+        <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Duel Concluded</span>
+        <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Lexical<br />Precision.</h2>
+      </div>
+      
+      <div className="max-w-md mx-auto p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+        <div className="space-y-2">
+          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
+          <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
+        </div>
+        <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+          <div className="text-left">
+            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
+            <p className="text-2xl font-serif font-bold text-teal-500">{score}</p>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
+            <p className="text-2xl font-serif font-bold text-accent-gold">{score * 10}</p>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        onClick={() => setGameState('start')}
+        className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+      >
+        Restart Duel
+      </button>
+    </div>
+  );
 
   return (
-    <div className="flex flex-col gap-5 p-4 max-w-sm mx-auto">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-accent-gold font-serif">Synonym Duel ⚔️</h2>
-        <div className="text-sm text-ink/50 dark:text-ink-dark/50">{index+1}/{shuffled.length}</div>
-      </div>
-
-      <div className="flex gap-4 text-center">
-        <div className="flex-1 bg-bg-primary rounded-xl p-2 border border-ink/5">
-          <div className="text-xl font-bold text-accent-gold">{score}</div>
-          <div className="text-xs text-ink/40 dark:text-ink-dark/40">Score</div>
+    <div className="space-y-12 max-w-2xl mx-auto w-full animate-in fade-in">
+      <div className="flex items-center justify-between border-b border-ink/5 pb-8">
+        <div className="text-left">
+          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Question</span>
+          <p className="text-2xl font-serif font-bold text-ink">{(questionCount + 1).toString().padStart(2, '0')}/10</p>
         </div>
-        <div className="flex-1 bg-bg-primary rounded-xl p-2 border border-ink/5">
-          <div className="text-xl font-bold text-green-500">{streak}</div>
-          <div className="text-xs text-ink/40 dark:text-ink-dark/40">Streak</div>
+        <div className="text-right">
+          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Current Score</span>
+          <p className="text-2xl font-serif font-bold text-accent-gold">{score}</p>
         </div>
       </div>
 
-      <div className="bg-bg-primary rounded-2xl p-6 text-center shadow-lg border border-ink/5">
-        <p className="text-xs text-ink/40 dark:text-ink-dark/40 uppercase tracking-wider mb-3">Find the closest synonym to:</p>
-        <p className="text-3xl font-bold text-ink dark:text-ink-dark font-serif">{current.word}</p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        {opts.map(opt => {
-          let cls = 'border-2 border-ink/20 dark:border-ink-dark/20 text-ink dark:text-ink-dark hover:border-accent-gold/50 hover:bg-accent-gold/10';
-          if (selected === opt) {
-            cls = feedback === 'correct' ? 'border-green-500 bg-green-500/20 text-green-600' : 'border-red-500 bg-red-500/20 text-red-600';
-          } else if (showExplanation && opt === current.correct) {
-            cls = 'border-green-500/50 bg-green-500/10 text-green-600';
-          }
-          return (
-            <button key={opt} onClick={() => handleAnswer(opt)}
-              className={`p-4 rounded-2xl font-bold text-lg transition-all ${cls}`}>
+      <div className="py-12 space-y-8 text-center">
+        <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em]">Find the closest synonym for</p>
+        <h2 className="text-6xl font-serif font-bold text-ink tracking-tight">{currentWord?.word}</h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
+          {options.map((opt, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleAnswer(opt)}
+              className={`
+                p-6 rounded-sm border transition-all text-center font-serif text-2xl font-bold
+                ${selectedOption === opt 
+                  ? (currentWord?.synonyms?.includes(opt) ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
+                  : (selectedOption && currentWord?.synonyms?.includes(opt) ? 'bg-teal-50 border-teal-200 text-teal-900' : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60')}
+              `}
+            >
               {opt}
             </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) => {
+  const [gameState, setGameState] = useState<'start' | 'playing' | 'recall' | 'end'>('start');
+  const [level, setLevel] = useState(1);
+  const [grid, setGrid] = useState<{ word: Word; pos: number }[]>([]);
+  const [recallIndex, setRecallIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [score, setScore] = useState(0);
+  const [timer, setTimer] = useState(0);
+
+  const startLevel = (lvl: number) => {
+    const wordCount = Math.min(lvl + 2, 9);
+    const selectedWords = [...ALL_GRE_WORDS].sort(() => 0.5 - Math.random()).slice(0, wordCount);
+    const positions = Array.from({ length: 9 }, (_, i) => i).sort(() => 0.5 - Math.random()).slice(0, wordCount);
+    
+    const newGrid = selectedWords.map((word, i) => ({ word, pos: positions[i] }));
+    setGrid(newGrid);
+    setGameState('playing');
+    setTimer(5 + lvl * 2);
+    setRecallIndex(0);
+    setUserInput('');
+  };
+
+  useEffect(() => {
+    let interval: any;
+    if (gameState === 'playing' && timer > 0) {
+      interval = setInterval(() => setTimer(t => t - 1), 1000);
+    } else if (gameState === 'playing' && timer === 0) {
+      setGameState('recall');
+    }
+    return () => clearInterval(interval);
+  }, [gameState, timer]);
+
+  const handleRecall = () => {
+    const current = grid[recallIndex];
+    if (userInput.toLowerCase().trim() === current.word.word.toLowerCase()) {
+      playSound('correct', soundEnabled);
+      if (recallIndex < grid.length - 1) {
+        setRecallIndex(prev => prev + 1);
+        setUserInput('');
+      } else {
+        const nextLvl = level + 1;
+        setLevel(nextLvl);
+        setScore(prev => prev + level * 100);
+        const newXp = awardXP(level * 10);
+        onXpChange(newXp);
+        startLevel(nextLvl);
+      }
+    } else {
+      playSound('wrong', soundEnabled);
+      setGameState('end');
+      recordQuizResult('Memory Palace', level, 10);
+    }
+  };
+
+  if (gameState === 'start') return (
+    <div className="flex flex-col items-center gap-8 p-6 text-center animate-in fade-in slide-in-from-bottom-4">
+      <div className="w-20 h-20 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold mx-auto">
+        <BookMarked size={32} />
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-5xl font-serif font-bold text-ink">Memory Palace.</h2>
+        <p className="text-lg font-sans text-ink/60 max-w-md mx-auto">Associate words with spatial positions. Memorize the grid and recall them in order.</p>
+      </div>
+      <button 
+        onClick={() => startLevel(1)}
+        className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+      >
+        Enter Palace
+      </button>
+    </div>
+  );
+
+  if (gameState === 'end') return (
+    <div className="space-y-12 py-12 text-center animate-in fade-in">
+      <div className="space-y-4">
+        <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Palace Exited</span>
+        <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Spatial<br />Recall.</h2>
+      </div>
+      <div className="max-w-md mx-auto p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+        <div className="space-y-2">
+          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Peak Level</span>
+          <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{level}</p>
+        </div>
+        <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+          <div className="text-left">
+            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Score</span>
+            <p className="text-2xl font-serif font-bold text-ink">{score}</p>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
+            <p className="text-2xl font-serif font-bold text-accent-gold">{score / 10}</p>
+          </div>
+        </div>
+      </div>
+      <button 
+        onClick={() => { setGameState('start'); setLevel(1); setScore(0); }}
+        className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+      >
+        Restart Session
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="space-y-12 max-w-2xl mx-auto w-full animate-in fade-in">
+      <div className="flex justify-between items-end border-b border-ink/5 pb-6">
+        <div className="space-y-1">
+          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Level {level}</span>
+          <h3 className="text-3xl font-serif font-bold text-ink">
+            {gameState === 'playing' ? 'Memorize the Grid' : `Recall Word ${recallIndex + 1}`}
+          </h3>
+        </div>
+        <div className="text-right space-y-1">
+          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
+            {gameState === 'playing' ? 'Time Remaining' : 'Progress'}
+          </span>
+          <p className="text-2xl font-serif font-bold text-ink tabular-nums">
+            {gameState === 'playing' ? `${timer}s` : `${recallIndex + 1}/${grid.length}`}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4 aspect-square">
+        {Array.from({ length: 9 }).map((_, i) => {
+          const item = grid.find(g => g.pos === i);
+          const isRecalling = gameState === 'recall' && item === grid[recallIndex];
+          
+          return (
+            <div 
+              key={i}
+              className={`
+                aspect-square rounded-sm border flex items-center justify-center p-4 text-center transition-all duration-500
+                ${gameState === 'playing' && item ? 'bg-white border-ink/10 shadow-sm' : 'bg-bg-primary border-ink/5'}
+                ${isRecalling ? 'ring-2 ring-accent-gold bg-white' : ''}
+              `}
+            >
+              {gameState === 'playing' && item && (
+                <span className="text-sm font-serif font-bold text-ink leading-tight">{item.word.word}</span>
+              )}
+              {gameState === 'recall' && isRecalling && (
+                <div className="w-full space-y-4">
+                  <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em]">Recall Here</span>
+                  <input
+                    type="text"
+                    value={userInput}
+                    onChange={(e) => setUserInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleRecall()}
+                    autoFocus
+                    className="w-full text-center text-lg font-serif font-bold border-b border-ink focus:outline-none bg-transparent"
+                  />
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
 
-      {showExplanation && (
-        <div className={`rounded-xl p-4 text-sm ${feedback === 'correct' ? 'bg-green-500/10 text-green-700 dark:text-green-400' : 'bg-amber-500/10 text-amber-700 dark:text-amber-400'}`}>
-          {feedback === 'correct' ? '✓ ' : '✗ '}{current.explanation}
-        </div>
-      )}
-
-      {showExplanation && (
-        <button onClick={next} className="w-full py-3 bg-accent-gold text-white rounded-xl font-semibold hover:opacity-90 transition-all">
-          {index >= shuffled.length - 1 ? 'See Results' : 'Next Word →'}
+      {gameState === 'recall' && (
+        <button
+          onClick={handleRecall}
+          className="w-full py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+        >
+          Confirm Word
         </button>
       )}
     </div>
   );
-}
+};
+
+const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) => {
+  const [gameState, setGameState] = useState<'start' | 'playing' | 'end'>('start');
+  const [currentWord, setCurrentWord] = useState<Word | null>(null);
+  const [options, setOptions] = useState<string[]>([]);
+  const [score, setScore] = useState(0);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const wordsWithPronunciation = ALL_GRE_WORDS.filter(w => w.pronunciation && w.pronunciation.length > 0);
+
+  const generateQuestion = () => {
+    const correct = wordsWithPronunciation[Math.floor(Math.random() * wordsWithPronunciation.length)];
+    const others = wordsWithPronunciation
+      .filter(w => w.id !== correct.id)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3)
+      .map(w => w.word);
+    
+    setCurrentWord(correct);
+    setOptions([correct.word, ...others].sort(() => 0.5 - Math.random()));
+    setSelectedOption(null);
+    setIsCorrect(null);
+    
+    // Auto-play pronunciation
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(correct.word);
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const startQuiz = () => {
+    setGameState('playing');
+    setScore(0);
+    setQuestionCount(0);
+    generateQuestion();
+    incrementStat('gamesPlayed');
+  };
+
+  const handleAnswer = (opt: string) => {
+    if (selectedOption) return;
+    setSelectedOption(opt);
+    const correct = opt === currentWord?.word;
+    setIsCorrect(correct);
+    
+    if (correct) {
+      setScore(prev => prev + 1);
+      playSound('correct', soundEnabled);
+      const newXp = awardXP(XP_REWARDS.correctVerbal);
+      onXpChange(newXp);
+    } else {
+      playSound('wrong', soundEnabled);
+    }
+
+    setTimeout(() => {
+      if (questionCount < 9) {
+        setQuestionCount(prev => prev + 1);
+        generateQuestion();
+      } else {
+        setGameState('end');
+        recordQuizResult('Pronunciation Quiz', score + (correct ? 1 : 0), 10);
+      }
+    }, 1500);
+  };
+
+  const replayPronunciation = () => {
+    if (currentWord && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(currentWord.word);
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto w-full text-center space-y-12">
+      {gameState === 'start' && (
+        <div className="space-y-8">
+          <div className="w-20 h-20 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold mx-auto">
+            <Volume2 size={32} />
+          </div>
+          <div className="space-y-4">
+            <h2 className="text-5xl font-serif font-bold text-ink">Phonetic Recall.</h2>
+            <p className="text-lg font-sans text-ink/60 max-w-md mx-auto">Identify the correct word based on its auditory pronunciation. Master the sounds of the lexicon.</p>
+          </div>
+          <button 
+            onClick={startQuiz}
+            className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+          >
+            Initiate Protocol
+          </button>
+        </div>
+      )}
+
+      {gameState === 'playing' && currentWord && (
+        <div className="space-y-12">
+          <div className="flex items-center justify-between border-b border-ink/5 pb-8">
+            <div className="text-left">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Question</span>
+              <p className="text-2xl font-serif font-bold text-ink">{(questionCount + 1).toString().padStart(2, '0')}/10</p>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Current Score</span>
+              <p className="text-2xl font-serif font-bold text-accent-gold">{score}</p>
+            </div>
+          </div>
+
+          <div className="py-12 space-y-8">
+            <button 
+              onClick={replayPronunciation}
+              className="w-24 h-24 bg-bg-primary rounded-full border border-ink/5 flex items-center justify-center text-accent-gold mx-auto hover:bg-ink hover:text-white transition-all shadow-lg group"
+            >
+              <Volume2 size={40} className="group-hover:scale-110 transition-transform" />
+            </button>
+            <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em]">Listen to the Pronunciation</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {options.map((opt, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleAnswer(opt)}
+                  className={`
+                    p-6 rounded-sm border transition-all text-center font-serif text-2xl font-bold
+                    ${selectedOption === opt 
+                      ? (opt === currentWord.word ? 'bg-ink text-white border-ink' : 'bg-red-50 border-red-200 text-red-900')
+                      : (selectedOption && opt === currentWord.word ? 'bg-teal-50 border-teal-200 text-teal-900' : 'bg-white border-ink/5 hover:border-ink/20 text-ink/60')}
+                  `}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {gameState === 'end' && (
+        <div className="space-y-12 py-12">
+          <div className="space-y-4">
+            <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Session Complete</span>
+            <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Auditory<br />Mastery.</h2>
+          </div>
+          
+          <div className="max-w-md mx-auto p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
+              <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
+            </div>
+            <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+              <div className="text-left">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
+                <p className="text-2xl font-serif font-bold text-teal-500">{score}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
+                <p className="text-2xl font-serif font-bold text-accent-gold">{score * 10}</p>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => setGameState('start')}
+            className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+          >
+            Restart Protocol
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void, currentXp: number }) => {
   const [activeGame, setActiveGame] = useState<string | null>(null);
@@ -1997,13 +2374,15 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
     switch (activeGame) {
       case 'chess':
         return <ChessGame onXpChange={onXpChange} soundEnabled={soundEnabled} currentXp={currentXp} />;
-      case 'wordscramble':
+      case 'word-scramble':
         return <WordScramble onXpChange={onXpChange} soundEnabled={soundEnabled} />;
-      case 'speedblitz':
+      case 'speed-blitz':
         return <SpeedBlitz onXpChange={onXpChange} soundEnabled={soundEnabled} />;
-      case 'synonymduel':
+      case 'synonym-duel':
         return <SynonymDuel onXpChange={onXpChange} soundEnabled={soundEnabled} />;
-      case 'memorypalace':
+      case 'pronunciation-quiz':
+        return <PronunciationQuiz onXpChange={onXpChange} soundEnabled={soundEnabled} />;
+      case 'memory-palace':
         return <MemoryPalace onXpChange={onXpChange} soundEnabled={soundEnabled} />;
       case 'number-memory':
         return (
@@ -2162,7 +2541,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
               </button>
 
               <button 
-                onClick={() => { setActiveGame('wordscramble'); incrementStat('gamesPlayed'); }}
+                onClick={() => { setActiveGame('word-scramble'); incrementStat('gamesPlayed'); }}
                 className="group text-left space-y-6"
               >
                 <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
@@ -2178,7 +2557,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
               </button>
 
               <button 
-                onClick={() => { setActiveGame('speedblitz'); incrementStat('gamesPlayed'); }}
+                onClick={() => { setActiveGame('speed-blitz'); incrementStat('gamesPlayed'); }}
                 className="group text-left space-y-6"
               >
                 <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
@@ -2194,7 +2573,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
               </button>
 
               <button 
-                onClick={() => { setActiveGame('synonymduel'); incrementStat('gamesPlayed'); }}
+                onClick={() => { setActiveGame('synonym-duel'); incrementStat('gamesPlayed'); }}
                 className="group text-left space-y-6"
               >
                 <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
@@ -2202,7 +2581,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Synonym Duel</h3>
-                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Can you tell the difference between near-synonyms? The GRE loves testing this nuance.</p>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Can you identify the closest synonym? The GRE loves testing these subtle nuances.</p>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
                   Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
@@ -2210,15 +2589,31 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
               </button>
 
               <button 
-                onClick={() => { setActiveGame('memorypalace'); incrementStat('gamesPlayed'); }}
+                onClick={() => { setActiveGame('pronunciation-quiz'); incrementStat('gamesPlayed'); }}
                 className="group text-left space-y-6"
               >
                 <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
-                  <span className="text-2xl">🏛️</span>
+                  <Volume2 size={24} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Pronunciation Quiz</h3>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Identify words based on their auditory pronunciation. Master the sounds of the lexicon.</p>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+                  Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setActiveGame('memory-palace'); incrementStat('gamesPlayed'); }}
+                className="group text-left space-y-6"
+              >
+                <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+                  <BookMarked size={24} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Memory Palace</h3>
-                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Place GRE words in a memory grid and recall their positions. Builds spatial memory.</p>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Associate words with spatial positions in a 3x3 grid. Sharpen your visual-spatial recall.</p>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
                   Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
@@ -2683,7 +3078,7 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
                         <h4 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct Solution</h4>
                         <div className="space-y-3">
                           {currentQuestion.answers.map((ans, idx) => {
-                            const wordData = GRE_WORDS.find(w => w.word.toLowerCase() === ans.toLowerCase());
+                            const wordData = ALL_GRE_WORDS.find(w => w.word.toLowerCase() === ans.toLowerCase());
                             return (
                               <div key={idx} className="p-4 bg-bg-primary rounded-sm border border-ink/5">
                                 <p className="text-sm font-sans font-bold text-ink mb-1">{ans}</p>
@@ -3100,205 +3495,6 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   );
 };
 
-// ─── MEMORY PALACE ─────────────────────────────────────────────────────────────
-
-function MemoryPalace({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
-  const STUDY_TIME = 15;
-  const GRID_SIZES = [6, 9, 12]; // easy / medium / hard
-  type Phase = 'setup'|'study'|'recall'|'result';
-
-  const [phase, setPhase] = useState<Phase>('setup');
-  const [difficulty, setDifficulty] = useState<0|1|2>(0);
-  const [words, setWords] = useState<typeof GRE_WORDS>([]);
-  const [allSlots, setAllSlots] = useState<(typeof GRE_WORDS[0]|null)[]>([]);
-  const [timeLeft, setTimeLeft] = useState(STUDY_TIME);
-  const [revealed, setRevealed] = useState<boolean[]>([]);
-  const [selected, setSelected] = useState<(typeof GRE_WORDS[0]|null)[]>([]);
-  const [activeWord, setActiveWord] = useState<typeof GRE_WORDS[0]|null>(null);
-  const [score, setScore] = useState(0);
-
-  const startGame = (diff: 0|1|2) => {
-    setDifficulty(diff);
-    const gridSize = GRID_SIZES[diff];
-    const wordCount = Math.floor(gridSize * 0.6); // 60% of slots have words
-    const picked = [...GRE_WORDS].sort(() => Math.random() - 0.5).slice(0, wordCount);
-
-    // Create grid with words in random positions
-    const slots: (typeof GRE_WORDS[0]|null)[] = Array(gridSize).fill(null);
-    const positions = Array.from({length: gridSize}, (_, i) => i).sort(() => Math.random() - 0.5).slice(0, wordCount);
-    positions.forEach((pos, i) => { slots[pos] = picked[i]; });
-
-    setWords(picked);
-    setAllSlots(slots);
-    setRevealed(Array(gridSize).fill(false));
-    setSelected(Array(gridSize).fill(null));
-    setPhase('study');
-    setTimeLeft(STUDY_TIME);
-    playSound('flip', soundEnabled);
-  };
-
-  useEffect(() => {
-    if (phase !== 'study') return;
-    const timer = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          clearInterval(timer);
-          setPhase('recall');
-          playSound('flip', soundEnabled);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [phase, soundEnabled]);
-
-  const handleRecallClick = (idx: number) => {
-    if (phase !== 'recall') return;
-    
-    if (revealed[idx]) {
-      // Undo: remove word from slot
-      const newSelected = [...selected];
-      newSelected[idx] = null;
-      setSelected(newSelected);
-      setRevealed(prev => { const n = [...prev]; n[idx] = false; return n; });
-      playSound('flip', soundEnabled);
-      return;
-    }
-
-    if (activeWord) {
-      // Place word in slot
-      const newSelected = [...selected];
-      newSelected[idx] = activeWord;
-      setSelected(newSelected);
-      setRevealed(prev => { const n = [...prev]; n[idx] = true; return n; });
-      setActiveWord(null);
-      playSound('flip', soundEnabled);
-    }
-  };
-
-  const handleSubmit = () => {
-    let correct = 0;
-    allSlots.forEach((slot, i) => {
-      if (slot === null && selected[i] === null) correct++;
-      else if (slot !== null && selected[i]?.id === slot.id) correct++;
-    });
-    setScore(correct);
-    setPhase('result');
-    
-    const xpAwarded = Math.round((correct / allSlots.length) * 12);
-    if (xpAwarded > 0) {
-      const newXp = awardXP(xpAwarded);
-      onXpChange(newXp);
-      playSound('correct', soundEnabled);
-    } else {
-      playSound('wrong', soundEnabled);
-    }
-  };
-
-  const gridCols = GRID_SIZES[difficulty] === 6 ? 'grid-cols-3' : GRID_SIZES[difficulty] === 9 ? 'grid-cols-3' : 'grid-cols-4';
-
-  if (phase === 'setup') return (
-    <div className="flex flex-col items-center gap-6 md:gap-8 p-6 md:p-12 text-center max-w-xl mx-auto">
-      <div className="w-16 h-16 md:w-20 md:h-20 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold mx-auto">
-        <span className="text-3xl md:text-4xl">🏛️</span>
-      </div>
-      <div className="space-y-2 md:space-y-4">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Memory Palace.</h2>
-        <p className="text-base md:text-lg font-sans text-ink/60">Memorize the positions of GRE words in a grid, then recall them from memory. Builds spatial memory.</p>
-      </div>
-      <div className="flex flex-col gap-3 md:gap-4 w-full max-w-xs">
-        {(['Easy (6 slots)','Medium (9 slots)','Hard (12 slots)'] as const).map((label, i) => (
-          <button key={i} onClick={() => startGame(i as 0|1|2)}
-            className="py-3 md:py-4 rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] border border-ink/10 hover:border-ink hover:bg-ink hover:text-white transition-all text-ink">
-            {label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-
-  if (phase === 'result') return (
-    <div className="flex flex-col items-center gap-6 md:gap-8 p-6 md:p-12 text-center max-w-xl mx-auto">
-      <div className="space-y-2 md:space-y-4">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-ink">Result.</h2>
-        <div className="text-5xl sm:text-7xl md:text-8xl font-serif font-bold text-accent-gold">{score}/{allSlots.length}</div>
-        <p className="text-base md:text-lg font-sans text-ink/60">positions correctly recalled</p>
-      </div>
-      <button onClick={() => setPhase('setup')} className="px-8 md:px-12 py-4 md:py-6 bg-ink text-white rounded-sm font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
-        Restart Protocol
-      </button>
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col gap-8 md:gap-12 p-4 md:p-8 max-w-4xl mx-auto w-full">
-      <div className="flex justify-between items-end border-b border-ink/5 pb-6 md:pb-8">
-        <div className="space-y-1">
-          <span className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Current Phase</span>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold text-ink">
-            {phase === 'study' ? '👁️ Memorize!' : '🧠 Recall!'}
-          </h2>
-        </div>
-        {phase === 'study' && (
-          <div className="text-2xl md:text-4xl font-serif font-bold text-accent-gold">{timeLeft}s</div>
-        )}
-      </div>
-
-      {phase === 'study' && (
-        <p className="text-xs md:text-sm font-sans text-ink/40 italic text-center">Remember which word is in which position!</p>
-      )}
-
-      <div className={`grid ${GRID_SIZES[difficulty] === 6 ? 'grid-cols-2 sm:grid-cols-3' : GRID_SIZES[difficulty] === 9 ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-4'} gap-3 md:gap-6`}>
-        {allSlots.map((slot, idx) => (
-          <div
-            key={idx}
-            onClick={() => handleRecallClick(idx)}
-            className={`aspect-square rounded-sm flex items-center justify-center text-center p-2 md:p-4 text-xs md:text-sm font-serif font-bold transition-all border
-              ${phase === 'study'
-                ? slot ? 'bg-white border-accent-gold text-ink shadow-sm' : 'bg-bg-primary border-ink/5 border-dashed'
-                : revealed[idx]
-                  ? selected[idx] ? 'bg-ink text-white border-ink' : 'bg-bg-primary border-ink/5 border-dashed'
-                  : 'bg-bg-primary border-ink/5 border-dashed hover:border-ink/20 cursor-pointer'
-              }`}
-          >
-            {phase === 'study' ? (slot ? slot.word : '') : (selected[idx] ? selected[idx]!.word : '?')}
-          </div>
-        ))}
-      </div>
-
-      {phase === 'recall' && (
-        <div className="space-y-8">
-          <div className="text-center space-y-2">
-            <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Available Lexicon</p>
-            <p className="text-sm font-sans text-ink/40 italic">Tap a word below, then tap its position in the grid</p>
-          </div>
-          <div className="flex flex-wrap gap-3 justify-center">
-            {words.map(w => (
-              <button
-                key={w.id}
-                onClick={() => setActiveWord(activeWord?.id === w.id ? null : w)}
-                className={`px-4 py-2 rounded-sm text-sm font-sans font-bold uppercase tracking-widest border transition-all
-                  ${activeWord?.id === w.id
-                    ? 'bg-accent-gold text-white border-accent-gold'
-                    : selected.some(s => s?.id === w.id)
-                      ? 'bg-ink/5 text-ink/20 border-ink/5 line-through cursor-not-allowed'
-                      : 'border-ink/10 text-ink/60 hover:border-ink hover:text-ink'
-                  }`}
-              >
-                {w.word}
-              </button>
-            ))}
-          </div>
-          <button onClick={handleSubmit} className="w-full py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
-            Submit Answers
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ─── DAILY CHALLENGE ─────────────────────────────────────────────────────────────
 
 function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange: (xp: number) => void }) {
@@ -3323,7 +3519,7 @@ function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange
 
   const generateOptions = (word: Word) => {
     const correct = word.definition;
-    const others = [...GRE_WORDS]
+    const others = [...ALL_GRE_WORDS]
       .filter(w => w.id !== word.id)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
@@ -3533,7 +3729,7 @@ const EtymologyExplorer = ({ onWordClick }: { onWordClick: (word: string) => voi
                       <h4 className="text-[10px] font-sans font-bold text-ink/20 uppercase tracking-[0.2em]">Associated Words</h4>
                       <div className="flex flex-wrap gap-2">
                         {item.words.map(word => {
-                          const isGreWord = GRE_WORDS.some(w => w.word.toLowerCase() === word.toLowerCase());
+                          const isGreWord = ALL_GRE_WORDS.some(w => w.word.toLowerCase() === word.toLowerCase());
                           return (
                             <button
                               key={word}
@@ -3608,9 +3804,9 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
     }
   }, [globalSearch]);
 
-  const currentWord = GRE_WORDS[currentIndex];
+  const currentWord = ALL_GRE_WORDS[currentIndex];
 
-  const filteredWords = GRE_WORDS.filter(word => {
+  const filteredWords = ALL_GRE_WORDS.filter(word => {
     const queryTerms = searchQuery.toLowerCase().split(' ').filter(Boolean);
     const matchesSearch = queryTerms.length === 0 || queryTerms.every(term => 
       word.word.toLowerCase().includes(term) ||
@@ -3653,14 +3849,14 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
 
   const nextWord = () => {
     setIsFlipped(false);
-    setCurrentIndex((prev) => (prev + 1) % GRE_WORDS.length);
+    setCurrentIndex((prev) => (prev + 1) % ALL_GRE_WORDS.length);
     playSound('flip', soundEnabled);
     incrementStat('wordsStudied');
   };
 
   const prevWord = () => {
     setIsFlipped(false);
-    setCurrentIndex((prev) => (prev - 1 + GRE_WORDS.length) % GRE_WORDS.length);
+    setCurrentIndex((prev) => (prev - 1 + ALL_GRE_WORDS.length) % ALL_GRE_WORDS.length);
     playSound('flip', soundEnabled);
     incrementStat('wordsStudied');
   };
@@ -3671,8 +3867,8 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
   };
 
   const generatePracticeOptions = (index: number) => {
-    const correct = GRE_WORDS[index].definition;
-    const others = GRE_WORDS
+    const correct = ALL_GRE_WORDS[index].definition;
+    const others = ALL_GRE_WORDS
       .filter((_, i) => i !== index)
       .sort(() => 0.5 - Math.random())
       .slice(0, 3)
@@ -3702,7 +3898,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
   };
 
   const nextPracticeWord = () => {
-    const nextIdx = (currentIndex + 1) % GRE_WORDS.length;
+    const nextIdx = (currentIndex + 1) % ALL_GRE_WORDS.length;
     setCurrentIndex(nextIdx);
     generatePracticeOptions(nextIdx);
     playSound('flip', soundEnabled);
@@ -3821,7 +4017,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
         </header>
 
         <EtymologyExplorer onWordClick={(word) => {
-          const index = GRE_WORDS.findIndex(w => w.word.toLowerCase() === word.toLowerCase());
+          const index = ALL_GRE_WORDS.findIndex(w => w.word.toLowerCase() === word.toLowerCase());
           if (index !== -1) {
             setCurrentIndex(index);
             setView('flashcards');
@@ -3843,7 +4039,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
             <X size={14} /> Terminate Quiz
           </button>
           <div className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
-            Word {currentIndex + 1} of {GRE_WORDS.length}
+            Word {currentIndex + 1} of {ALL_GRE_WORDS.length}
           </div>
         </div>
 
@@ -3967,7 +4163,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
             <X size={12} className="md:w-[14px] md:h-[14px]" /> Terminate Session
           </button>
           <div className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">
-            Card {currentIndex + 1} of {GRE_WORDS.length}
+            Card {currentIndex + 1} of {ALL_GRE_WORDS.length}
           </div>
         </div>
 
@@ -3983,9 +4179,14 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
               className="absolute inset-0 bg-white rounded-sm border border-ink/5 flex flex-col items-center justify-center p-8 md:p-16 text-center"
               style={{ backfaceVisibility: 'hidden' }}
             >
-              <p className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em] mb-4 md:mb-8">
-                {currentWord.category}
-              </p>
+              <div className="absolute top-4 left-4 flex gap-2">
+                <span className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">
+                  {currentWord.category}
+                </span>
+                <span className={`text-[8px] md:text-[10px] font-sans font-bold uppercase tracking-[0.2em] px-2 py-0.5 rounded-full ${currentWord.id > 1000 ? 'bg-blue-50 text-blue-500' : 'bg-bg-primary text-ink/30'}`}>
+                  {currentWord.id > 1000 ? 'Flash Review' : 'Manhattan Prep'}
+                </span>
+              </div>
               <div className="relative mb-4 md:mb-6 w-full">
                 <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold text-ink tracking-tight px-4 md:px-16 break-words">{currentWord.word}</h2>
                 <button 
@@ -4008,7 +4209,12 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
               style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
             >
               <div className="flex items-center justify-between mb-8 md:mb-12">
-                <span className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{currentWord.pos}</span>
+                <div className="flex items-center gap-4">
+                  <span className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">{currentWord.pos}</span>
+                  {currentWord.pronunciation && (
+                    <span className="text-[8px] md:text-[10px] font-serif italic text-ink/20">[{currentWord.pronunciation}]</span>
+                  )}
+                </div>
                 <button 
                   onClick={(e) => { e.stopPropagation(); toggleMastered(currentWord.id); }}
                   className={`p-2 md:p-3 rounded-sm transition-all ${masteredWords.includes(currentWord.id) ? 'bg-accent-gold text-white shadow-lg' : 'bg-ink/5 text-ink/20 hover:text-ink/40'}`}
@@ -4022,6 +4228,19 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
                   <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Definition</h4>
                   <p className="text-xl md:text-3xl font-serif font-bold text-ink leading-tight">{currentWord.definition}</p>
                 </div>
+
+                {currentWord.synonyms && currentWord.synonyms.length > 0 && (
+                  <div className="space-y-2 md:space-y-4">
+                    <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Synonyms</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {currentWord.synonyms.map(syn => (
+                        <span key={syn} className="px-3 py-1 bg-bg-primary rounded-full text-xs font-sans text-ink/60 border border-ink/5">
+                          {syn}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 
                 <div className="p-4 md:p-8 bg-bg-primary rounded-sm border border-ink/5 border-l-4 border-l-accent-gold">
                   <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-2 md:mb-4">Mnemonic</h4>
@@ -4118,6 +4337,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
                 <tr className="bg-bg-primary border-b border-ink/5">
                   <th className="px-8 py-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Lexeme</th>
                   <th className="px-8 py-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Category</th>
+                  <th className="px-8 py-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Synonyms</th>
                   <th className="px-8 py-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Definition</th>
                   <th className="px-8 py-6 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Mastery</th>
                 </tr>
@@ -4125,7 +4345,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
               <tbody className="divide-y divide-ink/5">
                 {searchQuery && filteredWords.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-8 py-12 text-center text-sm font-sans text-ink/30 italic">
+                    <td colSpan={5} className="px-8 py-12 text-center text-sm font-sans text-ink/30 italic">
                       No words match "{searchQuery}"
                     </td>
                   </tr>
@@ -4151,6 +4371,15 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
                         <span className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest">
                           {word.category}
                         </span>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-wrap gap-1 max-w-[200px]">
+                          {word.synonyms?.slice(0, 3).map(syn => (
+                            <span key={syn} className="text-[10px] font-sans text-ink/40 bg-bg-primary px-2 py-0.5 rounded-full border border-ink/5">
+                              {syn}
+                            </span>
+                          )) || <span className="text-[10px] font-sans text-ink/20 italic">None</span>}
+                        </div>
                       </td>
                       <td className="px-8 py-6">
                         <p className="text-sm font-sans text-ink/60 leading-relaxed max-w-md line-clamp-1">{word.definition}</p>
@@ -4184,7 +4413,7 @@ const VocabularyNotes = () => {
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const filteredWords = GRE_WORDS.filter(word => {
+  const filteredWords = ALL_GRE_WORDS.filter(word => {
     const queryTerms = searchQuery.toLowerCase().split(' ').filter(Boolean);
     const matchesSearch = queryTerms.length === 0 || queryTerms.every(term => 
       word.word.toLowerCase().includes(term) ||
@@ -4206,7 +4435,7 @@ const VocabularyNotes = () => {
     }
   };
 
-  const categories = ['All', ...Array.from(new Set(GRE_WORDS.map(w => w.category)))].sort();
+  const categories = ['All', ...Array.from(new Set(ALL_GRE_WORDS.map(w => w.category)))].sort();
 
   const nextFlashcard = () => {
     setIsFlipped(false);
@@ -4560,8 +4789,8 @@ const DayCard = ({
 
   // Find linked GRE word in the word list
   const linkedWord = day.greWordId
-    ? GRE_WORDS.find(w => w.id === day.greWordId) ?? null
-    : GRE_WORDS.find(w => w.word.toLowerCase() === day.greWord?.toLowerCase()) ?? null;
+    ? ALL_GRE_WORDS.find(w => w.id === day.greWordId) ?? null
+    : ALL_GRE_WORDS.find(w => w.word.toLowerCase() === day.greWord?.toLowerCase()) ?? null;
 
   return (
     <div
@@ -5080,7 +5309,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
     return `${minutes}m`;
   };
 
-  const behaviorWords = GRE_WORDS.filter(w => w.category?.toLowerCase() === 'behavior');
+  const behaviorWords = ALL_GRE_WORDS.filter(w => w.category?.toLowerCase() === 'behavior');
   const masteredBehavior = behaviorWords.filter(w => masteredWords.includes(w.id)).length;
   const quizHistoryData = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
   const quantCorrect = getStorage('grenius_quant_correct', 0);
@@ -5132,7 +5361,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
         </h1>
         <p className="text-lg md:text-2xl font-sans text-ink/60 leading-relaxed max-w-2xl font-light">
           A comprehensive audit of your cognitive progression across the Digital Lexicon. 
-          Your trajectory indicates a significant mastery of high-frequency verbal patterns.
+          Your trajectory indicates a significant mastery of high-frequency verbal patterns from our unified pool of {ALL_GRE_WORDS.length} words.
         </p>
       </header>
 
@@ -5635,19 +5864,19 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-primary flex">
+    <div className="h-screen bg-bg-primary flex overflow-hidden">
       {/* Sidebar */}
       <aside 
         className={`
           fixed md:sticky top-0 h-screen inset-y-0 left-0 z-50
-          bg-white border-r border-ink/5 transition-all duration-500 ease-in-out overflow-hidden
+          bg-white border-r border-ink/5 transition-all duration-500 ease-in-out overflow-y-auto overflow-x-hidden
           ${isMobile 
             ? (isSidebarOpen ? 'w-full sm:w-80 translate-x-0' : 'w-full sm:w-80 -translate-x-full')
             : (isSidebarOpen ? 'w-80' : 'w-20')
           }
         `}
       >
-        <div className={`h-full flex flex-col transition-all duration-500 ${isSidebarOpen ? 'p-8' : 'p-5'}`}>
+        <div className={`flex flex-col transition-all duration-500 ${isSidebarOpen ? 'p-8' : 'p-5'}`}>
           <div className={`flex items-center justify-between transition-all duration-500 mb-16 ${isSidebarOpen ? 'gap-4' : 'gap-0 justify-center'}`}>
             <div className="flex items-center gap-4">
               <motion.div 
@@ -5747,7 +5976,7 @@ const App = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header */}
         <header className="h-16 md:h-24 bg-white/90 backdrop-blur-xl border-b border-ink/5 flex items-center justify-between px-4 md:px-12 sticky top-0 z-40">
           <div className="flex items-center gap-3 md:gap-8">

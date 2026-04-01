@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export interface Word {
+export type Word = {
   id: number;
   word: string;
   pronunciation: string;
@@ -13,7 +13,8 @@ export interface Word {
   example: string;
   difficulty: number;
   category: string;
-}
+  synonyms?: string[];
+};
 
 export interface QuantQuestion {
   id: number;

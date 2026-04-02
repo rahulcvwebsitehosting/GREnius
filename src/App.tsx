@@ -46,10 +46,11 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { GameAnalysis } from './components/GameAnalysis';
 import { NewsContainer } from './components/news/NewsContainer';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
 import { ALL_GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
-import { QuizResult, UserSettings, Word, Achievement, UserStats, WorldDay } from './types';
+import { QuizResult, UserSettings, Word, Achievement, UserStats, WorldDay, Mistake } from './types';
 import { 
   StatCard, 
   AccoladeItem, 
@@ -1415,6 +1416,7 @@ function scrambleWord(word: string): string {
 
 function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
   const wordPool = ALL_GRE_WORDS.filter(w => w.word.length >= 5 && w.word.length <= 10 && !w.word.includes(' '));
+  const [gameState, setGameState] = useState<'playing' | 'end'>('playing');
   const [currentWord, setCurrentWord] = useState(() => wordPool[Math.floor(Math.random() * wordPool.length)]);
   const [scrambled, setScrambled] = useState(() => scrambleWord(currentWord.word));
   const [input, setInput] = useState('');
@@ -1424,6 +1426,7 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [attempts, setAttempts] = useState(0);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const [letters, setLetters] = useState<{char: string; used: boolean}[]>(() =>
     scrambleWord(currentWord.word).split('').map(c => ({ char: c, used: false }))
   );
@@ -1514,10 +1517,70 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
     }
   };
 
-  const handleSkip = () => { setShowDef(true); setTimeout(loadNew, 2500); };
+  const handleSkip = () => { 
+    setMistakes(prev => [...prev, {
+      question: `Unscramble: "${scrambled}"`,
+      userAnswer: assembled.join('') || 'Skipped',
+      correctAnswer: currentWord.word,
+      explanation: currentWord.definition
+    }]);
+    setShowDef(true); 
+    setTimeout(loadNew, 2500); 
+  };
+
+  if (gameState === 'end') {
+    return (
+      <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
+        <div className="space-y-4">
+          <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Session Concluded</span>
+          <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Lexical<br />Reconstruction.</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Score</span>
+              <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{score}</p>
+            </div>
+            <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+              <div className="text-left">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Attempts</span>
+                <p className="text-2xl font-serif font-bold text-ink">{attempts}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Max Streak</span>
+                <p className="text-2xl font-serif font-bold text-accent-gold">{streak}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => { setGameState('playing'); setScore(0); setAttempts(0); setStreak(0); setMistakes([]); loadNew(); }}
+              className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+            >
+              Restart Session
+            </button>
+          </div>
+
+          <div className="text-left">
+            <GameAnalysis mistakes={mistakes} onClose={() => { setGameState('playing'); setScore(0); setAttempts(0); setStreak(0); setMistakes([]); loadNew(); }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center gap-5 p-4 max-w-sm mx-auto">
+      <div className="w-full flex justify-end">
+        <button 
+          onClick={() => {
+            setGameState('end');
+            recordQuizResult('Word Scramble', score, attempts, mistakes);
+          }}
+          className="text-[10px] font-sans font-bold text-ink/30 hover:text-ink uppercase tracking-[0.2em] transition-colors"
+        >
+          Finish Session
+        </button>
+      </div>
       <div className="text-center">
         <h2 className="text-2xl font-bold text-accent-gold font-serif mb-1">Word Scramble</h2>
         <p className="text-sm text-ink/60 dark:text-ink-dark/60">Unscramble the GRE word</p>
@@ -1618,6 +1681,7 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
   const [combo, setCombo] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const pickQuestion = () => {
@@ -1676,6 +1740,12 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
       setCombo(0);
       setTimeLeft(t => Math.max(t - 3, 0));
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: `Match definition: "${current.definition}"`,
+        userAnswer: answer,
+        correctAnswer: current.word,
+        explanation: current.mnemonic
+      }]);
     }
     setTimeout(() => { if (gameState === 'playing') pickQuestion(); }, 500);
   };
@@ -1705,22 +1775,36 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
   );
 
   if (gameState === 'over') return (
-    <div className="flex flex-col items-center gap-5 p-6 text-center">
-      <h2 className="text-2xl font-bold text-accent-gold font-serif">Time's Up! ⏱️</h2>
-      <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
-        {[['Score', score, 'text-accent-gold'],['Accuracy', `${accuracy}%`, 'text-blue-500'],['Correct', correctCount, 'text-green-500'],['Answered', totalAnswered, 'text-ink dark:text-ink-dark']].map(([lbl,val,cls]) => (
-          <div key={lbl as string} className="bg-bg-primary rounded-xl p-4 border border-ink/5">
-            <div className={`text-3xl font-bold ${cls}`}>{val}</div>
-            <div className="text-xs text-ink/50 dark:text-ink-dark/50 mt-1">{lbl}</div>
+    <div className="flex flex-col items-center gap-12 p-6 text-center animate-in fade-in max-w-4xl mx-auto">
+      <div className="space-y-4">
+        <h2 className="text-5xl font-serif font-bold text-ink leading-tight">Time's Up! ⏱️</h2>
+        <p className="text-sm text-ink/60 dark:text-ink-dark/60">
+          {score >= 200 ? '🏆 Exceptional! GRE master!' : score >= 100 ? '🌟 Great performance!' : score >= 50 ? '📚 Good effort, keep practicing!' : '💪 Keep studying those definitions!'}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start w-full">
+        <div className="space-y-8">
+          <div className="grid grid-cols-2 gap-4">
+            {[['Score', score, 'text-accent-gold'],['Accuracy', `${accuracy}%`, 'text-blue-500'],['Correct', correctCount, 'text-green-500'],['Answered', totalAnswered, 'text-ink dark:text-ink-dark']].map(([lbl,val,cls]) => (
+              <div key={lbl as string} className="bg-white rounded-sm p-6 border border-ink/5 shadow-sm">
+                <div className={`text-3xl font-bold ${cls}`}>{val}</div>
+                <div className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] mt-1">{lbl}</div>
+              </div>
+            ))}
           </div>
-        ))}
+          <button 
+            onClick={() => { startGame(); setMistakes([]); }}
+            className="w-full px-8 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+          >
+            Play Again
+          </button>
+        </div>
+
+        <div className="text-left">
+          <GameAnalysis mistakes={mistakes} onClose={() => { setGameState('idle'); setMistakes([]); }} />
+        </div>
       </div>
-      <div className="text-sm text-ink/60 dark:text-ink-dark/60">
-        {score >= 200 ? '🏆 Exceptional! GRE master!' : score >= 100 ? '🌟 Great performance!' : score >= 50 ? '📚 Good effort, keep practicing!' : '💪 Keep studying those definitions!'}
-      </div>
-      <button onClick={startGame} className="px-8 py-3 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl">
-        Play Again
-      </button>
     </div>
   );
 
@@ -1841,8 +1925,7 @@ function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =>
   const [questionCount, setQuestionCount] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-
-  // Filter words that have synonyms
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const wordsWithSynonyms = ALL_GRE_WORDS.filter(w => w.synonyms && w.synonyms.length > 0);
 
   const generateQuestion = () => {
@@ -1882,6 +1965,12 @@ function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =>
       onXpChange(newXp);
     } else {
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: `Find the closest synonym for "${currentWord?.word}"`,
+        userAnswer: opt,
+        correctAnswer: currentWord?.synonyms?.[0] || 'Unknown',
+        explanation: currentWord?.definition
+      }]);
     }
 
     setTimeout(() => {
@@ -1890,7 +1979,7 @@ function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =>
         generateQuestion();
       } else {
         setGameState('end');
-        recordQuizResult('Synonym Duel', score + (correct ? 1 : 0), 10);
+        recordQuizResult('Synonym Duel', score + (correct ? 1 : 0), 10, mistakes);
       }
     }, 1500);
   };
@@ -1914,35 +2003,40 @@ function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =>
   );
 
   if (gameState === 'end') return (
-    <div className="space-y-12 py-12 text-center animate-in fade-in">
+    <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
       <div className="space-y-4">
         <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Duel Concluded</span>
         <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Lexical<br />Precision.</h2>
       </div>
       
-      <div className="max-w-md mx-auto p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
-        <div className="space-y-2">
-          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
-          <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+          <div className="space-y-2">
+            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
+            <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
+          </div>
+          <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+            <div className="text-left">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
+              <p className="text-2xl font-serif font-bold text-teal-500">{score}</p>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
+              <p className="text-2xl font-serif font-bold text-accent-gold">{score * 10}</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => { setGameState('start'); setMistakes([]); }}
+            className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+          >
+            Restart Duel
+          </button>
         </div>
-        <div className="flex justify-between items-center border-t border-ink/5 pt-8">
-          <div className="text-left">
-            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
-            <p className="text-2xl font-serif font-bold text-teal-500">{score}</p>
-          </div>
-          <div className="text-right">
-            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
-            <p className="text-2xl font-serif font-bold text-accent-gold">{score * 10}</p>
-          </div>
+
+        <div className="text-left">
+          <GameAnalysis mistakes={mistakes} onClose={() => { setGameState('start'); setMistakes([]); }} />
         </div>
       </div>
-
-      <button 
-        onClick={() => setGameState('start')}
-        className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
-      >
-        Restart Duel
-      </button>
     </div>
   );
 
@@ -1992,6 +2086,7 @@ const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
   const [userInput, setUserInput] = useState('');
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
 
   const startLevel = (lvl: number) => {
     const wordCount = Math.min(lvl + 2, 9);
@@ -2034,7 +2129,18 @@ const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
     } else {
       playSound('wrong', soundEnabled);
       setGameState('end');
-      recordQuizResult('Memory Palace', level, 10);
+      setMistakes([{
+        question: `Recall word at position ${current.pos + 1}`,
+        userAnswer: userInput || 'No Input',
+        correctAnswer: current.word.word,
+        explanation: current.word.definition
+      }]);
+      recordQuizResult('Memory Palace', level, 10, [{
+        question: `Recall word at position ${current.pos + 1}`,
+        userAnswer: userInput || 'No Input',
+        correctAnswer: current.word.word,
+        explanation: current.word.definition
+      }]);
     }
   };
 
@@ -2057,33 +2163,42 @@ const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
   );
 
   if (gameState === 'end') return (
-    <div className="space-y-12 py-12 text-center animate-in fade-in">
+    <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
       <div className="space-y-4">
         <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Palace Exited</span>
         <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Spatial<br />Recall.</h2>
       </div>
-      <div className="max-w-md mx-auto p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
-        <div className="space-y-2">
-          <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Peak Level</span>
-          <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{level}</p>
-        </div>
-        <div className="flex justify-between items-center border-t border-ink/5 pt-8">
-          <div className="text-left">
-            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Score</span>
-            <p className="text-2xl font-serif font-bold text-ink">{score}</p>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="space-y-8">
+          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Peak Level</span>
+              <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{level}</p>
+            </div>
+            <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+              <div className="text-left">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Score</span>
+                <p className="text-2xl font-serif font-bold text-ink">{score}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
+                <p className="text-2xl font-serif font-bold text-accent-gold">{score / 10}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => { setGameState('start'); setLevel(1); setScore(0); setMistakes([]); }}
+              className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+            >
+              Restart Session
+            </button>
           </div>
-          <div className="text-right">
-            <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
-            <p className="text-2xl font-serif font-bold text-accent-gold">{score / 10}</p>
+
+          <div className="text-left">
+            <GameAnalysis mistakes={mistakes} onClose={() => { setGameState('start'); setLevel(1); setScore(0); setMistakes([]); }} />
           </div>
         </div>
       </div>
-      <button 
-        onClick={() => { setGameState('start'); setLevel(1); setScore(0); }}
-        className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
-      >
-        Restart Session
-      </button>
     </div>
   );
 
@@ -2161,6 +2276,7 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
   const [questionCount, setQuestionCount] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
 
   const wordsWithPronunciation = ALL_GRE_WORDS.filter(w => w.pronunciation && w.pronunciation.length > 0);
 
@@ -2207,6 +2323,12 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
       onXpChange(newXp);
     } else {
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: `Identify the word from its pronunciation`,
+        userAnswer: opt,
+        correctAnswer: currentWord?.word || 'Unknown',
+        explanation: currentWord?.definition
+      }]);
     }
 
     setTimeout(() => {
@@ -2215,7 +2337,7 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
         generateQuestion();
       } else {
         setGameState('end');
-        recordQuizResult('Pronunciation Quiz', score + (correct ? 1 : 0), 10);
+        recordQuizResult('Pronunciation Quiz', score + (correct ? 1 : 0), 10, mistakes);
       }
     }, 1500);
   };
@@ -2292,35 +2414,40 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
       )}
 
       {gameState === 'end' && (
-        <div className="space-y-12 py-12">
+        <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
           <div className="space-y-4">
             <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Session Complete</span>
             <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Auditory<br />Mastery.</h2>
           </div>
           
-          <div className="max-w-md mx-auto p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
-            <div className="space-y-2">
-              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
-              <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+              <div className="space-y-2">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
+                <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
+              </div>
+              <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+                <div className="text-left">
+                  <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
+                  <p className="text-2xl font-serif font-bold text-teal-500">{score}</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
+                  <p className="text-2xl font-serif font-bold text-accent-gold">{score * 10}</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => { setGameState('start'); setMistakes([]); }}
+                className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+              >
+                Restart Protocol
+              </button>
             </div>
-            <div className="flex justify-between items-center border-t border-ink/5 pt-8">
-              <div className="text-left">
-                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
-                <p className="text-2xl font-serif font-bold text-teal-500">{score}</p>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">XP Gained</span>
-                <p className="text-2xl font-serif font-bold text-accent-gold">{score * 10}</p>
-              </div>
+
+            <div className="text-left">
+              <GameAnalysis mistakes={mistakes} onClose={() => { setGameState('start'); setMistakes([]); }} />
             </div>
           </div>
-
-          <button 
-            onClick={() => setGameState('start')}
-            className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
-          >
-            Restart Protocol
-          </button>
         </div>
       )}
     </div>
@@ -2335,6 +2462,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
   const [number, setNumber] = useState('');
   const [userInput, setUserInput] = useState('');
   const [showNumber, setShowNumber] = useState(false);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const soundEnabled = getStorage(STORAGE_KEYS.settings, { soundEnabled: true }).soundEnabled;
 
   const startNumberMemory = () => {
@@ -2367,6 +2495,18 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
     } else {
       setGameState('end');
       playSound('wrong', soundEnabled);
+      setMistakes([{
+        question: `Level ${level} Sequence`,
+        userAnswer: userInput || 'No Input',
+        correctAnswer: number,
+        explanation: `The cognitive load exceeded your current working memory capacity at Level ${level}.`
+      }]);
+      recordQuizResult('Number Memory', level - 1, level, [{
+        question: `Level ${level} Sequence`,
+        userAnswer: userInput || 'No Input',
+        correctAnswer: number,
+        explanation: `The cognitive load exceeded your current working memory capacity at Level ${level}.`
+      }]);
     }
   };
 
@@ -2452,44 +2592,48 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
               </div>
             )}
             {gameState === 'end' && (
-              <div className="space-y-12 py-12">
+              <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
                 <div className="space-y-4">
                   <span className="text-[10px] font-sans font-bold text-red-500 uppercase tracking-[0.3em]">Sequence Terminated</span>
                   <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Academic<br />Performance.</h2>
                 </div>
                 
-                <div className="max-w-md mx-auto p-8 bg-red-50 rounded-sm border border-red-100 space-y-6">
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Expected Sequence</span>
-                    <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter">{number}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Your Input</span>
-                    <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter opacity-50">{userInput || 'No Input'}</p>
-                  </div>
-                  <p className="text-xs font-sans text-red-600 leading-relaxed">
-                    The cognitive load exceeded your current working memory capacity at Level {level}. 
-                    Regular practice can help expand this capacity.
-                  </p>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                  <div className="space-y-8">
+                    <div className="p-8 bg-red-50 rounded-sm border border-red-100 space-y-6 text-left">
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Expected Sequence</span>
+                        <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter">{number}</p>
+                      </div>
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Your Input</span>
+                        <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter opacity-50">{userInput || 'No Input'}</p>
+                      </div>
+                    </div>
 
-                <div className="grid grid-cols-2 gap-8 max-w-md mx-auto">
-                  <div className="p-8 bg-bg-primary rounded-sm border border-ink/5 text-left">
-                    <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Level</span>
-                    <p className="text-3xl font-serif font-bold text-ink">{level}</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-8 bg-bg-primary rounded-sm border border-ink/5 text-left">
+                        <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Level</span>
+                        <p className="text-3xl font-serif font-bold text-ink">{level}</p>
+                      </div>
+                      <div className="p-8 bg-bg-primary rounded-sm border border-ink/5 text-left">
+                        <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Total Score</span>
+                        <p className="text-3xl font-serif font-bold text-accent-gold">{score}</p>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => { setGameState('start'); setLevel(1); setScore(0); setUserInput(''); setMistakes([]); }}
+                      className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+                    >
+                      Restart Protocol
+                    </button>
                   </div>
-                  <div className="p-8 bg-bg-primary rounded-sm border border-ink/5 text-left">
-                    <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Total Score</span>
-                    <p className="text-3xl font-serif font-bold text-accent-gold">{score}</p>
+
+                  <div className="text-left">
+                    <GameAnalysis mistakes={mistakes} onClose={() => { setGameState('start'); setLevel(1); setScore(0); setUserInput(''); setMistakes([]); }} />
                   </div>
                 </div>
-
-                <button 
-                  onClick={() => { setGameState('start'); setLevel(1); setScore(0); setUserInput(''); }}
-                  className="px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
-                >
-                  Restart Protocol
-                </button>
               </div>
             )}
           </div>
@@ -2654,6 +2798,8 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionTotal, setSessionTotal] = useState(0);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
+  const [showAnalysis, setShowAnalysis] = useState(false);
   const sessionCorrectRef = useRef(0);
   const sessionTotalRef = useRef(0);
 
@@ -2728,6 +2874,12 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
         onXpChange(newXp);
       } else {
         playSound('wrong', soundEnabled);
+        setMistakes(prev => [...prev, {
+          question: currentQuestion.sentence || currentQuestion.passage || 'Verbal Question',
+          userAnswer: ans,
+          correctAnswer: currentQuestion.answers?.[0] || 'Unknown',
+          explanation: currentQuestion.explanation
+        }]);
       }
     }
   };
@@ -2755,6 +2907,12 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
       onXpChange(newXp);
     } else {
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: currentQuestion.questions?.[questionIndex].q || 'RC Question',
+        userAnswer: opt,
+        correctAnswer: currentQuestion.questions?.[questionIndex].answer || 'Unknown',
+        explanation: currentQuestion.explanation
+      }]);
     }
 
     if (currentQuestion.questions && Object.keys(newAnswers).length === currentQuestion.questions.length) {
@@ -2806,6 +2964,12 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
       onXpChange(newXp);
     } else {
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: currentQuestion.sentence || currentQuestion.passage || 'TC Question',
+        userAnswer: blankSelections.join(', '),
+        correctAnswer: currentQuestion.answers?.join(', ') || 'Unknown',
+        explanation: currentQuestion.explanation
+      }]);
     }
   };
 
@@ -2833,23 +2997,19 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
       onXpChange(newXp);
     } else {
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: currentQuestion.sentence || currentQuestion.passage || 'SE Question',
+        userAnswer: selectedAnswers.join(', '),
+        correctAnswer: currentQuestion.answers?.join(', ') || 'Unknown',
+        explanation: currentQuestion.explanation
+      }]);
     }
   };
 
   const nextQuestion = () => {
     if (sessionTotalRef.current > 0 && sessionTotalRef.current % 5 === 0) {
-      const c = sessionCorrectRef.current;
-      const t = sessionTotalRef.current;
-      
-      // Reset refs BEFORE recording to avoid race condition
-      sessionCorrectRef.current = 0;
-      sessionTotalRef.current = 0;
-      setSessionCorrect(0);
-      setSessionTotal(0);
-      
-      const newXp = recordQuizResult('Verbal', c, t);
-      onXpChange(newXp);
-      playSound('xp', soundEnabled);
+      setShowAnalysis(true);
+      return;
     }
 
     setCurrentIndex((prev) => (prev + 1) % GRE_VERBAL.length);
@@ -2863,6 +3023,80 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     setTimeout(() => setIsTimerActive(true), 0);
     playSound('flip', soundEnabled);
   };
+
+  if (showAnalysis) {
+    const c = sessionCorrect;
+    const t = sessionTotal;
+    return (
+      <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
+        <div className="space-y-4">
+          <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Checkpoint Reached</span>
+          <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Verbal<br />Analysis.</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Accuracy</span>
+              <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((c / t) * 100)}%</p>
+            </div>
+            <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+              <div className="text-left">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
+                <p className="text-2xl font-serif font-bold text-teal-500">{c}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Total</span>
+                <p className="text-2xl font-serif font-bold text-ink">{t}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => {
+                sessionCorrectRef.current = 0;
+                sessionTotalRef.current = 0;
+                setSessionCorrect(0);
+                setSessionTotal(0);
+                setMistakes([]);
+                setShowAnalysis(false);
+                recordQuizResult('Verbal', c, t, mistakes);
+                setCurrentIndex((prev) => (prev + 1) % GRE_VERBAL.length);
+                setSelectedAnswers([]);
+                setBlankSelections([]);
+                setRcAnswers({});
+                setShowExplanation(false);
+                setIsCorrect(null);
+                setTimer(0);
+                setIsTimerActive(true);
+              }}
+              className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+            >
+              Continue Practice
+            </button>
+          </div>
+
+          <div className="text-left">
+            <GameAnalysis mistakes={mistakes} onClose={() => {
+              sessionCorrectRef.current = 0;
+              sessionTotalRef.current = 0;
+              setSessionCorrect(0);
+              setSessionTotal(0);
+              setMistakes([]);
+              setShowAnalysis(false);
+              recordQuizResult('Verbal', c, t, mistakes);
+              setCurrentIndex((prev) => (prev + 1) % GRE_VERBAL.length);
+              setSelectedAnswers([]);
+              setBlankSelections([]);
+              setRcAnswers({});
+              setShowExplanation(false);
+              setIsCorrect(null);
+              setTimer(0);
+              setIsTimerActive(true);
+            }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -3141,6 +3375,8 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [neInput, setNeInput] = useState('');
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionTotal, setSessionTotal] = useState(0);
+  const [mistakes, setMistakes] = useState<Mistake[]>([]);
+  const [showAnalysis, setShowAnalysis] = useState(false);
   const sessionCorrectRef = useRef(0);
   const sessionTotalRef = useRef(0);
 
@@ -3210,23 +3446,19 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
       onXpChange(newXp);
     } else {
       playSound('wrong', soundEnabled);
+      setMistakes(prev => [...prev, {
+        question: currentQuestion.type === 'QC' ? `Compare Quantity A: ${currentQuestion.colA} and Quantity B: ${currentQuestion.colB}` : currentQuestion.question || 'Quantitative Question',
+        userAnswer: ans,
+        correctAnswer: currentQuestion.answer,
+        explanation: currentQuestion.explanation
+      }]);
     }
   };
 
   const nextQuestion = () => {
     if (sessionTotalRef.current > 0 && sessionTotalRef.current % 5 === 0) {
-      const c = sessionCorrectRef.current;
-      const t = sessionTotalRef.current;
-      
-      // Reset refs BEFORE recording to avoid race condition
-      sessionCorrectRef.current = 0;
-      sessionTotalRef.current = 0;
-      setSessionCorrect(0);
-      setSessionTotal(0);
-      
-      const newXp = recordQuizResult('Quantitative', c, t);
-      onXpChange(newXp);
-      playSound('xp', soundEnabled);
+      setShowAnalysis(true);
+      return;
     }
 
     setCurrentIndex((prev) => (prev + 1) % GRE_QUANT.length);
@@ -3260,6 +3492,78 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     }
     playSound('flip', soundEnabled);
   };
+
+  if (showAnalysis) {
+    const c = sessionCorrect;
+    const t = sessionTotal;
+    return (
+      <div className="space-y-12 py-12 text-center animate-in fade-in max-w-4xl mx-auto">
+        <div className="space-y-4">
+          <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.3em]">Checkpoint Reached</span>
+          <h2 className="text-6xl font-serif font-bold text-ink leading-tight">Quantitative<br />Analysis.</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+            <div className="space-y-2">
+              <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Accuracy</span>
+              <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((c / t) * 100)}%</p>
+            </div>
+            <div className="flex justify-between items-center border-t border-ink/5 pt-8">
+              <div className="text-left">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Correct</span>
+                <p className="text-2xl font-serif font-bold text-teal-500">{c}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Total</span>
+                <p className="text-2xl font-serif font-bold text-ink">{t}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => {
+                sessionCorrectRef.current = 0;
+                sessionTotalRef.current = 0;
+                setSessionCorrect(0);
+                setSessionTotal(0);
+                setMistakes([]);
+                setShowAnalysis(false);
+                recordQuizResult('Quantitative', c, t, mistakes);
+                setCurrentIndex((prev) => (prev + 1) % GRE_QUANT.length);
+                setSelectedAnswer(null);
+                setShowExplanation(false);
+                setIsCorrect(null);
+                setTimer(0);
+                setTimeout(() => setIsTimerActive(true), 0);
+                setNeInput('');
+              }}
+              className="w-full px-12 py-6 bg-ink text-white rounded-sm font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-ink/90 transition-all shadow-xl"
+            >
+              Continue Practice
+            </button>
+          </div>
+
+          <div className="text-left">
+            <GameAnalysis mistakes={mistakes} onClose={() => {
+              sessionCorrectRef.current = 0;
+              sessionTotalRef.current = 0;
+              setSessionCorrect(0);
+              setSessionTotal(0);
+              setMistakes([]);
+              setShowAnalysis(false);
+              recordQuizResult('Quantitative', c, t, mistakes);
+              setCurrentIndex((prev) => (prev + 1) % GRE_QUANT.length);
+              setSelectedAnswer(null);
+              setShowExplanation(false);
+              setIsCorrect(null);
+              setTimer(0);
+              setTimeout(() => setIsTimerActive(true), 0);
+              setNeInput('');
+            }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">

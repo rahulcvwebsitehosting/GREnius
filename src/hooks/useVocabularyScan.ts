@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { GRE_WORDS } from '../data';
+import { ALL_GRE_WORDS } from '../data';
 import { Word } from '../types';
 
 export function useVocabularyScan(text: string | null | undefined) {
@@ -10,7 +10,7 @@ export function useVocabularyScan(text: string | null | undefined) {
     const lowerText = text.toLowerCase();
     
     // Simple scan for top 5 GRE words
-    for (const greWord of GRE_WORDS) {
+    for (const greWord of ALL_GRE_WORDS) {
       const wordLower = greWord.word.toLowerCase();
       // Use regex for whole word match
       const regex = new RegExp(`\\b${wordLower}\\b`, 'i');

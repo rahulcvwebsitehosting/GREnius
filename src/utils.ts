@@ -4,7 +4,7 @@
  */
 
 import { Word } from './types';
-import { GRE_WORDS } from './data';
+import { ALL_GRE_WORDS } from './data';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -171,15 +171,18 @@ export function updateStreak(): number {
   return newStreak;
 }
 
-export function recordQuizResult(type: string, correct: number, total: number): number {
-  const history = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
+import { Mistake, QuizResult } from './types';
+
+export function recordQuizResult(type: string, correct: number, total: number, mistakes?: Mistake[]): number {
+  const history = getStorage(STORAGE_KEYS.quizHistory, []) as QuizResult[];
   const score = Math.round((correct / total) * 100);
-  const entry = {
+  const entry: QuizResult = {
     type,
     score,
     correct,
     total,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    mistakes
   };
   // Keep only last 50 results
   const updated = [...history, entry].slice(-50);
@@ -253,7 +256,7 @@ export function getDailyChallenge(): Word[] {
   // Seeded shuffle
   let s = seed;
   const rng = () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
-  const shuffled = [...GRE_WORDS].sort(() => rng() - 0.5);
+  const shuffled = [...ALL_GRE_WORDS].sort(() => rng() - 0.5);
   return shuffled.slice(0, 10);
 }
 

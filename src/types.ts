@@ -46,11 +46,20 @@ export interface VerbalQuestion {
   }[];
 }
 
+export interface Mistake {
+  question: string;
+  userAnswer: string;
+  correctAnswer: string;
+  explanation?: string;
+}
+
 export interface QuizResult {
-  section: string;
+  type: string;
   score: number;
+  correct: number;
   total: number;
   date: string;
+  mistakes?: Mistake[];
 }
 
 export interface UserSettings {

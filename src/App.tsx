@@ -21,6 +21,7 @@ import {
   Flame, 
   Trophy, 
   Zap,
+  Keyboard,
   Menu,
   X,
   Search,
@@ -51,6 +52,7 @@ import { GameAnalysis } from './components/GameAnalysis';
 import MathCheatSheet from './components/MathCheatSheet';
 import MentalMath from './components/MentalMath';
 import QuantitativeNotes from './components/QuantitativeNotes';
+import SpellingPractice from './components/SpellingPractice';
 import { NewsContainer } from './components/news/NewsContainer';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
 import { ALL_GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
@@ -2530,6 +2532,8 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
         return <MemoryPalace onXpChange={onXpChange} soundEnabled={soundEnabled} />;
       case 'mental-math':
         return <MentalMath onXpChange={onXpChange} onClose={() => setActiveGame(null)} />;
+      case 'spelling-practice':
+        return <SpellingPractice onXpChange={onXpChange} />;
       case 'number-memory':
         return (
           <div className="max-w-2xl mx-auto w-full text-center space-y-12">
@@ -2780,6 +2784,22 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                 <div className="space-y-2">
                   <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Mental Math Blitz</h3>
                   <p className="text-sm font-sans text-ink/60 leading-relaxed">Fast-paced quantitative patterns. Exponents, squares, and quick arithmetic.</p>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+                  Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setActiveGame('spelling-practice'); incrementStat('gamesPlayed'); }}
+                className="group text-left space-y-6"
+              >
+                <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+                  <Keyboard size={24} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Lexical Spelling</h3>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Master the orthography of the GRE lexicon. Spell the word based on its semantic definition.</p>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
                   Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />

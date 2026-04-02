@@ -22,9 +22,18 @@ const MathCheatSheet: React.FC<MathCheatSheetProps> = ({ onClose }) => {
     {
       title: "Powers of Two",
       icon: <Hash className="text-blue-500" size={20} />,
+      description: "Essential for binary logic, doubling problems, and exponential growth.",
       content: [
-        { label: "2¹ to 2⁵", formula: "2, 4, 8, 16, 32", example: "2⁵ = 32" },
-        { label: "2⁶ to 2¹⁰", formula: "64, 128, 256, 512, 1024", example: "2¹⁰ = 1,024" },
+        { label: "2¹", formula: "2", example: "2¹ = 2" },
+        { label: "2²", formula: "4", example: "2² = 4" },
+        { label: "2³", formula: "8", example: "2³ = 8" },
+        { label: "2⁴", formula: "16", example: "2⁴ = 16" },
+        { label: "2⁵", formula: "32", example: "2⁵ = 32" },
+        { label: "2⁶", formula: "64", example: "2⁶ = 64" },
+        { label: "2⁷", formula: "128", example: "2⁷ = 128" },
+        { label: "2⁸", formula: "256", example: "2⁸ = 256" },
+        { label: "2⁹", formula: "512", example: "2⁹ = 512" },
+        { label: "2¹⁰", formula: "1,024", example: "2¹⁰ = 1,024" },
       ]
     },
     {
@@ -69,9 +78,16 @@ const MathCheatSheet: React.FC<MathCheatSheetProps> = ({ onClose }) => {
       <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 max-h-[70vh] overflow-y-auto">
         {sections.map((section, idx) => (
           <div key={idx} className="space-y-6">
-            <div className="flex items-center gap-2 border-b border-ink/5 pb-2">
-              {section.icon}
-              <h3 className="text-sm font-sans font-bold text-ink uppercase tracking-[0.2em]">{section.title}</h3>
+            <div className="flex flex-col border-b border-ink/5 pb-2">
+              <div className="flex items-center gap-2">
+                {section.icon}
+                <h3 className="text-sm font-sans font-bold text-ink uppercase tracking-[0.2em]">{section.title}</h3>
+              </div>
+              {'description' in section && (
+                <p className="text-[10px] font-sans font-medium text-ink/40 mt-1 italic leading-relaxed">
+                  {section.description as string}
+                </p>
+              )}
             </div>
             <div className="space-y-4">
               {section.content.map((item, i) => (

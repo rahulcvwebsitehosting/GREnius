@@ -615,7 +615,7 @@ export const FLASH_REVIEW_WORDS: Word[] = [];
 // Unified pool: Manhattan Prep (ids 1–990) + Flash Review (ids 1001–1569)
 // Use this everywhere in the app instead of GRE_WORDS alone
 export const ALL_GRE_WORDS: Word[] = [
-  {
+{
     "id": 1,
     "word": "Abase",
     "pronunciation": "/əˈbeɪs/",
@@ -626,7 +626,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 2,
     "word": "Abate",
     "pronunciation": "ah-BEYT",
@@ -635,15 +635,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Abate = a + bate (like rebate, a reduction).",
     "example": "The storm began to abate after several hours.",
     "difficulty": 1,
-    "category": "Change",
-    "synonyms": [
-      "decrease",
-      "diminish",
-      "reduce",
-      "subside"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 3,
     "word": "Abdicate",
     "pronunciation": "AB-di-keyt",
@@ -652,14 +646,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ab + dicate (to speak away/renounce).",
     "example": "The king decided to abdicate the throne in favor of his son.",
     "difficulty": 2,
-    "category": "Action",
-    "synonyms": [
-      "relinquish",
-      "renounce",
-      "resign"
-    ]
+    "category": "Action"
   },
-  {
+{
     "id": 4,
     "word": "Aberrant",
     "pronunciation": "ah-BER-uhnt",
@@ -668,15 +657,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ab + errant (wandering away from the norm).",
     "example": "His aberrant behavior was a cause for concern among his peers.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "abnormal",
-      "atypical",
-      "deviant",
-      "unusual"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 5,
     "word": "Abeyance",
     "pronunciation": "uh-BEY-uhns",
@@ -685,14 +668,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Abeyance = at + bay (waiting at the bay).",
     "example": "The matter was held in abeyance until further evidence was found.",
     "difficulty": 3,
-    "category": "Time",
-    "synonyms": [
-      "inactivity",
-      "recess",
-      "suspension"
-    ]
+    "category": "Time"
   },
-  {
+{
     "id": 6,
     "word": "Abhor",
     "pronunciation": "/əbˈhɔːr/",
@@ -703,23 +681,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 7,
     "word": "abject",
     "pronunciation": "AB-jekt",
     "pos": "various",
     "definition": "completely hopeless; of the most miserable kind",
-    "example": "They lost everything when their house burned down and have since lived in abject conditions, often homeless.",
-    "synonyms": [
-      "downtrodden",
-      "miserable",
-      "wretched"
-    ],
     "mnemonic": "",
+    "example": "They lost everything when their house burned down and have since lived in abject conditions, often homeless.",
     "difficulty": 1,
     "category": "Emotion"
   },
-  {
+{
     "id": 8,
     "word": "Abjure",
     "pronunciation": "ab-JOOR",
@@ -728,13 +701,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ab + jure (to swear away).",
     "example": "He was forced to abjure his beliefs to avoid prosecution.",
     "difficulty": 3,
-    "category": "Action",
-    "synonyms": [
-      "forswear",
-      "renounce"
-    ]
+    "category": "Action"
   },
-  {
+{
     "id": 9,
     "word": "Abrasive",
     "pronunciation": "/əˈbreɪ.sɪv/",
@@ -745,7 +714,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 10,
     "word": "Abreast",
     "pronunciation": "/əˈbrest/",
@@ -756,7 +725,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 11,
     "word": "Abridge",
     "pronunciation": "/əˈbrɪdʒ/",
@@ -767,7 +736,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 12,
     "word": "Abscission",
     "pronunciation": "/æbˈsɪʒ.ən/",
@@ -778,7 +747,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 13,
     "word": "Abscond",
     "pronunciation": "ab-SKOND",
@@ -787,14 +756,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ab + scond (absent in a second).",
     "example": "The treasurer absconded with the company's funds.",
     "difficulty": 2,
-    "category": "Action",
-    "synonyms": [
-      "disappear",
-      "escape",
-      "vanish"
-    ]
+    "category": "Action"
   },
-  {
+{
     "id": 14,
     "word": "Abstain",
     "pronunciation": "/əbˈsteɪn/",
@@ -805,7 +769,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 15,
     "word": "Abstemious",
     "pronunciation": "ab-STEE-mee-uhs",
@@ -814,31 +778,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Abstemious: 'Ab' (away) + 'stem' (stop).",
     "example": "He was abstemious and never overate.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "frugal",
-      "moderate",
-      "restrained",
-      "temperate"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 16,
     "word": "abysmal",
     "pronunciation": "uh-BIZ-muhl",
     "pos": "various",
     "definition": "like an abyss: immeasurably great or low; hopelessly bad",
-    "example": "He wrote the term paper all in one night, and the results were abysmal.",
-    "synonyms": [
-      "bottomless",
-      "vast",
-      "wretched"
-    ],
     "mnemonic": "",
+    "example": "He wrote the term paper all in one night, and the results were abysmal.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 17,
     "word": "Abyss",
     "pronunciation": "/əˈbɪs/",
@@ -849,7 +802,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 18,
     "word": "Accede",
     "pronunciation": "/əkˈsiːd/",
@@ -860,22 +813,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 19,
     "word": "accolade",
     "pronunciation": "A-kuh-LEYD",
     "pos": "various",
     "definition": "an award or other expression of honor or praise",
-    "example": "Given the number of accolades she has received for her work on stage and in film, it is surprising just how humble she is.",
-    "synonyms": [
-      "award",
-      "honor"
-    ],
     "mnemonic": "",
+    "example": "Given the number of accolades she has received for her work on stage and in film, it is surprising just how humble she is.",
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 20,
     "word": "Accretion",
     "pronunciation": "/əˈkriː.ʃən/",
@@ -886,23 +835,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 21,
     "word": "accrue",
     "pronunciation": "uh-KROO",
     "pos": "various",
     "definition": "to grow through additions",
-    "example": "As the years accrue, so does wisdom.",
-    "synonyms": [
-      "accumulate",
-      "collect",
-      "increase"
-    ],
     "mnemonic": "",
+    "example": "As the years accrue, so does wisdom.",
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 22,
     "word": "Acerbic",
     "pronunciation": "uh-SUHR-bik",
@@ -911,15 +855,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Acerbic = acidic (both mean sharp/sour).",
     "example": "His acerbic wit made him a formidable opponent in debates.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "acidic",
-      "caustic",
-      "harsh",
-      "sharp"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 23,
     "word": "Acidulous",
     "pronunciation": "/əˈsɪd.jʊ.ləs/",
@@ -930,7 +868,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 24,
     "word": "Acme",
     "pronunciation": "/ˈæk.mi/",
@@ -941,7 +879,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 25,
     "word": "Activism",
     "pronunciation": "/ˈæk.tɪ.vɪ.zəm/",
@@ -952,7 +890,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Politics"
   },
-  {
+{
     "id": 26,
     "word": "Acumen",
     "pronunciation": "A-kyuh-muhn",
@@ -961,33 +899,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Acumen = accurate men (who have good judgment).",
     "example": "His business acumen allowed him to turn the failing company around.",
     "difficulty": 2,
-    "category": "Intellect",
-    "synonyms": [
-      "discernment",
-      "insight",
-      "judgment",
-      "perception"
-    ]
+    "category": "Intellect"
   },
-  {
+{
     "id": 27,
     "word": "adamant",
     "pronunciation": "A-duh-muhnt",
     "pos": "various",
     "definition": "insistent, immovable",
-    "example": "Though the child protested, his parents were adamant: he had to be in bed by eight o'clock.",
-    "synonyms": [
-      "determined",
-      "inflexible",
-      "resolute",
-      "stubborn",
-      "unyielding"
-    ],
     "mnemonic": "",
+    "example": "Though the child protested, his parents were adamant: he had to be in bed by eight o'clock.",
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 28,
     "word": "Adhere",
     "pronunciation": "/ədˈhɪər/",
@@ -998,7 +923,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 29,
     "word": "Admonish",
     "pronunciation": "ad-MO-nish",
@@ -1007,31 +932,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Admonish = add a warning.",
     "example": "The teacher admonished the students for being too noisy.",
     "difficulty": 1,
-    "category": "Speech",
-    "synonyms": [
-      "advise",
-      "reprimand",
-      "warn"
-    ]
+    "category": "Speech"
   },
-  {
+{
     "id": 30,
     "word": "adulation",
     "pronunciation": "a-juh-LEY-shun",
     "pos": "various",
     "definition": "excessive admiration, praise, or devotion; flattery",
-    "example": "The football star enjoyed the adulation of thousands of fans until it was revealed that he had cheated.",
-    "synonyms": [
-      "devotion",
-      "fawning",
-      "flattery",
-      "worship"
-    ],
     "mnemonic": "",
+    "example": "The football star enjoyed the adulation of thousands of fans until it was revealed that he had cheated.",
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 31,
     "word": "Adulterate",
     "pronunciation": "uh-DUHL-tuh-REYT",
@@ -1040,15 +954,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Adulterate = making it 'adult' (corrupting purity).",
     "example": "The honey was adulterated with sugar syrup.",
     "difficulty": 2,
-    "category": "Change",
-    "synonyms": [
-      "cheapen",
-      "corrupt",
-      "dilute",
-      "weaken"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 32,
     "word": "Adumbrate",
     "pronunciation": "/ˈæd.əm.breɪt/",
@@ -1059,7 +967,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 33,
     "word": "Adverse",
     "pronunciation": "/ˈæd.vɜːs/",
@@ -1070,7 +978,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 34,
     "word": "Advocate",
     "pronunciation": "/ˈæd.və.keɪt/",
@@ -1081,7 +989,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 35,
     "word": "Aerie",
     "pronunciation": "/ˈeə.ri/",
@@ -1092,7 +1000,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 36,
     "word": "Aesthetic",
     "pronunciation": "es-THE-tik",
@@ -1101,12 +1009,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Aesthetic = artistic.",
     "example": "The building was designed with a modern aesthetic in mind.",
     "difficulty": 1,
-    "category": "Art",
-    "synonyms": [
-      "artistic"
-    ]
+    "category": "Art"
   },
-  {
+{
     "id": 37,
     "word": "Affable",
     "pronunciation": "/ˈæf.ə.bəl/",
@@ -1117,7 +1022,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 38,
     "word": "Affectation",
     "pronunciation": "/ˌæf.ekˈteɪ.ʃən/",
@@ -1128,23 +1033,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 39,
     "word": "affinity",
     "pronunciation": "uh-FI-ni-tee",
     "pos": "various",
     "definition": "an attraction, especially one based on a similarity in interests",
-    "example": "Countless young women have read and reread Jane Eyre, feeling an affinity for its fierce heroine.",
-    "synonyms": [
-      "affection",
-      "fondness",
-      "sympathy"
-    ],
     "mnemonic": "",
+    "example": "Countless young women have read and reread Jane Eyre, feeling an affinity for its fierce heroine.",
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 40,
     "word": "Aggrandize",
     "pronunciation": "uh-GRAN-dahyz",
@@ -1153,15 +1053,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Aggrandize = add grand (make it grander).",
     "example": "The dictator sought to aggrandize his power through military conquest.",
     "difficulty": 3,
-    "category": "Action",
-    "synonyms": [
-      "glorify",
-      "hype",
-      "inflate",
-      "strengthen"
-    ]
+    "category": "Action"
   },
-  {
+{
     "id": 41,
     "word": "Aggregate",
     "pronunciation": "A-gre-guht",
@@ -1170,13 +1064,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Aggregate = add great (adding things to make a great whole).",
     "example": "The aggregate score of the two matches was 4-2.",
     "difficulty": 1,
-    "category": "Quantity",
-    "synonyms": [
-      "accumulated",
-      "collective"
-    ]
+    "category": "Quantity"
   },
-  {
+{
     "id": 42,
     "word": "Alacrity",
     "pronunciation": "uh-LA-kruh-tee",
@@ -1185,14 +1075,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Alacrity = electricity (speedy energy).",
     "example": "She accepted the invitation with alacrity.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "liveliness",
-      "promptness",
-      "willingness"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 43,
     "word": "Albeit",
     "pronunciation": "/ɔːlˈbiː.ɪt/",
@@ -1203,22 +1088,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 44,
     "word": "alchemy",
     "pronunciation": "AL-kuh-mee",
     "pos": "various",
     "definition": "the power or process that can change something ordinary into something valuable; a seemingly magical process",
-    "example": "Through the alchemy of hard work and determination, she managed to turn a failing business into a success.",
-    "synonyms": [
-      "magic",
-      "transformation"
-    ],
     "mnemonic": "",
+    "example": "Through the alchemy of hard work and determination, she managed to turn a failing business into a success.",
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 45,
     "word": "Alienate",
     "pronunciation": "/ˈeɪ.li.ə.neɪt/",
@@ -1229,24 +1110,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 46,
     "word": "allay",
     "pronunciation": "uh-LEY",
     "pos": "various",
     "definition": "to lessen or relieve; to calm or pacify",
-    "example": "His confidence helped to allay our fears about the impending storm.",
-    "synonyms": [
-      "ease",
-      "moderate",
-      "pacify",
-      "reduce"
-    ],
     "mnemonic": "",
+    "example": "His confidence helped to allay our fears about the impending storm.",
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 47,
     "word": "Alleviate",
     "pronunciation": "uh-LEE-vee-eyt",
@@ -1255,48 +1130,31 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Alleviate = all-evil-ate (eating away the evil/pain).",
     "example": "The new drug will alleviate the symptoms of the disease.",
     "difficulty": 1,
-    "category": "Change",
-    "synonyms": [
-      "ease",
-      "moderate",
-      "relieve",
-      "soothe"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 48,
     "word": "alloy",
     "pronunciation": "A-loi",
     "pos": "various",
     "definition": "a mixture of metals; something added that lowers value",
-    "example": "Fool's gold is actually an alloy of iron and sulfur.",
-    "synonyms": [
-      "admixture",
-      "blend",
-      "mixture"
-    ],
     "mnemonic": "",
+    "example": "Fool's gold is actually an alloy of iron and sulfur.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 49,
     "word": "allure",
     "pronunciation": "uh-LOOR",
     "pos": "various",
     "definition": "to attract with something desirable; to entice",
-    "example": "The allure of the warm weather had them dreaming of a vacation.",
-    "synonyms": [
-      "attract",
-      "entice",
-      "lure",
-      "tempt"
-    ],
     "mnemonic": "",
+    "example": "The allure of the warm weather had them dreaming of a vacation.",
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 50,
     "word": "Aloof",
     "pronunciation": "/əˈluːf/",
@@ -1307,24 +1165,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 51,
     "word": "altruistic",
     "pronunciation": "al-troo-IS-tik",
     "pos": "various",
     "definition": "devoted to others' welfare; unselfish",
-    "example": "She is known for her altruistic work with the homeless in their community.",
-    "synonyms": [
-      "charitable",
-      "generous",
-      "selfless",
-      "unselfish"
-    ],
     "mnemonic": "",
+    "example": "She is known for her altruistic work with the homeless in their community.",
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 52,
     "word": "Amalgamate",
     "pronunciation": "/əˈmæl.ɡə.meɪt/",
@@ -1335,7 +1187,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 53,
     "word": "Ambiguous",
     "pronunciation": "am-BIG-yoo-uhs",
@@ -1344,14 +1196,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ambiguous = ambi (both) + guous (guess).",
     "example": "The election result was ambiguous.",
     "difficulty": 1,
-    "category": "Logic",
-    "synonyms": [
-      "cryptic",
-      "unclear",
-      "vague"
-    ]
+    "category": "Logic"
   },
-  {
+{
     "id": 54,
     "word": "Ambivalence",
     "pronunciation": "/æmˈbɪv.ə.ləns/",
@@ -1362,7 +1209,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 55,
     "word": "Ambivalent",
     "pronunciation": "am-BIV-uh-luhnt",
@@ -1371,14 +1218,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ambivalent = ambi (both) + valent (value/strength).",
     "example": "She was ambivalent about her new job.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "indecisive",
-      "uncertain",
-      "undecided"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 56,
     "word": "Ameliorate",
     "pronunciation": "uh-MEEL-yuh-reyt",
@@ -1387,82 +1229,53 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ameliorate = improve-ate.",
     "example": "The reform did much to ameliorate living conditions.",
     "difficulty": 3,
-    "category": "Change",
-    "synonyms": [
-      "better",
-      "correct",
-      "help",
-      "improve"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 57,
     "word": "amenable",
     "pronunciation": "uh-MEE-nuh-buhl",
     "pos": "various",
     "definition": "responsive; easily led or managed; willing to comply",
-    "example": "Though we expected a difficult negotiation, the sellers were surprisingly amenable to all of our demands.",
-    "synonyms": [
-      "agreeable",
-      "compliant",
-      "receptive",
-      "responsive"
-    ],
     "mnemonic": "",
+    "example": "Though we expected a difficult negotiation, the sellers were surprisingly amenable to all of our demands.",
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 58,
     "word": "amiable",
     "pronunciation": "EY-mee-uh-buhl",
     "pos": "various",
     "definition": "pleasant, friendly",
-    "example": "Despite his reputation for being difficult, the new boss turned out to be quite amiable.",
-    "synonyms": [
-      "agreeable",
-      "friendly",
-      "genial",
-      "good-natured"
-    ],
     "mnemonic": "",
+    "example": "Despite his reputation for being difficult, the new boss turned out to be quite amiable.",
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 59,
     "word": "amicable",
     "pronunciation": "A-mi-kuh-buhl",
     "pos": "various",
     "definition": "friendly; characterized by goodwill",
-    "example": "Though they had their differences, they managed to reach an amicable agreement.",
-    "synonyms": [
-      "cordial",
-      "friendly",
-      "harmonious",
-      "peaceful"
-    ],
     "mnemonic": "",
+    "example": "Though they had their differences, they managed to reach an amicable agreement.",
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 60,
     "word": "amorphous",
     "pronunciation": "uh-MAWR-fuhs",
     "pos": "various",
     "definition": "without a specific shape or form; lacking organization",
-    "example": "The fog formed an amorphous mass that blanketed the whole valley.",
-    "synonyms": [
-      "formless",
-      "shapeless",
-      "vague"
-    ],
     "mnemonic": "",
+    "example": "The fog formed an amorphous mass that blanketed the whole valley.",
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 61,
     "word": "Amortize",
     "pronunciation": "/ˈæm.ə.taɪz/",
@@ -1473,7 +1286,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 62,
     "word": "Anachronism",
     "pronunciation": "uh-NA-kruh-ni-zuhm",
@@ -1482,13 +1295,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Anachronism = ana (against) + chron (time).",
     "example": "The use of a sword in the modern army is an anachronism.",
     "difficulty": 2,
-    "category": "Time",
-    "synonyms": [
-      "archaism",
-      "relic"
-    ]
+    "category": "Time"
   },
-  {
+{
     "id": 63,
     "word": "Analgesia",
     "pronunciation": "/ˌæn.əlˈdʒiː.zi.ə/",
@@ -1499,7 +1308,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 64,
     "word": "Analogous",
     "pronunciation": "/əˈnæl.ə.ɡəs/",
@@ -1510,7 +1319,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 65,
     "word": "Anarchy",
     "pronunciation": "A-nahr-kee",
@@ -1519,50 +1328,31 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Anarchy = an (without) + archy (rule).",
     "example": "The country was in a state of anarchy after the revolution.",
     "difficulty": 1,
-    "category": "Politics",
-    "synonyms": [
-      "chaos",
-      "disorder",
-      "lawlessness",
-      "turmoil"
-    ]
+    "category": "Politics"
   },
-  {
+{
     "id": 66,
     "word": "anecdote",
     "pronunciation": "A-nik-doht",
     "pos": "various",
     "definition": "a short account of an amusing or interesting event",
-    "example": "His speech was peppered with anecdotes about growing up in a small Midwestern town.",
-    "synonyms": [
-      "account",
-      "narrative",
-      "story",
-      "tale"
-    ],
     "mnemonic": "",
+    "example": "His speech was peppered with anecdotes about growing up in a small Midwestern town.",
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 67,
     "word": "animosity",
     "pronunciation": "a-nuh-MO-si-tee",
     "pos": "various",
     "definition": "a feeling of dislike, hatred, or ill will",
-    "example": "There was animosity between the two players ever since the controversial call in the championship game.",
-    "synonyms": [
-      "antagonism",
-      "bitterness",
-      "enmity",
-      "hatred",
-      "hostility"
-    ],
     "mnemonic": "",
+    "example": "There was animosity between the two players ever since the controversial call in the championship game.",
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 68,
     "word": "Annul",
     "pronunciation": "/əˈnʌl/",
@@ -1573,7 +1363,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 69,
     "word": "Anodyne",
     "pronunciation": "/ˈæn.ə.daɪn/",
@@ -1584,7 +1374,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 70,
     "word": "Anoint",
     "pronunciation": "/əˈnɔɪnt/",
@@ -1595,7 +1385,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 71,
     "word": "Anomalous",
     "pronunciation": "/əˈnɒm.ə.ləs/",
@@ -1606,7 +1396,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 72,
     "word": "Anomaly",
     "pronunciation": "uh-NO-muh-lee",
@@ -1615,15 +1405,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Anomaly = abnormal (both start with 'a').",
     "example": "The scientist was unable to explain the anomaly in the data.",
     "difficulty": 1,
-    "category": "Logic",
-    "synonyms": [
-      "abnormality",
-      "exception",
-      "irregularity",
-      "oddity"
-    ]
+    "category": "Logic"
   },
-  {
+{
     "id": 73,
     "word": "Antagonize",
     "pronunciation": "an-TA-guh-nahyz",
@@ -1632,15 +1416,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Antagonize = anti (against) + agonize.",
     "example": "His constant criticism began to antagonize his colleagues.",
     "difficulty": 1,
-    "category": "Behavior",
-    "synonyms": [
-      "aggravate",
-      "annoy",
-      "irritate",
-      "provoke"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 74,
     "word": "Antedate",
     "pronunciation": "/ˌæn.tiˈdeɪt/",
@@ -1651,7 +1429,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Time"
   },
-  {
+{
     "id": 75,
     "word": "Antipathy",
     "pronunciation": "/ænˈtɪp.ə.θi/",
@@ -1662,25 +1440,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 76,
     "word": "antithesis",
     "pronunciation": "an-TI-thuh-sis",
     "pos": "various",
     "definition": "the exact opposite",
-    "example": "Her happy and outgoing personality is the antithesis of her shy and retiring sister's.",
-    "synonyms": [
-      "contradiction",
-      "contrary",
-      "contrast",
-      "opposite",
-      "reverse"
-    ],
     "mnemonic": "",
+    "example": "Her happy and outgoing personality is the antithesis of her shy and retiring sister's.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 77,
     "word": "Antithetical",
     "pronunciation": "/ˌæn.tɪˈθet.ɪ.kəl/",
@@ -1691,7 +1462,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 78,
     "word": "Apathy",
     "pronunciation": "A-puh-thee",
@@ -1700,16 +1471,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Apathy = a (without) + pathy (feeling).",
     "example": "There is widespread apathy among the electorate.",
     "difficulty": 1,
-    "category": "Behavior",
-    "synonyms": [
-      "disinterest",
-      "indifference",
-      "lethargy",
-      "passivity",
-      "unconcern"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 79,
     "word": "Apocryphal",
     "pronunciation": "/əˈpɒk.rɪ.fəl/",
@@ -1720,7 +1484,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 80,
     "word": "Apostate",
     "pronunciation": "/əˈpɒs.teɪt/",
@@ -1731,7 +1495,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 81,
     "word": "Apostle",
     "pronunciation": "/əˈpɒs.əl/",
@@ -1742,7 +1506,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Politics"
   },
-  {
+{
     "id": 82,
     "word": "Appease",
     "pronunciation": "uh-PEEZ",
@@ -1751,16 +1515,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Appease: 'Peace'.",
     "example": "He tried to appease the angry crowd.",
     "difficulty": 1,
-    "category": "Emotion",
-    "synonyms": [
-      "calm",
-      "pacify",
-      "placate",
-      "satisfy",
-      "soothe"
-    ]
+    "category": "Emotion"
   },
-  {
+{
     "id": 83,
     "word": "Apposite",
     "pronunciation": "/ˈæp.ə.zɪt/",
@@ -1771,7 +1528,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 84,
     "word": "Apprise",
     "pronunciation": "/əˈpraɪz/",
@@ -1782,7 +1539,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 85,
     "word": "Approbation",
     "pronunciation": "a-pruh-BEY-shuhn",
@@ -1791,16 +1548,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Approbation = approval.",
     "example": "The opera met with high approbation.",
     "difficulty": 3,
-    "category": "Speech",
-    "synonyms": [
-      "acclaim",
-      "approval",
-      "commendation",
-      "endorsement",
-      "praise"
-    ]
+    "category": "Speech"
   },
-  {
+{
     "id": 86,
     "word": "Appropriate",
     "pronunciation": "/əˈprəʊ.pri.ət/",
@@ -1811,25 +1561,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 87,
     "word": "apt",
     "pronunciation": "APT",
     "pos": "various",
     "definition": "suitable; appropriate; likely or inclined",
-    "example": "A reference to the works of Shakespeare is always apt in a discussion of the English language.",
-    "synonyms": [
-      "appropriate",
-      "fitting",
-      "likely",
-      "relevant",
-      "suitable"
-    ],
     "mnemonic": "",
+    "example": "A reference to the works of Shakespeare is always apt in a discussion of the English language.",
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 88,
     "word": "Arbiter",
     "pronunciation": "/ˈɑː.bɪ.tər/",
@@ -1840,7 +1583,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Politics"
   },
-  {
+{
     "id": 89,
     "word": "Arcane",
     "pronunciation": "/ɑːˈkeɪn/",
@@ -1851,7 +1594,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 90,
     "word": "Archaic",
     "pronunciation": "/ɑːˈkeɪ.ɪk/",
@@ -1862,7 +1605,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Time"
   },
-  {
+{
     "id": 91,
     "word": "Ardent",
     "pronunciation": "/ˈɑː.dənt/",
@@ -1873,25 +1616,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 92,
     "word": "ardor",
     "pronunciation": "AHR-dor",
     "pos": "various",
     "definition": "great enthusiasm; intense devotion or love",
-    "example": "With the ardor of a true believer, she committed herself wholeheartedly to the cause.",
-    "synonyms": [
-      "devotion",
-      "eagerness",
-      "enthusiasm",
-      "fervor",
-      "passion"
-    ],
     "mnemonic": "",
+    "example": "With the ardor of a true believer, she committed herself wholeheartedly to the cause.",
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 93,
     "word": "Arduous",
     "pronunciation": "AHR-joo-uhs",
@@ -1900,34 +1636,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Arduous = hard-u-ous.",
     "example": "The journey was arduous and dangerous.",
     "difficulty": 2,
-    "category": "Action",
-    "synonyms": [
-      "difficult",
-      "exhausting",
-      "laborious",
-      "strenuous",
-      "trying"
-    ]
+    "category": "Action"
   },
-  {
+{
     "id": 94,
     "word": "arrogant",
     "pronunciation": "A-ruh-guhnt",
     "pos": "various",
     "definition": "having an exaggerated sense of self-importance",
-    "example": "He was too arrogant to even consider the possibility that he might be wrong.",
-    "synonyms": [
-      "conceited",
-      "haughty",
-      "pompous",
-      "prideful",
-      "snobbish"
-    ],
     "mnemonic": "",
+    "example": "He was too arrogant to even consider the possibility that he might be wrong.",
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 95,
     "word": "Arrogate",
     "pronunciation": "/ˈær.ə.ɡeɪt/",
@@ -1938,7 +1660,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 96,
     "word": "Articulate",
     "pronunciation": "ahr-TI-kyuh-luht",
@@ -1947,16 +1669,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Articulate = article (clear writing).",
     "example": "She is an articulate speaker who can explain complex ideas clearly.",
     "difficulty": 1,
-    "category": "Speech",
-    "synonyms": [
-      "clear",
-      "eloquent",
-      "expressive",
-      "fluent",
-      "well-spoken"
-    ]
+    "category": "Speech"
   },
-  {
+{
     "id": 97,
     "word": "Artifact",
     "pronunciation": "/ˈɑː.tɪ.fækt/",
@@ -1967,7 +1682,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 98,
     "word": "Artless",
     "pronunciation": "/ˈɑːt.ləs/",
@@ -1978,7 +1693,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 99,
     "word": "Ascertain",
     "pronunciation": "a-ser-TEYN",
@@ -1987,16 +1702,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ascertain = as (certain) + tain.",
     "example": "The police are trying to ascertain the cause of the accident.",
     "difficulty": 2,
-    "category": "Action",
-    "synonyms": [
-      "confirm",
-      "determine",
-      "discover",
-      "establish",
-      "verify"
-    ]
+    "category": "Action"
   },
-  {
+{
     "id": 100,
     "word": "Ascetic",
     "pronunciation": "uh-SE-tik",
@@ -2005,16 +1713,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Ascetic = a (not) + skeptic (of pleasures).",
     "example": "The monks lived an ascetic life.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "austere",
-      "disciplined",
-      "frugal",
-      "self-denying",
-      "severe"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 101,
     "word": "Ascribe",
     "pronunciation": "/əˈskraɪb/",
@@ -2025,7 +1726,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 102,
     "word": "Aseptic",
     "pronunciation": "/eɪˈsep.tɪk/",
@@ -2036,7 +1737,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 103,
     "word": "Asperity",
     "pronunciation": "/əˈsper.ə.ti/",
@@ -2047,24 +1748,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 104,
     "word": "aspersion",
     "pronunciation": "uh-SPUHR-zhuhn",
     "pos": "various",
     "definition": "a damaging remark; slander",
-    "example": "She had no reason to cast aspersions on her colleague's work ethic, which was impeccable.",
-    "synonyms": [
-      "defamation",
-      "disparagement",
-      "innuendo",
-      "slander"
-    ],
     "mnemonic": "",
+    "example": "She had no reason to cast aspersions on her colleague's work ethic, which was impeccable.",
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 105,
     "word": "Aspersions",
     "pronunciation": "/əˈspɜː.ʃənz/",
@@ -2075,7 +1770,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 106,
     "word": "Assail",
     "pronunciation": "/əˈseɪl/",
@@ -2086,7 +1781,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 107,
     "word": "Assiduous",
     "pronunciation": "uh-SI-joo-uhs",
@@ -2095,16 +1790,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Assiduous = as (diligent) + siduous.",
     "example": "She was assiduous in her duties.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "diligent",
-      "hard-working",
-      "industrious",
-      "persistent",
-      "tireless"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 108,
     "word": "Assuage",
     "pronunciation": "uh-SWEYJ",
@@ -2113,52 +1801,31 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Assuage = as (sweet) + suage.",
     "example": "The letter assuaged her fears.",
     "difficulty": 3,
-    "category": "Change",
-    "synonyms": [
-      "alleviate",
-      "appease",
-      "ease",
-      "mitigate",
-      "pacify"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 109,
     "word": "astute",
     "pronunciation": "uh-STOOT",
     "pos": "various",
     "definition": "clever and shrewd; perceptive",
-    "example": "He made an astute observation about the economy that impressed even the most experienced economists.",
-    "synonyms": [
-      "clever",
-      "cunning",
-      "keen",
-      "perceptive",
-      "shrewd"
-    ],
     "mnemonic": "",
+    "example": "He made an astute observation about the economy that impressed even the most experienced economists.",
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 110,
     "word": "atrophy",
     "pronunciation": "A-truh-fee",
     "pos": "various",
     "definition": "a wasting away from lack of use",
-    "example": "The muscles in the injured arm began to atrophy during the three months it was in a cast.",
-    "synonyms": [
-      "decay",
-      "decline",
-      "deterioration",
-      "wasting",
-      "withering"
-    ],
     "mnemonic": "",
+    "example": "The muscles in the injured arm began to atrophy during the three months it was in a cast.",
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 111,
     "word": "Attenuate",
     "pronunciation": "/əˈten.ju.eɪt/",
@@ -2169,7 +1836,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 112,
     "word": "Attuned",
     "pronunciation": "/əˈtjuːnd/",
@@ -2180,7 +1847,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 113,
     "word": "Audacious",
     "pronunciation": "aw-DEY-shuhs",
@@ -2189,16 +1856,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Audacious = aud (bold) + acious.",
     "example": "The plan was audacious and risky.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "bold",
-      "brazen",
-      "daring",
-      "fearless",
-      "reckless"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 114,
     "word": "Augment",
     "pronunciation": "awg-MENT",
@@ -2207,16 +1867,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Augment = add (make larger).",
     "example": "The company sought to augment its profits through new investments.",
     "difficulty": 1,
-    "category": "Change",
-    "synonyms": [
-      "amplify",
-      "enhance",
-      "expand",
-      "increase",
-      "supplement"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 115,
     "word": "Augury",
     "pronunciation": "/ˈɔː.ɡjə.ri/",
@@ -2227,7 +1880,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 4,
     "category": "Logic"
   },
-  {
+{
     "id": 116,
     "word": "August",
     "pronunciation": "/ɔːˈɡʌst/",
@@ -2238,25 +1891,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 117,
     "word": "auspicious",
     "pronunciation": "aw-SPI-shuhs",
     "pos": "various",
     "definition": "promising; marking a good beginning; favorable",
-    "example": "The sunny weather on the day of the outdoor festival was an auspicious beginning to the weekend.",
-    "synonyms": [
-      "encouraging",
-      "favorable",
-      "fortunate",
-      "hopeful",
-      "promising"
-    ],
     "mnemonic": "",
+    "example": "The sunny weather on the day of the outdoor festival was an auspicious beginning to the weekend.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 118,
     "word": "Austere",
     "pronunciation": "aw-STEER",
@@ -2265,33 +1911,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Austere sounds like 'severe'.",
     "example": "The monk led an austere life in the desert.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "bleak",
-      "harsh",
-      "plain",
-      "severe",
-      "stark"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 119,
     "word": "authoritarian",
     "pronunciation": "uh-thawr-i-TAIR-ee-uhn",
     "pos": "various",
     "definition": "demanding complete obedience to authority; favoring strict social control",
-    "example": "The authoritarian regime did not allow free elections or free speech.",
-    "synonyms": [
-      "despotic",
-      "dictatorial",
-      "domineering",
-      "tyrannical"
-    ],
     "mnemonic": "",
+    "example": "The authoritarian regime did not allow free elections or free speech.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 120,
     "word": "Autonomous",
     "pronunciation": "/ɔːˈtɒn.ə.məs/",
@@ -2302,7 +1935,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 121,
     "word": "Avarice",
     "pronunciation": "A-vuh-ris",
@@ -2311,15 +1944,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Avarice sounds like 'a very rich' person who wants more.",
     "example": "His avarice led him to embezzle money from the company.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "covetousness",
-      "cupidity",
-      "greed",
-      "materialism"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 122,
     "word": "Aver",
     "pronunciation": "/əˈvɜːr/",
@@ -2330,7 +1957,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 4,
     "category": "Speech"
   },
-  {
+{
     "id": 123,
     "word": "Avid",
     "pronunciation": "A-vid",
@@ -2339,16 +1966,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Avid sounds like 'avoid' (opposite) - you don't avoid what you are avid about.",
     "example": "She is an avid reader of historical fiction.",
     "difficulty": 1,
-    "category": "Behavior",
-    "synonyms": [
-      "ardent",
-      "eager",
-      "enthusiastic",
-      "fervent",
-      "keen"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 124,
     "word": "Axiom",
     "pronunciation": "/ˈæk.si.əm/",
@@ -2359,7 +1979,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 125,
     "word": "Balk",
     "pronunciation": "/bɔːk/",
@@ -2370,7 +1990,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 126,
     "word": "Balloon",
     "pronunciation": "/bəˈluːn/",
@@ -2381,7 +2001,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 127,
     "word": "Banal",
     "pronunciation": "buh-NAL",
@@ -2390,16 +2010,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Banal sounds like 'ban all' (ban all boring things).",
     "example": "The movie's plot was banal and predictable.",
     "difficulty": 2,
-    "category": "Art",
-    "synonyms": [
-      "commonplace",
-      "mundane",
-      "ordinary",
-      "predictable",
-      "trite"
-    ]
+    "category": "Art"
   },
-  {
+{
     "id": 128,
     "word": "Bane",
     "pronunciation": "/beɪn/",
@@ -2410,7 +2023,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 129,
     "word": "Base",
     "pronunciation": "/beɪs/",
@@ -2421,7 +2034,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 130,
     "word": "Baying",
     "pronunciation": "/ˈbeɪ.ɪŋ/",
@@ -2432,7 +2045,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 131,
     "word": "Belie",
     "pronunciation": "bi-LAHY",
@@ -2441,33 +2054,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Belie sounds like 'be a lie'.",
     "example": "His calm face belied the anger he felt inside.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "contradict",
-      "deny",
-      "disguise",
-      "misrepresent"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 132,
     "word": "belligerent",
     "pronunciation": "buh-LI-juh-ruhnt",
     "pos": "various",
     "definition": "hostile and aggressive; engaged in or inclined to war",
-    "example": "She seemed to be in a belligerent mood; she was looking for an argument.",
-    "synonyms": [
-      "aggressive",
-      "argumentative",
-      "combative",
-      "hostile",
-      "warlike"
-    ],
     "mnemonic": "",
+    "example": "She seemed to be in a belligerent mood; she was looking for an argument.",
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 133,
     "word": "Beneficent",
     "pronunciation": "/bəˈnef.ɪ.sənt/",
@@ -2478,24 +2078,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 134,
     "word": "benevolent",
     "pronunciation": "buh-NE-vuh-luhnt",
     "pos": "various",
     "definition": "generous; showing goodwill and kindness",
-    "example": "The benevolent landlord allowed his tenants to pay their rent late since they had lost their jobs.",
-    "synonyms": [
-      "charitable",
-      "generous",
-      "kind",
-      "philanthropic"
-    ],
     "mnemonic": "",
+    "example": "The benevolent landlord allowed his tenants to pay their rent late since they had lost their jobs.",
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 135,
     "word": "Benign",
     "pronunciation": "/bɪˈnaɪn/",
@@ -2506,7 +2100,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 136,
     "word": "Bent",
     "pronunciation": "/bent/",
@@ -2517,7 +2111,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 137,
     "word": "Besiege",
     "pronunciation": "/bɪˈsiːdʒ/",
@@ -2528,7 +2122,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 138,
     "word": "Bevy",
     "pronunciation": "/ˈbev.i/",
@@ -2539,25 +2133,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 139,
     "word": "biased",
     "pronunciation": "BAHY-uhst",
     "pos": "various",
     "definition": "having a prejudice in favor of or against something",
-    "example": "The biased coverage of the election in the newspaper clearly favored one candidate.",
-    "synonyms": [
-      "influenced",
-      "one-sided",
-      "partial",
-      "prejudiced",
-      "skewed"
-    ],
     "mnemonic": "",
+    "example": "The biased coverage of the election in the newspaper clearly favored one candidate.",
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 140,
     "word": "Bifurcate",
     "pronunciation": "/ˈbaɪ.fə.keɪt/",
@@ -2568,7 +2155,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 141,
     "word": "Bilk",
     "pronunciation": "/bɪlk/",
@@ -2579,7 +2166,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 142,
     "word": "Blight",
     "pronunciation": "/blaɪt/",
@@ -2590,7 +2177,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 143,
     "word": "Blithe",
     "pronunciation": "/blaɪð/",
@@ -2601,7 +2188,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 144,
     "word": "Bogus",
     "pronunciation": "/ˈbəʊ.ɡəs/",
@@ -2612,7 +2199,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 145,
     "word": "Bolster",
     "pronunciation": "/ˈbəʊl.stər/",
@@ -2623,7 +2210,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 146,
     "word": "Bombastic",
     "pronunciation": "bom-BAS-tik",
@@ -2632,16 +2219,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Bombastic sounds like 'bomb' (loud and showy).",
     "example": "His bombastic speech failed to impress the audience.",
     "difficulty": 3,
-    "category": "Speech",
-    "synonyms": [
-      "grandiose",
-      "inflated",
-      "pompous",
-      "pretentious",
-      "verbose"
-    ]
+    "category": "Speech"
   },
-  {
+{
     "id": 147,
     "word": "Bonhomie",
     "pronunciation": "/ˌbɒn.əˈmiː/",
@@ -2652,25 +2232,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 4,
     "category": "Behavior"
   },
-  {
+{
     "id": 148,
     "word": "boon",
     "pronunciation": "BOON",
     "pos": "various",
     "definition": "a benefit; a welcome gift or advantage",
-    "example": "The money the company received from the government was a boon to its ailing operations.",
-    "synonyms": [
-      "benefit",
-      "blessing",
-      "gift",
-      "godsend",
-      "windfall"
-    ],
     "mnemonic": "",
+    "example": "The money the company received from the government was a boon to its ailing operations.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 149,
     "word": "Boor",
     "pronunciation": "/bʊər/",
@@ -2681,7 +2254,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 150,
     "word": "Boorish",
     "pronunciation": "BOOR-ish",
@@ -2690,16 +2263,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Boorish: 'Boar' (wild pig).",
     "example": "His boorish behavior at the party was embarrassing.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "crude",
-      "crass",
-      "ill-mannered",
-      "rude",
-      "uncouth"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 151,
     "word": "Brandish",
     "pronunciation": "/ˈbræn.dɪʃ/",
@@ -2710,7 +2276,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 152,
     "word": "Brook",
     "pronunciation": "/brʊk/",
@@ -2721,7 +2287,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 153,
     "word": "Bucolic",
     "pronunciation": "/bjuːˈkɒl.ɪk/",
@@ -2732,7 +2298,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 154,
     "word": "Buffer",
     "pronunciation": "/ˈbʌf.ər/",
@@ -2743,7 +2309,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 155,
     "word": "Bureaucracy",
     "pronunciation": "/bjʊəˈrɒk.rə.si/",
@@ -2754,7 +2320,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 156,
     "word": "Burgeon",
     "pronunciation": "BUR-juhn",
@@ -2763,16 +2329,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Burgeon sounds like 'burger' (growing big).",
     "example": "The city's population burgeoned in the late 19th century.",
     "difficulty": 3,
-    "category": "Change",
-    "synonyms": [
-      "bloom",
-      "expand",
-      "flourish",
-      "grow",
-      "thrive"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 157,
     "word": "Burnish",
     "pronunciation": "/ˈbɜːr.nɪʃ/",
@@ -2783,7 +2342,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 158,
     "word": "Buttress",
     "pronunciation": "/ˈbʌt.rəs/",
@@ -2794,7 +2353,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 159,
     "word": "Bygone",
     "pronunciation": "/ˈbaɪ.ɡɒn/",
@@ -2805,7 +2364,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 160,
     "word": "Cacophony",
     "pronunciation": "kuh-KO-fuh-nee",
@@ -2814,34 +2373,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Cacophony: 'Caco' (bad) + 'phony' (sound).",
     "example": "The cacophony of the city traffic was overwhelming.",
     "difficulty": 2,
-    "category": "Art",
-    "synonyms": [
-      "clamor",
-      "commotion",
-      "din",
-      "discord",
-      "noise"
-    ]
+    "category": "Art"
   },
-  {
+{
     "id": 161,
     "word": "callous",
     "pronunciation": "KA-luhs",
     "pos": "various",
     "definition": "unfeeling; unsympathetic",
-    "example": "He was callous in his response to the suffering of others, never stopping to consider their pain.",
-    "synonyms": [
-      "cold",
-      "cold-hearted",
-      "hardened",
-      "indifferent",
-      "insensitive"
-    ],
     "mnemonic": "",
+    "example": "He was callous in his response to the suffering of others, never stopping to consider their pain.",
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 162,
     "word": "Calumny",
     "pronunciation": "/ˈkæl.əm.ni/",
@@ -2852,7 +2397,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 163,
     "word": "Canard",
     "pronunciation": "/kəˈnɑːrd/",
@@ -2863,7 +2408,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 164,
     "word": "Candid",
     "pronunciation": "KAN-did",
@@ -2872,16 +2417,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Candid: 'Candy' (sweet/honest).",
     "example": "She gave a candid interview about her life.",
     "difficulty": 1,
-    "category": "Behavior",
-    "synonyms": [
-      "direct",
-      "frank",
-      "honest",
-      "open",
-      "truthful"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 165,
     "word": "Canonical",
     "pronunciation": "/kəˈnɒn.ɪ.kəl/",
@@ -2892,7 +2430,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 166,
     "word": "Capricious",
     "pronunciation": "kuh-PRI-shuhs",
@@ -2901,16 +2439,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Capricious: 'Caprice' (whim).",
     "example": "The weather was capricious and unpredictable.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "erratic",
-      "fickle",
-      "impulsive",
-      "mercurial",
-      "whimsical"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 167,
     "word": "Cardinal",
     "pronunciation": "/ˈkɑːr.dɪ.nəl/",
@@ -2921,7 +2452,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 168,
     "word": "Cartography",
     "pronunciation": "/kɑːrˈtɒɡ.rə.fi/",
@@ -2932,7 +2463,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 169,
     "word": "Castigate",
     "pronunciation": "KAS-ti-geyt",
@@ -2941,16 +2472,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Castigate: 'Cast' (throw) + 'igate' (gate/punish).",
     "example": "The manager castigated the employees for their poor performance.",
     "difficulty": 3,
-    "category": "Speech",
-    "synonyms": [
-      "berate",
-      "chastise",
-      "criticize",
-      "rebuke",
-      "reprimand"
-    ]
+    "category": "Speech"
   },
-  {
+{
     "id": 170,
     "word": "Castigation",
     "pronunciation": "/ˌkæs.tɪˈɡeɪ.ʃən/",
@@ -2961,7 +2485,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 171,
     "word": "Catalyst",
     "pronunciation": "/ˈkæt.əl.ɪst/",
@@ -2972,7 +2496,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 172,
     "word": "Catholic",
     "pronunciation": "/ˈkæθ.lɪk/",
@@ -2983,7 +2507,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 173,
     "word": "Caustic",
     "pronunciation": "KAW-stik",
@@ -2992,16 +2516,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Caustic: 'Cause' + 'tic' (burn).",
     "example": "The caustic liquid burned his skin.",
     "difficulty": 2,
-    "category": "Art",
-    "synonyms": [
-      "biting",
-      "corrosive",
-      "cutting",
-      "mordant",
-      "sarcastic"
-    ]
+    "category": "Art"
   },
-  {
+{
     "id": 174,
     "word": "Censure",
     "pronunciation": "/ˈsen.ʃər/",
@@ -3012,7 +2529,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 175,
     "word": "Chauvinism",
     "pronunciation": "/ˈʃəʊ.vɪ.nɪ.zəm/",
@@ -3023,7 +2540,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 176,
     "word": "Chicanery",
     "pronunciation": "shi-KEY-nuh-ree",
@@ -3032,16 +2549,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Chicanery: 'Chicken' (trickery) + 'ery'.",
     "example": "The election was full of chicanery.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "deceit",
-      "deception",
-      "dishonesty",
-      "trickery",
-      "underhandedness"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 177,
     "word": "Chronological",
     "pronunciation": "/ˌkrɒn.əˈlɒdʒ.ɪ.kəl/",
@@ -3052,7 +2562,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 178,
     "word": "Circumspect",
     "pronunciation": "SUR-kuhm-spekt",
@@ -3061,16 +2571,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Circumspect: 'Circum' (around) + 'spect' (look).",
     "example": "He was circumspect in his dealings with the new company.",
     "difficulty": 3,
-    "category": "Behavior",
-    "synonyms": [
-      "careful",
-      "cautious",
-      "guarded",
-      "prudent",
-      "wary"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 179,
     "word": "Clamor",
     "pronunciation": "KLA-mer",
@@ -3079,16 +2582,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Clamor: 'Claim' (shout).",
     "example": "The clamor of the crowd was deafening.",
     "difficulty": 2,
-    "category": "Speech",
-    "synonyms": [
-      "din",
-      "noise",
-      "outcry",
-      "racket",
-      "uproar"
-    ]
+    "category": "Speech"
   },
-  {
+{
     "id": 180,
     "word": "Clench",
     "pronunciation": "/klentʃ/",
@@ -3099,7 +2595,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 181,
     "word": "Coagulate",
     "pronunciation": "/kəʊˈæɡ.jə.leɪt/",
@@ -3110,7 +2606,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 182,
     "word": "Coalesce",
     "pronunciation": "/ˌkəʊ.əˈles/",
@@ -3121,7 +2617,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 183,
     "word": "Coda",
     "pronunciation": "/ˈkəʊ.də/",
@@ -3132,25 +2628,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 184,
     "word": "coerce",
     "pronunciation": "koh-URS",
     "pos": "various",
     "definition": "to force someone to do something through threat or intimidation",
-    "example": "He was coerced into signing the contract by threats against his family.",
-    "synonyms": [
-      "bully",
-      "compel",
-      "force",
-      "intimidate",
-      "pressure"
-    ],
     "mnemonic": "",
+    "example": "He was coerced into signing the contract by threats against his family.",
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 185,
     "word": "Coffer",
     "pronunciation": "/ˈkɒf.ər/",
@@ -3161,7 +2650,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 186,
     "word": "Cogent",
     "pronunciation": "KOH-juhnt",
@@ -3170,16 +2659,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Cogent: 'Co' (together) + 'gent' (logical).",
     "example": "He gave a cogent argument for the new policy.",
     "difficulty": 2,
-    "category": "Logic",
-    "synonyms": [
-      "compelling",
-      "convincing",
-      "forceful",
-      "logical",
-      "persuasive"
-    ]
+    "category": "Logic"
   },
-  {
+{
     "id": 187,
     "word": "Collude",
     "pronunciation": "/kəˈluːd/",
@@ -3190,7 +2672,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 188,
     "word": "Commensurate",
     "pronunciation": "kuh-MEN-suh-ruht",
@@ -3199,16 +2681,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Commensurate: 'Proportional'.",
     "example": "The salary is commensurate with experience.",
     "difficulty": 3,
-    "category": "Quantity",
-    "synonyms": [
-      "appropriate",
-      "corresponding",
-      "equal",
-      "equivalent",
-      "proportionate"
-    ]
+    "category": "Quantity"
   },
-  {
+{
     "id": 189,
     "word": "Compendium",
     "pronunciation": "/kəmˈpen.di.əm/",
@@ -3219,7 +2694,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 190,
     "word": "Complacent",
     "pronunciation": "/kəmˈpleɪ.sənt/",
@@ -3230,7 +2705,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 191,
     "word": "Complaisant",
     "pronunciation": "/kəmˈpleɪ.zənt/",
@@ -3241,7 +2716,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 192,
     "word": "Complement",
     "pronunciation": "/ˈkɒm.plɪ.ment/",
@@ -3252,7 +2727,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 193,
     "word": "complementary",
     "pronunciation": "/ˌkɒm.plɪˈmen.tər.i/",
@@ -3263,7 +2738,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 194,
     "word": "Compliant",
     "pronunciation": "kuhm-PLAHY-uhnt",
@@ -3272,34 +2747,20 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Compliant: 'Comply'.",
     "example": "The company was compliant with the new regulations.",
     "difficulty": 1,
-    "category": "Behavior",
-    "synonyms": [
-      "agreeable",
-      "biddable",
-      "complying",
-      "obedient",
-      "submissive"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 195,
     "word": "compunction",
     "pronunciation": "kuhm-PUNGK-shuhn",
     "pos": "various",
     "definition": "guilt or anxiety over a past action; remorse",
-    "example": "She felt no compunction about leaving the job, knowing it was the right decision for her career.",
-    "synonyms": [
-      "guilt",
-      "qualm",
-      "regret",
-      "remorse",
-      "scruple"
-    ],
     "mnemonic": "",
+    "example": "She felt no compunction about leaving the job, knowing it was the right decision for her career.",
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 196,
     "word": "Concede",
     "pronunciation": "/kənˈsiːd/",
@@ -3310,7 +2771,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 197,
     "word": "Conciliatory",
     "pronunciation": "kuhn-SI-lee-uh-tawr-ee",
@@ -3319,16 +2780,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Conciliatory: 'Conciliate' (make peace).",
     "example": "He made a conciliatory gesture to end the argument.",
     "difficulty": 2,
-    "category": "Emotion",
-    "synonyms": [
-      "appeasing",
-      "mollifying",
-      "pacifying",
-      "peacemaking",
-      "placating"
-    ]
+    "category": "Emotion"
   },
-  {
+{
     "id": 198,
     "word": "Concur",
     "pronunciation": "/kənˈkɜːr/",
@@ -3339,7 +2793,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 199,
     "word": "condone",
     "pronunciation": "kuhn-DOHN",
@@ -3348,16 +2802,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Condone: 'Con' (together) + 'done' (let it be done).",
     "example": "I cannot condone such behavior.",
     "difficulty": 1,
-    "category": "Morality",
-    "synonyms": [
-      "disregard",
-      "excuse",
-      "forgive",
-      "ignore",
-      "overlook"
-    ]
+    "category": "Morality"
   },
-  {
+{
     "id": 200,
     "word": "confer",
     "pronunciation": "/kənˈfɜːr/",
@@ -3368,7 +2815,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 201,
     "word": "confound",
     "pronunciation": "/kənˈfaʊnd/",
@@ -3379,7 +2826,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 202,
     "word": "connoisseur",
     "pronunciation": "/ˌɒn.əˈsɜːr/",
@@ -3390,7 +2837,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 203,
     "word": "connote",
     "pronunciation": "/kəˈnəʊt/",
@@ -3401,7 +2848,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 204,
     "word": "console",
     "pronunciation": "/kənˈsəʊl/",
@@ -3412,7 +2859,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Emotion"
   },
-  {
+{
     "id": 205,
     "word": "consolidate",
     "pronunciation": "/kənˈsɒl.ɪ.deɪt/",
@@ -3423,7 +2870,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 206,
     "word": "constrict",
     "pronunciation": "/kənˈstrɪkt/",
@@ -3434,7 +2881,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 207,
     "word": "construe",
     "pronunciation": "/kənˈstruː/",
@@ -3445,7 +2892,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 208,
     "word": "Contention",
     "pronunciation": "/kənˈten.ʃən/",
@@ -3456,7 +2903,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 209,
     "word": "contentious",
     "pronunciation": "kuhn-TEN-shuhs",
@@ -3465,16 +2912,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Contentious: 'Content' (fight) + 'ious'.",
     "example": "The meeting was contentious and unproductive.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "argumentative",
-      "combative",
-      "controversial",
-      "disputatious",
-      "quarrelsome"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 210,
     "word": "contextualize",
     "pronunciation": "/kənˈteks.tʃu.ə.laɪz/",
@@ -3485,7 +2925,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 211,
     "word": "contraries",
     "pronunciation": "/ˈkɒn.trə.riz/",
@@ -3496,7 +2936,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 212,
     "word": "contrite",
     "pronunciation": "KON-trahyt",
@@ -3505,16 +2945,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Contrite: 'Con' (together) + 'trite' (worn out/sad).",
     "example": "He felt contrite after the argument.",
     "difficulty": 3,
-    "category": "Emotion",
-    "synonyms": [
-      "apologetic",
-      "guilty",
-      "penitent",
-      "remorseful",
-      "sorry"
-    ]
+    "category": "Emotion"
   },
-  {
+{
     "id": 213,
     "word": "contumacious",
     "pronunciation": "/ˌkɒn.tjuˈmeɪ.ʃəs/",
@@ -3525,7 +2958,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 214,
     "word": "conundrum",
     "pronunciation": "/kəˈnʌn.drəm/",
@@ -3536,7 +2969,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 215,
     "word": "converge",
     "pronunciation": "/kənˈvɜːrdʒ/",
@@ -3547,7 +2980,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 216,
     "word": "conversant",
     "pronunciation": "/kənˈvɜːr.sənt/",
@@ -3558,7 +2991,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 217,
     "word": "conversely",
     "pronunciation": "/kənˈvɜːrs.li/",
@@ -3569,7 +3002,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 218,
     "word": "convoke",
     "pronunciation": "/kənˈvəʊk/",
@@ -3580,7 +3013,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 219,
     "word": "convoluted",
     "pronunciation": "KON-vuh-loo-tid",
@@ -3589,16 +3022,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Convoluted: 'Con' (together) + 'vol' (roll).",
     "example": "The plot of the movie was so convoluted I couldn't follow it.",
     "difficulty": 2,
-    "category": "Logic",
-    "synonyms": [
-      "complex",
-      "complicated",
-      "intricate",
-      "involved",
-      "tangled"
-    ]
+    "category": "Logic"
   },
-  {
+{
     "id": 220,
     "word": "copious",
     "pronunciation": "KOH-pee-uhs",
@@ -3607,16 +3033,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Copious: 'Copy' many times.",
     "example": "She took copious notes during the lecture.",
     "difficulty": 1,
-    "category": "Quantity",
-    "synonyms": [
-      "abundant",
-      "ample",
-      "extensive",
-      "plentiful",
-      "prolific"
-    ]
+    "category": "Quantity"
   },
-  {
+{
     "id": 221,
     "word": "corroborate",
     "pronunciation": "kuh-RO-buh-reyt",
@@ -3625,16 +3044,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Corroborate: 'Co' (together) + 'rob' (robust/strong).",
     "example": "The witness corroborated his story.",
     "difficulty": 2,
-    "category": "Logic",
-    "synonyms": [
-      "authenticate",
-      "confirm",
-      "prove",
-      "substantiate",
-      "verify"
-    ]
+    "category": "Logic"
   },
-  {
+{
     "id": 222,
     "word": "cosmopolitan",
     "pronunciation": "/ˌkɒz.məˈpɒl.ɪ.tən/",
@@ -3645,7 +3057,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 223,
     "word": "cosset",
     "pronunciation": "/ˈkɒs.ɪt/",
@@ -3656,7 +3068,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 224,
     "word": "coterie",
     "pronunciation": "/ˈkəʊ.tər.i/",
@@ -3667,7 +3079,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 225,
     "word": "countenance",
     "pronunciation": "/ˈkaʊn.tɪ.nəns/",
@@ -3678,7 +3090,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 226,
     "word": "counterintuitive",
     "pronunciation": "/ˌkaʊn.tər.ɪnˈtjuː.ɪ.tɪv/",
@@ -3689,7 +3101,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 227,
     "word": "counterpoint",
     "pronunciation": "/ˈkaʊn.tər.pɔɪnt/",
@@ -3700,7 +3112,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 228,
     "word": "counterproductive",
     "pronunciation": "/ˌkaʊn.tər.prəˈdʌk.tɪv/",
@@ -3711,7 +3123,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 229,
     "word": "covert",
     "pronunciation": "/ˈkəʊ.vɜːrt/",
@@ -3722,7 +3134,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 230,
     "word": "crafty",
     "pronunciation": "/ˈkræf.ti/",
@@ -3733,7 +3145,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 231,
     "word": "craven",
     "pronunciation": "/ˈkreɪ.vən/",
@@ -3744,7 +3156,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 232,
     "word": "credibility",
     "pronunciation": "/ˌkred.əˈbɪl.ə.ti/",
@@ -3755,7 +3167,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Intellect"
   },
-  {
+{
     "id": 233,
     "word": "credulous",
     "pronunciation": "KRE-juh-luhs",
@@ -3764,16 +3176,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Credulous: 'Cred' (believe) + 'ulous' (full of).",
     "example": "The credulous child believed in fairies.",
     "difficulty": 2,
-    "category": "Behavior",
-    "synonyms": [
-      "gullible",
-      "naive",
-      "susceptible",
-      "trusting",
-      "unsuspecting"
-    ]
+    "category": "Behavior"
   },
-  {
+{
     "id": 234,
     "word": "crescendo",
     "pronunciation": "/krəˈʃen.dəʊ/",
@@ -3784,7 +3189,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 235,
     "word": "culminate",
     "pronunciation": "/ˈkʌl.mɪ.neɪt/",
@@ -3795,7 +3200,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 236,
     "word": "Culpable",
     "pronunciation": "/ˈkʌl.pə.bəl/",
@@ -3806,7 +3211,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 237,
     "word": "cupidity",
     "pronunciation": "/kjuːˈpɪd.ə.ti/",
@@ -3817,7 +3222,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 238,
     "word": "curmudgeon",
     "pronunciation": "/kɜːˈmʌdʒ.ən/",
@@ -3828,25 +3233,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 239,
     "word": "cursory",
     "pronunciation": "KUR-suh-ree",
     "pos": "various",
     "definition": "hasty and shallow; done quickly with little attention to detail",
-    "example": "A cursory reading of the report was not enough; he needed to study it carefully.",
-    "synonyms": [
-      "brief",
-      "careless",
-      "hasty",
-      "quick",
-      "superficial"
-    ],
     "mnemonic": "",
+    "example": "A cursory reading of the report was not enough; he needed to study it carefully.",
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 240,
     "word": "Cynic",
     "pronunciation": "/ˈsɪn.ɪk/",
@@ -3857,7 +3255,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 241,
     "word": "cynical",
     "pronunciation": "SI-ni-kuhl",
@@ -3866,16 +3264,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Cynical: 'Cynic' (doubter).",
     "example": "He has a cynical view of politics.",
     "difficulty": 1,
-    "category": "Emotion",
-    "synonyms": [
-      "distrustful",
-      "doubtful",
-      "misanthropic",
-      "pessimistic",
-      "scornful"
-    ]
+    "category": "Emotion"
   },
-  {
+{
     "id": 242,
     "word": "daunt",
     "pronunciation": "DAWNT",
@@ -3884,16 +3275,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Daunt: 'Dauntless' (fearless).",
     "example": "The challenge did not daunt her.",
     "difficulty": 2,
-    "category": "Emotion",
-    "synonyms": [
-      "cow",
-      "discourage",
-      "frighten",
-      "intimidate",
-      "unnerve"
-    ]
+    "category": "Emotion"
   },
-  {
+{
     "id": 243,
     "word": "debase",
     "pronunciation": "di-BEYS",
@@ -3902,16 +3286,9 @@ export const ALL_GRE_WORDS: Word[] = [
     "mnemonic": "Debase: 'De' (down) + 'base' (low).",
     "example": "The currency was debased by inflation.",
     "difficulty": 2,
-    "category": "Change",
-    "synonyms": [
-      "cheapen",
-      "corrupt",
-      "degrade",
-      "demean",
-      "diminish"
-    ]
+    "category": "Change"
   },
-  {
+{
     "id": 244,
     "word": "debunk",
     "pronunciation": "/ˌdiːˈbʌŋk/",
@@ -3922,7 +3299,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Intellect"
   },
-  {
+{
     "id": 245,
     "word": "declaim",
     "pronunciation": "/dɪˈkleɪm/",
@@ -3933,7 +3310,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 246,
     "word": "declivity",
     "pronunciation": "/dɪˈklɪv.ə.ti/",
@@ -3944,7 +3321,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Nature"
   },
-  {
+{
     "id": 247,
     "word": "decorous",
     "pronunciation": "/ˈdek.ər.əs/",
@@ -3955,7 +3332,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 248,
     "word": "Decorum",
     "pronunciation": "/dɪˈkɔː.rəm/",
@@ -3966,25 +3343,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 249,
     "word": "decry",
     "pronunciation": "di-KRAHY",
     "pos": "various",
     "definition": "to express strong disapproval of; to criticize openly",
-    "example": "The editorial decried the government's failure to act on the issue of climate change.",
-    "synonyms": [
-      "belittle",
-      "condemn",
-      "criticize",
-      "denounce",
-      "disparage"
-    ],
     "mnemonic": "",
+    "example": "The editorial decried the government's failure to act on the issue of climate change.",
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 250,
     "word": "deem",
     "pronunciation": "/diːm/",
@@ -3995,7 +3365,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Intellect"
   },
-  {
+{
     "id": 251,
     "word": "deface",
     "pronunciation": "/dɪˈfeɪs/",
@@ -4006,7 +3376,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 252,
     "word": "default",
     "pronunciation": "/dɪˈfɔːlt/",
@@ -4017,7 +3387,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 253,
     "word": "deference",
     "pronunciation": "/ˈdef.ər.əns/",
@@ -4028,7 +3398,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 254,
     "word": "deflect",
     "pronunciation": "/dɪˈflekt/",
@@ -4039,7 +3409,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 255,
     "word": "deleterious",
     "pronunciation": "/ˌdel.ɪˈtɪə.ri.əs/",
@@ -4050,7 +3420,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Nature"
   },
-  {
+{
     "id": 256,
     "word": "delimit",
     "pronunciation": "/diːˈlɪm.ɪt/",
@@ -4061,7 +3431,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 257,
     "word": "delineate",
     "pronunciation": "/dɪˈlɪn.i.eɪt/",
@@ -4072,7 +3442,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 258,
     "word": "demagogue",
     "pronunciation": "/ˈdem.ə.ɡɒɡ/",
@@ -4083,7 +3453,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 259,
     "word": "demur",
     "pronunciation": "/dɪˈmɜːr/",
@@ -4094,7 +3464,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 260,
     "word": "denigrate",
     "pronunciation": "/ˈden.ɪ.ɡreɪt/",
@@ -4105,7 +3475,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 261,
     "word": "denote",
     "pronunciation": "/dɪˈnəʊt/",
@@ -4116,7 +3486,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 262,
     "word": "deride",
     "pronunciation": "/dɪˈraɪd/",
@@ -4127,7 +3497,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 263,
     "word": "derivative",
     "pronunciation": "/dɪˈrɪv.ə.tɪv/",
@@ -4138,7 +3508,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 264,
     "word": "desiccate",
     "pronunciation": "/ˈdes.ɪ.keɪt/",
@@ -4149,7 +3519,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Nature"
   },
-  {
+{
     "id": 265,
     "word": "desultory",
     "pronunciation": "/ˈdes.əl.tər.i/",
@@ -4160,7 +3530,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 266,
     "word": "detached",
     "pronunciation": "/dɪˈtætʃt/",
@@ -4171,7 +3541,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 267,
     "word": "deterrent",
     "pronunciation": "/dɪˈter.ənt/",
@@ -4182,7 +3552,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 268,
     "word": "diaphanous",
     "pronunciation": "/daɪˈæf.ən.əs/",
@@ -4193,7 +3563,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Nature"
   },
-  {
+{
     "id": 269,
     "word": "diatribe",
     "pronunciation": "/ˈdaɪ.ə.traɪb/",
@@ -4204,7 +3574,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 270,
     "word": "dichotomy",
     "pronunciation": "/daɪˈkɒt.ə.mi/",
@@ -4215,7 +3585,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 271,
     "word": "dictum",
     "pronunciation": "/ˈdɪk.təm/",
@@ -4226,7 +3596,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 272,
     "word": "didactic",
     "pronunciation": "/daɪˈdæk.tɪk/",
@@ -4237,7 +3607,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 273,
     "word": "Diffidence",
     "pronunciation": "/ˈdɪf.ɪ.dəns/",
@@ -4248,7 +3618,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 274,
     "word": "diffident",
     "pronunciation": "/ˈdɪf.ɪ.dənt/",
@@ -4259,7 +3629,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 275,
     "word": "diffuse",
     "pronunciation": "/dɪˈfjuːz/",
@@ -4270,7 +3640,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 276,
     "word": "digress",
     "pronunciation": "/daɪˈɡres/",
@@ -4281,7 +3651,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 277,
     "word": "Digression",
     "pronunciation": "/daɪˈɡreʃ.ən/",
@@ -4292,7 +3662,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 278,
     "word": "dilate",
     "pronunciation": "/daɪˈleɪt/",
@@ -4303,7 +3673,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 279,
     "word": "dilatory",
     "pronunciation": "/ˈdɪl.ə.tər.i/",
@@ -4314,7 +3684,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 280,
     "word": "dilettante",
     "pronunciation": "/ˌdɪl.əˈtæn.ti/",
@@ -4325,7 +3695,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 281,
     "word": "din",
     "pronunciation": "/dɪn/",
@@ -4336,7 +3706,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 282,
     "word": "dirge",
     "pronunciation": "/dɜːdʒ/",
@@ -4347,7 +3717,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 283,
     "word": "disabuse",
     "pronunciation": "/ˌdɪs.əˈbjuːz/",
@@ -4358,7 +3728,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 284,
     "word": "discerning",
     "pronunciation": "/dɪˈsɜː.nɪŋ/",
@@ -4369,7 +3739,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 285,
     "word": "discomfiting",
     "pronunciation": "/dɪsˈkʌm.fɪ.tɪŋ/",
@@ -4380,7 +3750,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 286,
     "word": "discordant",
     "pronunciation": "/dɪˈskɔː.dənt/",
@@ -4391,7 +3761,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 287,
     "word": "discredit",
     "pronunciation": "/dɪˈskred.ɪt/",
@@ -4402,7 +3772,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 288,
     "word": "discrepancy",
     "pronunciation": "/dɪˈskrep.ən.si/",
@@ -4413,7 +3783,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 289,
     "word": "discrete",
     "pronunciation": "/dɪˈskriːt/",
@@ -4424,7 +3794,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 290,
     "word": "discriminating",
     "pronunciation": "/dɪˈskrɪm.ɪ.neɪ.tɪŋ/",
@@ -4435,7 +3805,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 291,
     "word": "disingenuous",
     "pronunciation": "/ˌdɪs.ɪnˈdʒen.ju.əs/",
@@ -4446,7 +3816,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 292,
     "word": "disinterested",
     "pronunciation": "/dɪˈstɪn.trə.stɪd/",
@@ -4457,7 +3827,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 293,
     "word": "disjointed",
     "pronunciation": "/dɪsˈdʒɔɪn.tɪd/",
@@ -4468,7 +3838,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 294,
     "word": "dismiss",
     "pronunciation": "/dɪˈsmɪs/",
@@ -4479,7 +3849,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 295,
     "word": "disparage",
     "pronunciation": "/dɪˈspær.ɪdʒ/",
@@ -4490,7 +3860,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 296,
     "word": "disparate",
     "pronunciation": "/ˈdɪs.pər.ət/",
@@ -4501,7 +3871,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 297,
     "word": "dispassionate",
     "pronunciation": "/dɪsˈpæʃ.ən.ət/",
@@ -4512,7 +3882,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 298,
     "word": "dispatch",
     "pronunciation": "/dɪˈspætʃ/",
@@ -4523,7 +3893,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 299,
     "word": "disperse",
     "pronunciation": "/dɪˈspɜːs/",
@@ -4534,7 +3904,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 300,
     "word": "disposition",
     "pronunciation": "/ˌdɪs.pəˈzɪʃ.ən/",
@@ -4545,7 +3915,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 301,
     "word": "disquieting",
     "pronunciation": "/dɪsˈkwaɪə.tɪŋ/",
@@ -4556,7 +3926,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 302,
     "word": "dissemble",
     "pronunciation": "/dɪˈsem.bəl/",
@@ -4567,7 +3937,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 303,
     "word": "disseminate",
     "pronunciation": "/dɪˈsem.ɪ.neɪt/",
@@ -4578,7 +3948,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 304,
     "word": "dissent",
     "pronunciation": "/dɪˈsent/",
@@ -4589,7 +3959,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 305,
     "word": "dissolution",
     "pronunciation": "/ˌdɪs.əˈluː.ʃən/",
@@ -4600,7 +3970,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 306,
     "word": "dissonance",
     "pronunciation": "/ˈdɪs.ə.nəns/",
@@ -4611,7 +3981,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 307,
     "word": "distaff",
     "pronunciation": "/ˈdɪs.tɑːf/",
@@ -4622,7 +3992,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 308,
     "word": "distend",
     "pronunciation": "/dɪˈstend/",
@@ -4633,7 +4003,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 309,
     "word": "distill",
     "pronunciation": "/dɪˈstɪl/",
@@ -4644,7 +4014,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 310,
     "word": "dither",
     "pronunciation": "/ˈdɪð.ər/",
@@ -4655,7 +4025,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 311,
     "word": "diurnal",
     "pronunciation": "/daɪˈɜː.nəl/",
@@ -4666,7 +4036,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Time"
   },
-  {
+{
     "id": 312,
     "word": "diverge",
     "pronunciation": "/daɪˈvɜːdʒ/",
@@ -4677,7 +4047,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 313,
     "word": "divest",
     "pronunciation": "/daɪˈvest/",
@@ -4688,7 +4058,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 314,
     "word": "divine",
     "pronunciation": "/dɪˈvaɪn/",
@@ -4699,7 +4069,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Intellect"
   },
-  {
+{
     "id": 315,
     "word": "doctrinaire",
     "pronunciation": "/ˌdɒk.trɪˈneər/",
@@ -4710,7 +4080,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 316,
     "word": "document",
     "pronunciation": "/ˈdɒk.jə.mənt/",
@@ -4721,7 +4091,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 317,
     "word": "doff",
     "pronunciation": "/dɒf/",
@@ -4732,7 +4102,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 318,
     "word": "dogmatic",
     "pronunciation": "/dɒɡˈmæt.ɪk/",
@@ -4743,7 +4113,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 319,
     "word": "dormant",
     "pronunciation": "/ˈdɔː.mənt/",
@@ -4754,7 +4124,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 320,
     "word": "dovetail",
     "pronunciation": "/ˈdʌv.teɪl/",
@@ -4765,7 +4135,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 321,
     "word": "droll",
     "pronunciation": "/drəʊl/",
@@ -4776,7 +4146,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 322,
     "word": "dupe",
     "pronunciation": "/dʒuːp/",
@@ -4787,7 +4157,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 323,
     "word": "duplicity",
     "pronunciation": "/dʒuːˈplɪs.ə.ti/",
@@ -4798,7 +4168,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 324,
     "word": "dynamic",
     "pronunciation": "/daɪˈnæm.ɪk/",
@@ -4809,7 +4179,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 325,
     "word": "ebullient",
     "pronunciation": "/ɪˈbʊl.i.ənt/",
@@ -4820,7 +4190,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 326,
     "word": "eccentric",
     "pronunciation": "/ɪkˈsen.trɪk/",
@@ -4831,7 +4201,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 327,
     "word": "echelon",
     "pronunciation": "/ˈeʃ.ə.lɒn/",
@@ -4842,7 +4212,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 328,
     "word": "eclectic",
     "pronunciation": "/ekˈlek.tɪk/",
@@ -4853,7 +4223,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 329,
     "word": "eclipse",
     "pronunciation": "/ɪˈklɪps/",
@@ -4864,7 +4234,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 330,
     "word": "efficacy",
     "pronunciation": "/ˈef.ɪ.kə.si/",
@@ -4875,7 +4245,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 331,
     "word": "effigy",
     "pronunciation": "/ˈef.ɪ.dʒi/",
@@ -4886,7 +4256,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 332,
     "word": "effrontery",
     "pronunciation": "/ɪˈfrʌn.tər.i/",
@@ -4897,7 +4267,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 333,
     "word": "egress",
     "pronunciation": "/ˈiː.ɡres/",
@@ -4908,7 +4278,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 334,
     "word": "elegy",
     "pronunciation": "/ˈel.ə.dʒi/",
@@ -4919,7 +4289,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 335,
     "word": "elevate",
     "pronunciation": "/ˈel.ɪ.veɪt/",
@@ -4930,7 +4300,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 336,
     "word": "elicit",
     "pronunciation": "/iˈlɪs.ɪt/",
@@ -4941,7 +4311,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 337,
     "word": "eloquent",
     "pronunciation": "/ˈel.ə.kwənt/",
@@ -4952,7 +4322,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 338,
     "word": "emaciate",
     "pronunciation": "/iˈmeɪ.si.eɪt/",
@@ -4963,7 +4333,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 339,
     "word": "embellish",
     "pronunciation": "/ɪmˈbel.ɪʃ/",
@@ -4974,7 +4344,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 340,
     "word": "eminent",
     "pronunciation": "/ˈem.ɪ.nənt/",
@@ -4985,7 +4355,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 341,
     "word": "empirical",
     "pronunciation": "/ɪmˈpɪr.ɪ.kəl/",
@@ -4996,7 +4366,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 342,
     "word": "emulate",
     "pronunciation": "/ˈem.jə.leɪt/",
@@ -5007,7 +4377,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 343,
     "word": "encomium",
     "pronunciation": "/enˈkəʊ.mi.am/",
@@ -5018,7 +4388,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 344,
     "word": "endemic",
     "pronunciation": "/enˈdem.ɪk/",
@@ -5029,7 +4399,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 345,
     "word": "enervate",
     "pronunciation": "/ˈen.ə.veɪt/",
@@ -5040,7 +4410,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 346,
     "word": "engender",
     "pronunciation": "/ɪnˈdʒen.dər/",
@@ -5051,7 +4421,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 347,
     "word": "enhance",
     "pronunciation": "/ɪnˈhɑːns/",
@@ -5062,7 +4432,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 348,
     "word": "enigma",
     "pronunciation": "/ɪˈnɪɡ.mə/",
@@ -5073,7 +4443,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 349,
     "word": "entitlement",
     "pronunciation": "/ɪnˈtaɪ.təl.mənt/",
@@ -5084,7 +4454,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 350,
     "word": "enumerate",
     "pronunciation": "/ɪˈnjuː.mə.reɪt/",
@@ -5095,7 +4465,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 351,
     "word": "ephemeral",
     "pronunciation": "/ɪˈfem.ər.əl/",
@@ -5106,7 +4476,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Time"
   },
-  {
+{
     "id": 352,
     "word": "equanimity",
     "pronunciation": "/ˌek.wəˈnɪm.ə.ti/",
@@ -5117,7 +4487,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 353,
     "word": "equitable",
     "pronunciation": "/ˈek.wɪ.tə.bəl/",
@@ -5128,7 +4498,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 354,
     "word": "equivocate",
     "pronunciation": "/ɪˈkwɪv.ə.keɪt/",
@@ -5139,7 +4509,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 355,
     "word": "erroneous",
     "pronunciation": "/ɪˈrəʊ.ni.əs/",
@@ -5150,7 +4520,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 356,
     "word": "erudite",
     "pronunciation": "/ˈer.ʊ.daɪt/",
@@ -5161,7 +4531,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 357,
     "word": "eschew",
     "pronunciation": "/ɪsˈtʃuː/",
@@ -5172,7 +4542,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 358,
     "word": "esoteric",
     "pronunciation": "/ˌes.əˈter.ɪk/",
@@ -5183,7 +4553,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 359,
     "word": "estimable",
     "pronunciation": "/ˈes.tɪ.mə.bəl/",
@@ -5194,7 +4564,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 360,
     "word": "eulogy",
     "pronunciation": "/ˈjuː.lə.dʒi/",
@@ -5205,7 +4575,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 361,
     "word": "Euphemism",
     "pronunciation": "/ˈjuː.fə.mɪ.zəm/",
@@ -5216,7 +4586,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 362,
     "word": "exacerbate",
     "pronunciation": "/ɪɡˈzæs.ə.beɪt/",
@@ -5227,7 +4597,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 363,
     "word": "exacting",
     "pronunciation": "/ɪɡˈzæk.tɪŋ/",
@@ -5238,7 +4608,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 364,
     "word": "exculpate",
     "pronunciation": "/ˈek.skʌl.peɪt/",
@@ -5249,7 +4619,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 365,
     "word": "exhaustive",
     "pronunciation": "/ɪɡˈzɔː.stɪv/",
@@ -5260,7 +4630,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 366,
     "word": "Exigency",
     "pronunciation": "/ˈek.sɪ.dʒən.si/",
@@ -5271,7 +4641,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 367,
     "word": "exigent",
     "pronunciation": "/ˈek.sɪ.dʒənt/",
@@ -5282,7 +4652,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 368,
     "word": "exonerate",
     "pronunciation": "/ɪɡˈzɒn.ə.reɪt/",
@@ -5293,7 +4663,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 369,
     "word": "exorbitant",
     "pronunciation": "/ɪɡˈzɔː.bɪ.tənt/",
@@ -5304,7 +4674,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 370,
     "word": "expedient",
     "pronunciation": "/ɪkˈspiː.di.ənt/",
@@ -5315,7 +4685,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 371,
     "word": "explicit",
     "pronunciation": "/ɪkˈsplɪs.ɪt/",
@@ -5326,7 +4696,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 372,
     "word": "exponent",
     "pronunciation": "/ɪkˈspəʊ.nənt/",
@@ -5337,7 +4707,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 373,
     "word": "Exponents",
     "pronunciation": "/ɪkˈspəʊ.nənts/",
@@ -5348,7 +4718,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 374,
     "word": "expurgate",
     "pronunciation": "/ˈek.spə.ɡeɪt/",
@@ -5359,7 +4729,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 375,
     "word": "extemporaneous",
     "pronunciation": "/ekˌstem.pəˈreɪ.ni.əs/",
@@ -5370,7 +4740,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 376,
     "word": "extraneous",
     "pronunciation": "/ɪkˈstreɪ.ni.əs/",
@@ -5381,7 +4751,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 377,
     "word": "extrapolate",
     "pronunciation": "/ɪkˈstræp.ə.leɪt/",
@@ -5392,7 +4762,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 378,
     "word": "facetious",
     "pronunciation": "/fəˈsiː.ʃəs/",
@@ -5403,7 +4773,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 379,
     "word": "facilitate",
     "pronunciation": "/fəˈsɪl.ɪ.teɪt/",
@@ -5414,7 +4784,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 380,
     "word": "faction",
     "pronunciation": "/ˈfæk.ʃən/",
@@ -5425,7 +4795,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 381,
     "word": "fallacious",
     "pronunciation": "/fəˈleɪ.ʃəs/",
@@ -5436,7 +4806,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 382,
     "word": "fallow",
     "pronunciation": "/ˈfæl.əʊ/",
@@ -5447,7 +4817,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 383,
     "word": "fanatical",
     "pronunciation": "/fəˈnæt.ɪ.kəl/",
@@ -5458,7 +4828,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 384,
     "word": "fanciful",
     "pronunciation": "/ˈfæn.sɪ.fəl/",
@@ -5469,7 +4839,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 385,
     "word": "fastidious",
     "pronunciation": "/fæsˈtɪd.i.əs/",
@@ -5480,7 +4850,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 386,
     "word": "fathom",
     "pronunciation": "/ˈfæð.əm/",
@@ -5491,7 +4861,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 387,
     "word": "fatuous",
     "pronunciation": "/ˈfæt.ju.əs/",
@@ -5502,7 +4872,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 388,
     "word": "fawn",
     "pronunciation": "/fɔːn/",
@@ -5513,7 +4883,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 389,
     "word": "Fawning",
     "pronunciation": "/ˈfɔː.nɪŋ/",
@@ -5524,7 +4894,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 390,
     "word": "feasible",
     "pronunciation": "/ˈfiː.zə.bəl/",
@@ -5535,7 +4905,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 391,
     "word": "fecund",
     "pronunciation": "/ˈfek.ənd/",
@@ -5546,7 +4916,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 392,
     "word": "felicitous",
     "pronunciation": "/fəˈlɪs.ɪ.təs/",
@@ -5557,7 +4927,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 393,
     "word": "fervid",
     "pronunciation": "/ˈfɜː.vɪd/",
@@ -5568,7 +4938,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 394,
     "word": "fetid",
     "pronunciation": "/ˈfet.ɪd/",
@@ -5579,7 +4949,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 395,
     "word": "fidelity",
     "pronunciation": "/fɪˈdel.ə.ti/",
@@ -5590,7 +4960,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Morality"
   },
-  {
+{
     "id": 396,
     "word": "figurative",
     "pronunciation": "/ˈfɪɡ.ər.ə.tɪv/",
@@ -5601,7 +4971,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 397,
     "word": "finesse",
     "pronunciation": "/fɪˈnes/",
@@ -5612,7 +4982,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 398,
     "word": "flag",
     "pronunciation": "/flæɡ/",
@@ -5623,7 +4993,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 399,
     "word": "fledgling",
     "pronunciation": "/ˈfledʒ.lɪŋ/",
@@ -5634,7 +5004,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 400,
     "word": "fleeting",
     "pronunciation": "/ˈfliː.tɪŋ/",
@@ -5645,7 +5015,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 401,
     "word": "florid",
     "pronunciation": "/ˈflɒr.ɪd/",
@@ -5656,7 +5026,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 402,
     "word": "flout",
     "pronunciation": "/flaʊt/",
@@ -5667,7 +5037,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 403,
     "word": "fluke",
     "pronunciation": "/fluːk/",
@@ -5678,7 +5048,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 404,
     "word": "foment",
     "pronunciation": "/foʊˈment/",
@@ -5689,7 +5059,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 405,
     "word": "forage",
     "pronunciation": "/ˈfɔːr.ɪdʒ/",
@@ -5700,7 +5070,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 406,
     "word": "ford",
     "pronunciation": "/fɔːrd/",
@@ -5711,7 +5081,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 407,
     "word": "foreshadow",
     "pronunciation": "/fɔːrˈʃæd.əʊ/",
@@ -5722,7 +5092,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 408,
     "word": "forestall",
     "pronunciation": "/fɔːrˈstɔːl/",
@@ -5733,7 +5103,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 409,
     "word": "forfeit",
     "pronunciation": "/ˈfɔːr.fɪt/",
@@ -5744,7 +5114,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 410,
     "word": "fortify",
     "pronunciation": "/ˈfɔːr.tɪ.faɪ/",
@@ -5755,7 +5125,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 411,
     "word": "fortuitous",
     "pronunciation": "/fɔːrˈtuː.ɪ.təs/",
@@ -5766,7 +5136,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 412,
     "word": "fracas",
     "pronunciation": "/ˈfreɪ.kəs/",
@@ -5777,7 +5147,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 413,
     "word": "fractious",
     "pronunciation": "/ˈfræk.ʃəs/",
@@ -5788,7 +5158,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 414,
     "word": "frenetic",
     "pronunciation": "/frəˈnet.ɪk/",
@@ -5799,7 +5169,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 415,
     "word": "fringe",
     "pronunciation": "/frɪndʒ/",
@@ -5810,7 +5180,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 416,
     "word": "frugal",
     "pronunciation": "/ˈfruː.ɡəl/",
@@ -5821,7 +5191,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 417,
     "word": "Frugality",
     "pronunciation": "/fruːˈɡæl.ə.ti/",
@@ -5832,7 +5202,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 418,
     "word": "fulminate",
     "pronunciation": "/ˈfʊl.mɪ.neɪt/",
@@ -5843,7 +5213,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 419,
     "word": "furtive",
     "pronunciation": "/ˈfɜː.tɪv/",
@@ -5854,7 +5224,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 420,
     "word": "futile",
     "pronunciation": "/ˈfjuː.taɪl/",
@@ -5865,7 +5235,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 421,
     "word": "gainsay",
     "pronunciation": "/ˌɡeɪnˈseɪ/",
@@ -5876,7 +5246,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 422,
     "word": "gambol",
     "pronunciation": "/ˈɡæm.bəl/",
@@ -5887,7 +5257,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 423,
     "word": "garner",
     "pronunciation": "/ˈɡɑːr.nər/",
@@ -5898,7 +5268,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 424,
     "word": "garrulous",
     "pronunciation": "/ˈɡær.əl.əs/",
@@ -5909,7 +5279,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 425,
     "word": "gauche",
     "pronunciation": "/ɡəʊʃ/",
@@ -5920,7 +5290,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 426,
     "word": "gawky",
     "pronunciation": "/ˈɡɔː.ki/",
@@ -5931,7 +5301,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 427,
     "word": "germane",
     "pronunciation": "/dʒɜːˈmeɪn/",
@@ -5942,7 +5312,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 428,
     "word": "gestation",
     "pronunciation": "/dʒesˈteɪ.ʃən/",
@@ -5953,7 +5323,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Time"
   },
-  {
+{
     "id": 429,
     "word": "gist",
     "pronunciation": "/dʒɪst/",
@@ -5964,7 +5334,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 430,
     "word": "glacial",
     "pronunciation": "/ˈɡleɪ.ʃəl/",
@@ -5975,7 +5345,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 431,
     "word": "glib",
     "pronunciation": "/ɡlɪb/",
@@ -5986,7 +5356,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 432,
     "word": "glower",
     "pronunciation": "/ˈɡlaʊ.ər/",
@@ -5997,7 +5367,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 433,
     "word": "goad",
     "pronunciation": "/ɡəʊd/",
@@ -6008,18 +5378,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 434,
     "word": "goosebumps",
     "pronunciation": "/ˈɡuːs.bʌmps/",
     "pos": "noun",
-    "definition": "The \"bumps\" created by hairs standing up on the skin in response to cold, fear, etc.",
+    "definition": "The bumps on a person's skin at the base of body hairs which may stand up when a person is cold, scared, or excited.",
     "mnemonic": "Goosebumps: Skin like a plucked goose.",
     "example": "The scary movie gave me goosebumps.",
     "difficulty": 1,
     "category": "Emotion"
   },
-  {
+{
     "id": 435,
     "word": "gouge",
     "pronunciation": "/ɡaʊdʒ/",
@@ -6030,7 +5400,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 436,
     "word": "gradation",
     "pronunciation": "/ɡrəˈdeɪ.ʃən/",
@@ -6041,7 +5411,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 437,
     "word": "graft",
     "pronunciation": "/ɡrɑːft/",
@@ -6052,7 +5422,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 438,
     "word": "grandiloquent",
     "pronunciation": "/ɡrænˈdɪl.ə.kwənt/",
@@ -6063,7 +5433,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 439,
     "word": "grandstand",
     "pronunciation": "/ˈɡræn.stænd/",
@@ -6074,7 +5444,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 440,
     "word": "grating",
     "pronunciation": "/ˈɡreɪ.tɪŋ/",
@@ -6085,7 +5455,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 441,
     "word": "gregarious",
     "pronunciation": "/ɡrɪˈɡeər.i.əs/",
@@ -6096,7 +5466,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 442,
     "word": "grievous",
     "pronunciation": "/ˈɡriː.vəs/",
@@ -6107,7 +5477,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 443,
     "word": "grouse",
     "pronunciation": "/ɡraʊs/",
@@ -6118,7 +5488,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 444,
     "word": "grovel",
     "pronunciation": "/ˈɡrɒv.əl/",
@@ -6129,7 +5499,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 445,
     "word": "guile",
     "pronunciation": "/ɡaɪl/",
@@ -6140,7 +5510,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 446,
     "word": "Gullible",
     "pronunciation": "/ˈɡʌl.ə.bəl/",
@@ -6151,7 +5521,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 447,
     "word": "hackneyed",
     "pronunciation": "/ˈhæk.nid/",
@@ -6162,7 +5532,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 448,
     "word": "halcyon",
     "pronunciation": "/ˈhæl.si.ən/",
@@ -6173,7 +5543,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 449,
     "word": "hallmark",
     "pronunciation": "/ˈhɔːl.mɑːrk/",
@@ -6184,7 +5554,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 450,
     "word": "hand-wringing",
     "pronunciation": "/ˈhændˌrɪŋ.ɪŋ/",
@@ -6195,7 +5565,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 451,
     "word": "hapless",
     "pronunciation": "/ˈhæp.ləs/",
@@ -6206,7 +5576,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 452,
     "word": "harangue",
     "pronunciation": "/həˈræŋ/",
@@ -6217,7 +5587,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 453,
     "word": "hardy",
     "pronunciation": "/ˈhɑːr.di/",
@@ -6228,7 +5598,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 454,
     "word": "harrow",
     "pronunciation": "/ˈhær.əʊ/",
@@ -6239,7 +5609,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 455,
     "word": "haven",
     "pronunciation": "/ˈheɪ.vən/",
@@ -6250,7 +5620,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 456,
     "word": "hearken",
     "pronunciation": "/ˈhɑːr.kən/",
@@ -6261,7 +5631,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 457,
     "word": "hedge",
     "pronunciation": "/hedʒ/",
@@ -6272,7 +5642,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 458,
     "word": "hedonist",
     "pronunciation": "/ˈhed.ən.ɪst/",
@@ -6283,7 +5653,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 459,
     "word": "hegemony",
     "pronunciation": "/hɪˈdʒem.ə.ni/",
@@ -6294,7 +5664,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 460,
     "word": "hermetic",
     "pronunciation": "/hɜːˈmet.ɪk/",
@@ -6305,7 +5675,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 461,
     "word": "heterogeneous",
     "pronunciation": "/ˌhet.ər.əˈdʒiː.ni.əs/",
@@ -6316,7 +5686,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 462,
     "word": "hew",
     "pronunciation": "/hjuː/",
@@ -6327,7 +5697,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 463,
     "word": "hierarchy",
     "pronunciation": "/ˈhaɪə.rɑː.ki/",
@@ -6338,7 +5708,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 464,
     "word": "hoary",
     "pronunciation": "/ˈhɔː.ri/",
@@ -6349,7 +5719,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Time"
   },
-  {
+{
     "id": 465,
     "word": "hodgepodge",
     "pronunciation": "/ˈhɒdʒ.pɒdʒ/",
@@ -6360,7 +5730,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 466,
     "word": "homage",
     "pronunciation": "/ˈhɒm.ɪdʒ/",
@@ -6371,7 +5741,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 467,
     "word": "homogeneous",
     "pronunciation": "/ˌhɒm.əˈdʒiː.ni.əs/",
@@ -6382,7 +5752,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 468,
     "word": "hoodwink",
     "pronunciation": "/ˈhʊd.wɪŋk/",
@@ -6393,7 +5763,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 469,
     "word": "hotly",
     "pronunciation": "/ˈhɒt.li/",
@@ -6404,7 +5774,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 470,
     "word": "husband",
     "pronunciation": "/ˈhʌz.bənd/",
@@ -6415,7 +5785,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 471,
     "word": "hyperbole",
     "pronunciation": "/haɪˈpɜː.bəl.i/",
@@ -6426,7 +5796,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 472,
     "word": "iconoclast",
     "pronunciation": "/aɪˈkɒn.ə.klæst/",
@@ -6437,7 +5807,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 473,
     "word": "Iconoclastic",
     "pronunciation": "/aɪˌkɒn.əˈklæs.tɪk/",
@@ -6448,7 +5818,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 474,
     "word": "idiosyncrasy",
     "pronunciation": "/ˌɪd.i.əˈsɪŋ.krə.si/",
@@ -6459,7 +5829,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 475,
     "word": "idolatry",
     "pronunciation": "/aɪˈdɒl.ə.tri/",
@@ -6470,7 +5840,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 476,
     "word": "idyllic",
     "pronunciation": "/aɪˈdɪl.ɪk/",
@@ -6481,7 +5851,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 477,
     "word": "Immutable",
     "pronunciation": "/ɪˈmjuː.tə.bəl/",
@@ -6492,7 +5862,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 478,
     "word": "Impair",
     "pronunciation": "/ɪmˈpeər/",
@@ -6503,7 +5873,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 479,
     "word": "Impassive",
     "pronunciation": "/ɪmˈpæs.ɪv/",
@@ -6514,7 +5884,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 480,
     "word": "Impede",
     "pronunciation": "/ɪmˈpiːd/",
@@ -6525,7 +5895,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 481,
     "word": "Impediment",
     "pronunciation": "/ɪmˈped.ɪ.mənt/",
@@ -6536,7 +5906,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 482,
     "word": "Impermeable",
     "pronunciation": "/ɪmˈpɜː.mi.ə.bəl/",
@@ -6547,7 +5917,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 483,
     "word": "Imperturbable",
     "pronunciation": "/ˌɪm.pəˈtɜː.bə.bəl/",
@@ -6558,7 +5928,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 484,
     "word": "Impervious",
     "pronunciation": "/ɪmˈpɜː.vi.əs/",
@@ -6569,7 +5939,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 485,
     "word": "Impetuous",
     "pronunciation": "/ɪmˈpetʃ.u.əs/",
@@ -6580,7 +5950,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 486,
     "word": "Implacable",
     "pronunciation": "/ɪmˈplæk.ə.bəl/",
@@ -6591,7 +5961,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 487,
     "word": "Implicit",
     "pronunciation": "/ɪmˈplɪs.ɪt/",
@@ -6602,7 +5972,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 488,
     "word": "Implode",
     "pronunciation": "/ɪmˈpləʊd/",
@@ -6613,7 +5983,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 489,
     "word": "Inadvertently",
     "pronunciation": "/ˌɪn.ədˈvɜː.tənt.li/",
@@ -6624,7 +5994,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 490,
     "word": "Inchoate",
     "pronunciation": "/ɪnˈkəʊ.ət/",
@@ -6635,7 +6005,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Time"
   },
-  {
+{
     "id": 491,
     "word": "Incongruity",
     "pronunciation": "/ˌɪn.kɒŋˈɡruː.ə.ti/",
@@ -6646,7 +6016,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 492,
     "word": "Inconsequential",
     "pronunciation": "/ɪnˌkɒn.sɪˈkwen.ʃəl/",
@@ -6657,7 +6027,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 493,
     "word": "Incorporate",
     "pronunciation": "/ɪnˈkɔː.pər.eɪt/",
@@ -6668,7 +6038,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 494,
     "word": "Indeterminate",
     "pronunciation": "/ˌɪn.dɪˈtɜː.mɪ.nət/",
@@ -6679,7 +6049,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 495,
     "word": "Indigence",
     "pronunciation": "/ˈɪn.dɪ.dʒəns/",
@@ -6690,7 +6060,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 496,
     "word": "Indolent",
     "pronunciation": "/ˈɪn.dəl.ənt/",
@@ -6701,7 +6071,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 497,
     "word": "Inert",
     "pronunciation": "/ɪˈnɜːt/",
@@ -6712,7 +6082,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 498,
     "word": "Ingenuous",
     "pronunciation": "/ɪnˈdʒen.ju.əs/",
@@ -6723,7 +6093,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 499,
     "word": "Inherent",
     "pronunciation": "/ɪnˈher.ənt/",
@@ -6734,7 +6104,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 500,
     "word": "Innocuous",
     "pronunciation": "/ɪˈnɒk.ju.əs/",
@@ -6745,7 +6115,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 501,
     "word": "Insensible",
     "pronunciation": "/ɪnˈsen.sə.bəl/",
@@ -6756,7 +6126,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 502,
     "word": "Insinuate",
     "pronunciation": "/ɪnˈsɪn.ju.eɪt/",
@@ -6767,7 +6137,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 503,
     "word": "Insipid",
     "pronunciation": "/ɪnˈsɪp.ɪd/",
@@ -6778,7 +6148,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 504,
     "word": "Insularity",
     "pronunciation": "/ˌɪn.sjəˈlær.ə.ti/",
@@ -6789,7 +6159,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 505,
     "word": "Intractable",
     "pronunciation": "/ɪnˈtræk.tə.bəl/",
@@ -6800,7 +6170,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 506,
     "word": "Intransigence",
     "pronunciation": "/ɪnˈtræn.sɪ.dʒəns/",
@@ -6811,7 +6181,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 507,
     "word": "Inundate",
     "pronunciation": "/ˈɪn.ʌn.deɪt/",
@@ -6822,7 +6192,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 508,
     "word": "Inured",
     "pronunciation": "/ɪˈnjʊəd/",
@@ -6833,7 +6203,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 509,
     "word": "Invective",
     "pronunciation": "/ɪnˈvek.tɪv/",
@@ -6844,7 +6214,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 510,
     "word": "Irascible",
     "pronunciation": "/ɪˈræs.ə.bəl/",
@@ -6855,7 +6225,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 511,
     "word": "Irresolute",
     "pronunciation": "/ɪˈrez.əl.uːt/",
@@ -6866,7 +6236,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 512,
     "word": "Itinerant",
     "pronunciation": "/aɪˈtɪn.ər.ənt/",
@@ -6877,7 +6247,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 513,
     "word": "Judicious",
     "pronunciation": "/dʒuːˈdɪʃ.əs/",
@@ -6888,7 +6258,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 514,
     "word": "Laconic",
     "pronunciation": "/ləˈkɒn.ɪk/",
@@ -6899,7 +6269,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 515,
     "word": "Lassitude",
     "pronunciation": "/ˈlæs.ɪ.tʃuːd/",
@@ -6910,7 +6280,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 516,
     "word": "Latent",
     "pronunciation": "/ˈleɪ.tənt/",
@@ -6921,7 +6291,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Time"
   },
-  {
+{
     "id": 517,
     "word": "Laud",
     "pronunciation": "/lɔːd/",
@@ -6932,7 +6302,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 518,
     "word": "Lethargic",
     "pronunciation": "/ləˈθɑː.dʒɪk/",
@@ -6943,7 +6313,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Emotion"
   },
-  {
+{
     "id": 519,
     "word": "Levity",
     "pronunciation": "/ˈlev.ə.ti/",
@@ -6954,7 +6324,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 520,
     "word": "Log",
     "pronunciation": "/lɒɡ/",
@@ -6965,7 +6335,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 521,
     "word": "Loquacious",
     "pronunciation": "/ləˈkweɪ.ʃəs/",
@@ -6976,7 +6346,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 522,
     "word": "Lucid",
     "pronunciation": "/ˈluː.sɪd/",
@@ -6987,7 +6357,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 523,
     "word": "Luminous",
     "pronunciation": "/ˈluː.mɪ.nəs/",
@@ -6998,7 +6368,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 524,
     "word": "Magnanimity",
     "pronunciation": "/ˌmæɡ.nəˈnɪm.ə.ti/",
@@ -7009,7 +6379,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 525,
     "word": "Malediction",
     "pronunciation": "/ˌmæl.əˈdɪk.ʃən/",
@@ -7020,7 +6390,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 526,
     "word": "Malevolent",
     "pronunciation": "/məˈlev.əl.ənt/",
@@ -7031,7 +6401,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 527,
     "word": "Malleable",
     "pronunciation": "/ˈmæl.i.ə.bəl/",
@@ -7042,7 +6412,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 528,
     "word": "Martinet",
     "pronunciation": "/ˌmɑː.tɪˈnet/",
@@ -7053,7 +6423,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 529,
     "word": "Maverick",
     "pronunciation": "/ˈmæv.ər.ɪk/",
@@ -7064,7 +6434,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 530,
     "word": "Mendacious",
     "pronunciation": "/menˈdeɪ.ʃəs/",
@@ -7075,7 +6445,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 531,
     "word": "Metamorphosis",
     "pronunciation": "/ˌmet.əˈmɔː.fə.sɪs/",
@@ -7086,7 +6456,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 532,
     "word": "Meticulous",
     "pronunciation": "/məˈtɪk.jə.ləs/",
@@ -7097,7 +6467,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 533,
     "word": "Misanthrope",
     "pronunciation": "/ˈmɪs.ən.θrəʊp/",
@@ -7108,7 +6478,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 534,
     "word": "Mitigate",
     "pronunciation": "/ˈmɪt.ɪ.ɡeɪt/",
@@ -7119,7 +6489,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 535,
     "word": "Mollify",
     "pronunciation": "/ˈmɒl.ɪ.faɪ/",
@@ -7130,7 +6500,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 536,
     "word": "Monotony",
     "pronunciation": "/məˈnɒt.ən.i/",
@@ -7141,7 +6511,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 537,
     "word": "Morose",
     "pronunciation": "/məˈrəʊs/",
@@ -7152,7 +6522,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 538,
     "word": "Mundane",
     "pronunciation": "/mʌnˈdeɪn/",
@@ -7163,7 +6533,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 539,
     "word": "Negate",
     "pronunciation": "/nɪˈɡeɪt/",
@@ -7174,7 +6544,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 540,
     "word": "Neophyte",
     "pronunciation": "/ˈniː.ə.faɪt/",
@@ -7185,7 +6555,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Time"
   },
-  {
+{
     "id": 541,
     "word": "Obdurate",
     "pronunciation": "/ˈɒb.dʒə.rət/",
@@ -7196,7 +6566,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 542,
     "word": "Obsequious",
     "pronunciation": "/əbˈsiː.kwi.əs/",
@@ -7207,7 +6577,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 543,
     "word": "Obstinate",
     "pronunciation": "/ˈɒb.stɪ.nət/",
@@ -7218,7 +6588,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 544,
     "word": "Obviate",
     "pronunciation": "/ˈɒb.vi.eɪt/",
@@ -7229,7 +6599,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 545,
     "word": "Occlude",
     "pronunciation": "/əˈkluːd/",
@@ -7240,7 +6610,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 546,
     "word": "Officious",
     "pronunciation": "/əˈfɪʃ.əs/",
@@ -7251,7 +6621,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 547,
     "word": "Onerous",
     "pronunciation": "/ˈəʊ.nər.əs/",
@@ -7262,7 +6632,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 548,
     "word": "Opaque",
     "pronunciation": "/əʊˈpeɪk/",
@@ -7273,7 +6643,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 549,
     "word": "Opprobrium",
     "pronunciation": "/əˈprəʊ.bri.əm/",
@@ -7284,7 +6654,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 550,
     "word": "Oscillate",
     "pronunciation": "/ˈɒs.ɪ.leɪt/",
@@ -7295,7 +6665,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 551,
     "word": "Oscillation",
     "pronunciation": "/ˌɒs.ɪˈleɪ.ʃən/",
@@ -7306,7 +6676,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 552,
     "word": "Ostentatious",
     "pronunciation": "/ˌɒs.tenˈteɪ.ʃəs/",
@@ -7317,7 +6687,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 553,
     "word": "Paragon",
     "pronunciation": "/ˈpær.ə.ɡən/",
@@ -7328,7 +6698,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 554,
     "word": "Partisan",
     "pronunciation": "/ˈpɑː.tɪ.zæn/",
@@ -7339,7 +6709,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 555,
     "word": "Pathological",
     "pronunciation": "/ˌpæθ.əˈlɒdʒ.ɪ.kəl/",
@@ -7350,7 +6720,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 556,
     "word": "Paucity",
     "pronunciation": "/ˈpɔː.sə.ti/",
@@ -7361,7 +6731,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 557,
     "word": "Pedantic",
     "pronunciation": "/pəˈdæn.tɪk/",
@@ -7372,7 +6742,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Intellect"
   },
-  {
+{
     "id": 558,
     "word": "Pellucid",
     "pronunciation": "/pəˈluː.sɪd/",
@@ -7383,7 +6753,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 559,
     "word": "Penchant",
     "pronunciation": "/ˈpen.tʃənt/",
@@ -7394,7 +6764,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 560,
     "word": "Penury",
     "pronunciation": "/ˈpen.jə.ri/",
@@ -7405,7 +6775,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 561,
     "word": "Perennial",
     "pronunciation": "/pəˈren.i.əl/",
@@ -7416,7 +6786,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 562,
     "word": "Perfidious",
     "pronunciation": "/pəˈfɪd.i.əs/",
@@ -7427,7 +6797,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 563,
     "word": "Perfunctory",
     "pronunciation": "/pəˈfʌŋk.tər.i/",
@@ -7438,7 +6808,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 564,
     "word": "Permeable",
     "pronunciation": "/ˈpɜː.mi.ə.bəl/",
@@ -7449,7 +6819,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 565,
     "word": "Pervasive",
     "pronunciation": "/pəˈveɪ.sɪv/",
@@ -7460,7 +6830,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 566,
     "word": "Phlegmatic",
     "pronunciation": "/fleɡˈmæt.ɪk/",
@@ -7471,7 +6841,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 567,
     "word": "Piety",
     "pronunciation": "/ˈpaɪ.ə.ti/",
@@ -7482,7 +6852,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 568,
     "word": "Placate",
     "pronunciation": "/pləˈkeɪt/",
@@ -7493,7 +6863,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 569,
     "word": "Plasticity",
     "pronunciation": "/plæsˈtɪs.ə.ti/",
@@ -7504,7 +6874,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 570,
     "word": "Platitude",
     "pronunciation": "/ˈplæt.ɪ.tʃuːd/",
@@ -7515,7 +6885,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 571,
     "word": "Plethora",
     "pronunciation": "/ˈpleθ.ər.ə/",
@@ -7526,7 +6896,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 572,
     "word": "Plummet",
     "pronunciation": "/ˈplʌm.ɪt/",
@@ -7537,7 +6907,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 573,
     "word": "Pragmatic",
     "pronunciation": "/præɡˈmæt.ɪk/",
@@ -7548,7 +6918,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 574,
     "word": "Preamble",
     "pronunciation": "/ˈpriː.æm.bəl/",
@@ -7559,7 +6929,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 575,
     "word": "Precarious",
     "pronunciation": "/prɪˈkeə.ri.əs/",
@@ -7570,7 +6940,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 576,
     "word": "Precipitate",
     "pronunciation": "/prɪˈsɪp.ɪ.teɪt/",
@@ -7581,7 +6951,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Change"
   },
-  {
+{
     "id": 577,
     "word": "Precursor",
     "pronunciation": "/ˌpriːˈkɜː.sər/",
@@ -7592,7 +6962,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 578,
     "word": "Presumptuous",
     "pronunciation": "/prɪˈzʌmp.tʃu.əs/",
@@ -7603,7 +6973,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 579,
     "word": "Prevaricate",
     "pronunciation": "/prɪˈvær.ɪ.keɪt/",
@@ -7614,7 +6984,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 580,
     "word": "Pristine",
     "pronunciation": "/ˈprɪs.tiːn/",
@@ -7625,7 +6995,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 581,
     "word": "Probity",
     "pronunciation": "/ˈprəʊ.bə.ti/",
@@ -7636,7 +7006,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 582,
     "word": "Problematic",
     "pronunciation": "/ˌprɒb.ləˈmæt.ɪk/",
@@ -7647,7 +7017,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 583,
     "word": "Prodigal",
     "pronunciation": "/ˈprɒd.ɪ.ɡəl/",
@@ -7658,7 +7028,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 584,
     "word": "Profound",
     "pronunciation": "/prəˈfaʊnd/",
@@ -7669,7 +7039,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 585,
     "word": "Proliferate",
     "pronunciation": "/prəˈlɪf.ər.eɪt/",
@@ -7680,7 +7050,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 586,
     "word": "Propitiate",
     "pronunciation": "/prəˈpɪʃ.i.eɪt/",
@@ -7691,7 +7061,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 587,
     "word": "Propriety",
     "pronunciation": "/prəˈpraɪ.ə.ti/",
@@ -7702,7 +7072,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 588,
     "word": "Proscribe",
     "pronunciation": "/prəʊˈskraɪb/",
@@ -7713,7 +7083,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Action"
   },
-  {
+{
     "id": 589,
     "word": "Pungent",
     "pronunciation": "/ˈpʌn.dʒənt/",
@@ -7724,7 +7094,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 590,
     "word": "Qualified",
     "pronunciation": "/ˈkwɒl.ɪ.faɪd/",
@@ -7735,7 +7105,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 591,
     "word": "Quibble",
     "pronunciation": "/ˈkwɪb.əl/",
@@ -7746,7 +7116,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 592,
     "word": "Quiescent",
     "pronunciation": "/kwiˈes.ənt/",
@@ -7757,7 +7127,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Time"
   },
-  {
+{
     "id": 593,
     "word": "Rarefied",
     "pronunciation": "/ˈreə.rɪ.faɪd/",
@@ -7768,7 +7138,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 594,
     "word": "Recalcitrant",
     "pronunciation": "/rɪˈkæl.sɪ.trənt/",
@@ -7779,7 +7149,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 595,
     "word": "Recant",
     "pronunciation": "/rɪˈkænt/",
@@ -7790,7 +7160,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 596,
     "word": "Recondite",
     "pronunciation": "/ˈrek.ən.daɪt/",
@@ -7801,7 +7171,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Intellect"
   },
-  {
+{
     "id": 597,
     "word": "Refractory",
     "pronunciation": "/rɪˈfræk.tər.i/",
@@ -7812,7 +7182,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 598,
     "word": "Refute",
     "pronunciation": "/rɪˈfjuːt/",
@@ -7823,7 +7193,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 599,
     "word": "Relegate",
     "pronunciation": "/ˈrel.ɪ.ɡeɪt/",
@@ -7834,7 +7204,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 600,
     "word": "Reproach",
     "pronunciation": "/rɪˈprəʊtʃ/",
@@ -7845,7 +7215,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 601,
     "word": "Reprobate",
     "pronunciation": "/ˈrep.rə.beɪt/",
@@ -7856,7 +7226,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 602,
     "word": "Repudiate",
     "pronunciation": "/rɪˈpjuː.di.eɪt/",
@@ -7867,7 +7237,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 603,
     "word": "Rescind",
     "pronunciation": "/rɪˈsɪnd/",
@@ -7878,7 +7248,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 604,
     "word": "Resolution",
     "pronunciation": "/ˌrez.əˈluː.ʃən/",
@@ -7889,7 +7259,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 605,
     "word": "Resolve",
     "pronunciation": "/rɪˈzɒlv/",
@@ -7900,7 +7270,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 606,
     "word": "Reticent",
     "pronunciation": "/ˈret.ɪ.sənt/",
@@ -7911,7 +7281,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 607,
     "word": "Reverent",
     "pronunciation": "/ˈrev.ər.ənt/",
@@ -7922,7 +7292,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Morality"
   },
-  {
+{
     "id": 608,
     "word": "Sage",
     "pronunciation": "/seɪdʒ/",
@@ -7933,7 +7303,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Intellect"
   },
-  {
+{
     "id": 609,
     "word": "Salubrious",
     "pronunciation": "/səˈluː.bri.əs/",
@@ -7944,7 +7314,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 610,
     "word": "Sanction",
     "pronunciation": "/ˈsæŋk.ʃən/",
@@ -7955,7 +7325,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Action"
   },
-  {
+{
     "id": 611,
     "word": "Satiate",
     "pronunciation": "/ˈseɪ.ʃi.eɪt/",
@@ -7966,7 +7336,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Emotion"
   },
-  {
+{
     "id": 612,
     "word": "Saturate",
     "pronunciation": "/ˈsætʃ.ər.eɪt/",
@@ -7977,7 +7347,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 613,
     "word": "Savor",
     "pronunciation": "/ˈseɪ.vər/",
@@ -7988,7 +7358,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Art"
   },
-  {
+{
     "id": 614,
     "word": "Secrete",
     "pronunciation": "/sɪˈkriːt/",
@@ -7999,7 +7369,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 615,
     "word": "Shard",
     "pronunciation": "/ʃɑːd/",
@@ -8010,7 +7380,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Art"
   },
-  {
+{
     "id": 616,
     "word": "Skeptic",
     "pronunciation": "/ˈskep.tɪk/",
@@ -8021,7 +7391,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 617,
     "word": "Solicitous",
     "pronunciation": "/səˈlɪs.ɪ.təs/",
@@ -8032,7 +7402,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 618,
     "word": "Soporific",
     "pronunciation": "/ˌsɒp.əˈrɪf.ɪk/",
@@ -8043,7 +7413,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Time"
   },
-  {
+{
     "id": 619,
     "word": "Specious",
     "pronunciation": "/ˈspiː.ʃəs/",
@@ -8054,7 +7424,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 620,
     "word": "Spectrum",
     "pronunciation": "/ˈspek.trəm/",
@@ -8065,7 +7435,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Quantity"
   },
-  {
+{
     "id": 621,
     "word": "Sporadic",
     "pronunciation": "/spəˈræd.ɪk/",
@@ -8076,7 +7446,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Time"
   },
-  {
+{
     "id": 622,
     "word": "Stigma",
     "pronunciation": "/ˈstɪɡ.mə/",
@@ -8087,7 +7457,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Morality"
   },
-  {
+{
     "id": 623,
     "word": "Stint",
     "pronunciation": "/stɪnt/",
@@ -8098,7 +7468,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 624,
     "word": "Stipulate",
     "pronunciation": "/ˈstɪp.jə.leɪt/",
@@ -8109,7 +7479,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 625,
     "word": "Stolid",
     "pronunciation": "/ˈstɒl.ɪd/",
@@ -8120,7 +7490,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 626,
     "word": "Striated",
     "pronunciation": "/straɪˈeɪ.tɪd/",
@@ -8131,7 +7501,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Art"
   },
-  {
+{
     "id": 627,
     "word": "Strut",
     "pronunciation": "/strʌt/",
@@ -8142,7 +7512,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 628,
     "word": "Subpoena",
     "pronunciation": "/səˈpiː.nə/",
@@ -8153,7 +7523,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Action"
   },
-  {
+{
     "id": 629,
     "word": "Subside",
     "pronunciation": "/səbˈsaɪd/",
@@ -8164,7 +7534,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 630,
     "word": "Substantiate",
     "pronunciation": "/səbˈstæn.ʃi.eɪt/",
@@ -8175,7 +7545,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 631,
     "word": "Subsume",
     "pronunciation": "/səbˈsjuːm/",
@@ -8186,7 +7556,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 632,
     "word": "Supersede",
     "pronunciation": "/ˌsuː.pəˈsiːd/",
@@ -8197,7 +7567,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Change"
   },
-  {
+{
     "id": 633,
     "word": "Supposition",
     "pronunciation": "/ˌsʌp.əˈzɪʃ.ən/",
@@ -8208,7 +7578,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 634,
     "word": "Tacit",
     "pronunciation": "/ˈtæs.ɪt/",
@@ -8219,7 +7589,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 635,
     "word": "Taciturn",
     "pronunciation": "/ˈtæs.ɪ.tɜːn/",
@@ -8230,7 +7600,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 636,
     "word": "Tangential",
     "pronunciation": "/tænˈdʒen.ʃəl/",
@@ -8241,7 +7611,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Logic"
   },
-  {
+{
     "id": 637,
     "word": "Tenuous",
     "pronunciation": "/ˈten.ju.əs/",
@@ -8252,7 +7622,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 638,
     "word": "Tirade",
     "pronunciation": "/taɪˈreɪd/",
@@ -8263,7 +7633,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Speech"
   },
-  {
+{
     "id": 639,
     "word": "Torpor",
     "pronunciation": "/ˈtɔː.pər/",
@@ -8274,7 +7644,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Emotion"
   },
-  {
+{
     "id": 640,
     "word": "Tortuous",
     "pronunciation": "/ˈtɔː.tʃu.əs/",
@@ -8285,7 +7655,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Logic"
   },
-  {
+{
     "id": 641,
     "word": "Tractable",
     "pronunciation": "/ˈtræk.tə.bəl/",
@@ -8296,7 +7666,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 642,
     "word": "Transgression",
     "pronunciation": "/trænzˈɡreʃ.ən/",
@@ -8307,7 +7677,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 643,
     "word": "Truculence",
     "pronunciation": "/ˈtrʌk.jə.ləns/",
@@ -8318,7 +7688,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Behavior"
   },
-  {
+{
     "id": 644,
     "word": "Vacillate",
     "pronunciation": "/ˈvæs.ɪ.leɪt/",
@@ -8329,7 +7699,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 645,
     "word": "Venerate",
     "pronunciation": "/ˈven.ər.eɪt/",
@@ -8340,7 +7710,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Morality"
   },
-  {
+{
     "id": 646,
     "word": "Veracious",
     "pronunciation": "/vəˈreɪ.ʃəs/",
@@ -8351,7 +7721,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Morality"
   },
-  {
+{
     "id": 647,
     "word": "Verbose",
     "pronunciation": "/vɜːˈbəʊs/",
@@ -8362,7 +7732,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Speech"
   },
-  {
+{
     "id": 648,
     "word": "Viable",
     "pronunciation": "/ˈvaɪ.ə.bəl/",
@@ -8373,7 +7743,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 649,
     "word": "Viscous",
     "pronunciation": "/ˈvɪs.kəs/",
@@ -8384,7 +7754,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Quantity"
   },
-  {
+{
     "id": 650,
     "word": "Vituperative",
     "pronunciation": "/vɪˈtjuː.pər.ə.tɪv/",
@@ -8395,7 +7765,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Speech"
   },
-  {
+{
     "id": 651,
     "word": "Volatile",
     "pronunciation": "/ˈvɒl.ə.taɪl/",
@@ -8406,7 +7776,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Change"
   },
-  {
+{
     "id": 652,
     "word": "Warranted",
     "pronunciation": "/ˈwɒr.ən.tɪd/",
@@ -8417,7 +7787,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Logic"
   },
-  {
+{
     "id": 653,
     "word": "Wary",
     "pronunciation": "/ˈweə.ri/",
@@ -8428,7 +7798,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 1,
     "category": "Behavior"
   },
-  {
+{
     "id": 654,
     "word": "Welter",
     "pronunciation": "/ˈwel.tər/",
@@ -8439,7 +7809,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 3,
     "category": "Quantity"
   },
-  {
+{
     "id": 655,
     "word": "Whimsical",
     "pronunciation": "/ˈwɪm.zɪ.kəl/",
@@ -8450,7 +7820,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "Behavior"
   },
-  {
+{
     "id": 656,
     "word": "Zealot",
     "pronunciation": "/ˈzel.ət/",
@@ -8460,965 +7830,964 @@ export const ALL_GRE_WORDS: Word[] = [
     "example": "He was a zealot who would do anything for his cause.",
     "difficulty": 2,
     "category": "Behavior"
-  }
-,
-{
-  "id": 657,
-  "word": "Abstruse",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Difficult to understand; obscure",
-  "mnemonic": "abstruse: Difficult...",
-  "example": "The abstruse nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Abstract Concepts"
-},
-{
-  "id": 658,
-  "word": "Inscrutable",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Impossible to understand or interpret",
-  "mnemonic": "inscrutable: Impossible...",
-  "example": "The inscrutable nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Abstract Concepts"
-},
-{
-  "id": 659,
-  "word": "Transmute",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Change in form, nature, or substance",
-  "mnemonic": "transmute: Change...",
-  "example": "The transmute nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Change"
-},
-{
-  "id": 660,
-  "word": "Wax",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "To increase gradually (opposite of wane)",
-  "mnemonic": "wax: To...",
-  "example": "The wax nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Change"
-},
-{
-  "id": 661,
-  "word": "Wane",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "To decrease gradually",
-  "mnemonic": "wane: To...",
-  "example": "The wane nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Change"
-},
-{
-  "id": 662,
-  "word": "Acquiesce",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Accept something reluctantly but without protest",
-  "mnemonic": "acquiesce: Accept...",
-  "example": "The acquiesce nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Communication"
-},
-{
-  "id": 663,
-  "word": "Prattle",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Chatter or babble pointlessly",
-  "mnemonic": "prattle: Chatter...",
-  "example": "The prattle nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Communication"
-},
-{
-  "id": 664,
-  "word": "Pontificate",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Express one's opinions in a pompous way",
-  "mnemonic": "pontificate: Express...",
-  "example": "The pontificate nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Communication"
-},
-{
-  "id": 665,
-  "word": "Enunciate",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Pronounce clearly; announce",
-  "mnemonic": "enunciate: Pronounce...",
-  "example": "The enunciate nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Communication"
-},
-{
-  "id": 666,
-  "word": "Sanguine",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Optimistic or positive, especially in a difficult situation",
-  "mnemonic": "sanguine: Optimistic...",
-  "example": "The sanguine nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Emotions"
-},
-{
-  "id": 667,
-  "word": "Lugubrious",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Looking or sounding sad and dismal",
-  "mnemonic": "lugubrious: Looking...",
-  "example": "The lugubrious nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Emotions"
-},
-{
-  "id": 668,
-  "word": "Sardonic",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Disdainfully or skeptically humorous",
-  "mnemonic": "sardonic: Disdainfully...",
-  "example": "The sardonic nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Emotions"
-},
-{
-  "id": 669,
-  "word": "Truculent",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Eager or quick to argue or fight; aggressively defiant",
-  "mnemonic": "truculent: Eager...",
-  "example": "The truculent nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Emotions"
-},
-{
-  "id": 670,
-  "word": "Sagacious",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Having or showing keen mental discernment and good judgment",
-  "mnemonic": "sagacious: Having...",
-  "example": "The sagacious nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Intelligence"
-},
-{
-  "id": 671,
-  "word": "Perspicacious",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Having a ready insight into and understanding of things",
-  "mnemonic": "perspicacious: Having...",
-  "example": "The perspicacious nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Intelligence"
-},
-{
-  "id": 672,
-  "word": "Dearth",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A scarcity or lack of something",
-  "mnemonic": "dearth: A...",
-  "example": "The dearth nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Quantity"
-},
-{
-  "id": 673,
-  "word": "Surfeit",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "An excessive amount of something",
-  "mnemonic": "surfeit: An...",
-  "example": "The surfeit nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Quantity"
-},
-{
-  "id": 674,
-  "word": "Modicum",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A small or moderate amount",
-  "mnemonic": "modicum: A...",
-  "example": "The modicum nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Quantity"
-},
-{
-  "id": 675,
-  "word": "Scintilla",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A tiny trace or spark of a specified quality",
-  "mnemonic": "scintilla: A...",
-  "example": "The scintilla nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Quantity"
-},
-{
-  "id": 676,
-  "word": "Myriad",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A countless or extremely great number",
-  "mnemonic": "myriad: A...",
-  "example": "The myriad nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Quantity"
-},
-{
-  "id": 677,
-  "word": "Evanescent",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Soon passing out of sight, memory, or existence",
-  "mnemonic": "evanescent: Soon...",
-  "example": "The evanescent nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Time"
-},
-{
-  "id": 678,
-  "word": "Transitory",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Not permanent",
-  "mnemonic": "transitory: Not...",
-  "example": "The transitory nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Time"
-},
-{
-  "id": 679,
-  "word": "Quotidian",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Daily; everyday, ordinary",
-  "mnemonic": "quotidian: Daily;...",
-  "example": "The quotidian nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Time"
-},
-{
-  "id": 680,
-  "word": "Belittle",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Make someone or something seem unimportant",
-  "mnemonic": "belittle: Make...",
-  "example": "The belittle nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Criticism"
-},
-{
-  "id": 681,
-  "word": "Pillory",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Attack or ridicule publicly",
-  "mnemonic": "pillory: Attack...",
-  "example": "The pillory nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Criticism"
-},
-{
-  "id": 682,
-  "word": "Execrate",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Curse or declare to be evil",
-  "mnemonic": "execrate: Curse...",
-  "example": "The execrate nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Criticism"
-},
-{
-  "id": 683,
-  "word": "Inveigh",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Speak or write about something with great hostility",
-  "mnemonic": "inveigh: Speak...",
-  "example": "The inveigh nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Criticism"
-},
-{
-  "id": 684,
-  "word": "Perjury",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "The offense of willfully telling an untruth",
-  "mnemonic": "perjury: The...",
-  "example": "The perjury nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Deception"
-},
-{
-  "id": 685,
-  "word": "Artifice",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Clever or cunning devices or expedients",
-  "mnemonic": "artifice: Clever...",
-  "example": "The artifice nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Deception"
-},
-{
-  "id": 686,
-  "word": "Intransigent",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Uncompromising; refusing to change",
-  "mnemonic": "intransigent: Uncompromising;...",
-  "example": "The intransigent nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Behavior"
-},
-{
-  "id": 687,
-  "word": "Pliable",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Easily bent; flexible or easily influenced",
-  "mnemonic": "pliable: Easily...",
-  "example": "The pliable nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Behavior"
-},
-{
-  "id": 688,
-  "word": "Trite",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Overused and consequently of little import",
-  "mnemonic": "trite: Overused...",
-  "example": "The trite nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Appearance"
-},
-{
-  "id": 689,
-  "word": "Prosaic",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Lacking poetic beauty; commonplace",
-  "mnemonic": "prosaic: Lacking...",
-  "example": "The prosaic nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Appearance"
-},
-{
-  "id": 690,
-  "word": "Vapid",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Offering nothing that is stimulating or challenging",
-  "mnemonic": "vapid: Offering...",
-  "example": "The vapid nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Appearance"
-},
-{
-  "id": 691,
-  "word": "Pedestrian",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Lacking inspiration or excitement; dull",
-  "mnemonic": "pedestrian: Lacking...",
-  "example": "The pedestrian nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Appearance"
-},
-{
-  "id": 692,
-  "word": "Ascendancy",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Occupation of a position of dominant power",
-  "mnemonic": "ascendancy: Occupation...",
-  "example": "The ascendancy nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Power"
-},
-{
-  "id": 693,
-  "word": "Predominance",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "The state or quality of being predominant",
-  "mnemonic": "predominance: The...",
-  "example": "The predominance nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Power"
-},
-{
-  "id": 694,
-  "word": "Supremacy",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "The state or condition of being superior",
-  "mnemonic": "supremacy: The...",
-  "example": "The supremacy nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Power"
-},
-{
-  "id": 695,
-  "word": "Profligate",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Recklessly extravagant or wasteful",
-  "mnemonic": "profligate: Recklessly...",
-  "example": "The profligate nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Money"
-},
-{
-  "id": 696,
-  "word": "Parsimonious",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Unwilling to spend money; stingy",
-  "mnemonic": "parsimonious: Unwilling...",
-  "example": "The parsimonious nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Money"
-},
-{
-  "id": 697,
-  "word": "Miserly",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Reluctant to spend money; stingy",
-  "mnemonic": "miserly: Reluctant...",
-  "example": "The miserly nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Money"
-},
-{
-  "id": 698,
-  "word": "Munificent",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "More generous than is usual or expected",
-  "mnemonic": "munificent: More...",
-  "example": "The munificent nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Money"
-},
-{
-  "id": 699,
-  "word": "Bountiful",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Large in quantity; abundant",
-  "mnemonic": "bountiful: Large...",
-  "example": "The bountiful nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Money"
-},
-{
-  "id": 700,
-  "word": "Consonant",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "In agreement; consistent",
-  "mnemonic": "consonant: In...",
-  "example": "The consonant nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Agreement"
-},
-{
-  "id": 701,
-  "word": "Concord",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Agreement or harmony between people or groups",
-  "mnemonic": "concord: Agreement...",
-  "example": "The concord nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Agreement"
-},
-{
-  "id": 702,
-  "word": "Amity",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Friendly relations",
-  "mnemonic": "amity: Friendly...",
-  "example": "The amity nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Agreement"
-},
-{
-  "id": 703,
-  "word": "Rapport",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A close and harmonious relationship",
-  "mnemonic": "rapport: A...",
-  "example": "The rapport nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Agreement"
-},
-{
-  "id": 704,
-  "word": "Strife",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Angry or bitter disagreement over fundamental issues",
-  "mnemonic": "strife: Angry...",
-  "example": "The strife nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Disagreement"
-},
-{
-  "id": 705,
-  "word": "Dissension",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Disagreement that leads to discord",
-  "mnemonic": "dissension: Disagreement...",
-  "example": "The dissension nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Disagreement"
-},
-{
-  "id": 706,
-  "word": "Sedulous",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Showing dedication and diligence",
-  "mnemonic": "sedulous: Showing...",
-  "example": "The sedulous nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Work"
-},
-{
-  "id": 707,
-  "word": "Industrious",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Diligent and hard-working",
-  "mnemonic": "industrious: Diligent...",
-  "example": "The industrious nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Work"
-},
-{
-  "id": 708,
-  "word": "Diligent",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Having or showing care and conscientiousness",
-  "mnemonic": "diligent: Having...",
-  "example": "The diligent nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Work"
-},
-{
-  "id": 709,
-  "word": "Remiss",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Lacking care or attention to duty; negligent",
-  "mnemonic": "remiss: Lacking...",
-  "example": "The remiss nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Neglect"
-},
-{
-  "id": 710,
-  "word": "Derelict",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "In a very poor condition as a result of disuse and neglect",
-  "mnemonic": "derelict: In...",
-  "example": "The derelict nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Neglect"
-},
-{
-  "id": 711,
-  "word": "Neglectful",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Not giving proper care or attention",
-  "mnemonic": "neglectful: Not...",
-  "example": "The neglectful nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Neglect"
-},
-{
-  "id": 712,
-  "word": "Slapdash",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Done too hurriedly and carelessly",
-  "mnemonic": "slapdash: Done...",
-  "example": "The slapdash nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Neglect"
-},
-{
-  "id": 713,
-  "word": "Trepidation",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A feeling of fear or agitation about something",
-  "mnemonic": "trepidation: A...",
-  "example": "The trepidation nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Fear"
-},
-{
-  "id": 714,
-  "word": "Consternation",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Feelings of anxiety or dismay",
-  "mnemonic": "consternation: Feelings...",
-  "example": "The consternation nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Fear"
-},
-{
-  "id": 715,
-  "word": "Disquiet",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "A feeling of anxiety or worry",
-  "mnemonic": "disquiet: A...",
-  "example": "The disquiet nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Fear"
-},
-{
-  "id": 716,
-  "word": "Foreboding",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Fearful apprehension",
-  "mnemonic": "foreboding: Fearful...",
-  "example": "The foreboding nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Fear"
-},
-{
-  "id": 717,
-  "word": "Aplomb",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Self-confidence or assurance",
-  "mnemonic": "aplomb: Self-confidence...",
-  "example": "The aplomb nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Confidence"
-},
-{
-  "id": 718,
-  "word": "Nonchalant",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Feeling or appearing casually calm",
-  "mnemonic": "nonchalant: Feeling...",
-  "example": "The nonchalant nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Confidence"
-},
-{
-  "id": 719,
-  "word": "Equivocal",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Open to more than one interpretation",
-  "mnemonic": "equivocal: Open...",
-  "example": "The equivocal nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Doubt"
-},
-{
-  "id": 720,
-  "word": "Nebulous",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "In the form of a cloud or haze; vague",
-  "mnemonic": "nebulous: In...",
-  "example": "The nebulous nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Doubt"
-},
-{
-  "id": 721,
-  "word": "Incipient",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "In an initial stage; beginning to happen",
-  "mnemonic": "incipient: In...",
-  "example": "The incipient nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Beginning"
-},
-{
-  "id": 722,
-  "word": "Nascent",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Just coming into existence",
-  "mnemonic": "nascent: Just...",
-  "example": "The nascent nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Beginning"
-},
-{
-  "id": 723,
-  "word": "Embryonic",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "In a rudimentary stage",
-  "mnemonic": "embryonic: In...",
-  "example": "The embryonic nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Beginning"
-},
-{
-  "id": 724,
-  "word": "Moribund",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "At the point of death; terminal",
-  "mnemonic": "moribund: At...",
-  "example": "The moribund nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Beginning"
-},
-{
-  "id": 725,
-  "word": "Sundry",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Various; several",
-  "mnemonic": "sundry: Various;...",
-  "example": "The sundry nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Mixture"
-},
-{
-  "id": 726,
-  "word": "Motley",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Incongruously varied in appearance or character",
-  "mnemonic": "motley: Incongruously...",
-  "example": "The motley nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Mixture"
-},
-{
-  "id": 727,
-  "word": "Extol",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Praise enthusiastically",
-  "mnemonic": "extol: Praise...",
-  "example": "The extol nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Praise"
-},
-{
-  "id": 728,
-  "word": "Eulogize",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Praise highly in speech or writing",
-  "mnemonic": "eulogize: Praise...",
-  "example": "The eulogize nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Praise"
-},
-{
-  "id": 729,
-  "word": "Revere",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Feel deep respect or admiration for",
-  "mnemonic": "revere: Feel...",
-  "example": "The revere nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Praise"
-},
-{
-  "id": 730,
-  "word": "Reprehend",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Rebuke or criticize",
-  "mnemonic": "reprehend: Rebuke...",
-  "example": "The reprehend nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Blame"
-},
-{
-  "id": 731,
-  "word": "Chastise",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Rebuke or reprimand severely",
-  "mnemonic": "chastise: Rebuke...",
-  "example": "The chastise nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Blame"
-},
-{
-  "id": 732,
-  "word": "Upbraid",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Find fault with; scold",
-  "mnemonic": "upbraid: Find...",
-  "example": "The upbraid nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Blame"
-},
-{
-  "id": 733,
-  "word": "Clemency",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Mercy; lenience",
-  "mnemonic": "clemency: Mercy;...",
-  "example": "The clemency nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Forgiveness"
-},
-{
-  "id": 734,
-  "word": "Leniency",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "The fact or quality of being more merciful",
-  "mnemonic": "leniency: The...",
-  "example": "The leniency nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Forgiveness"
-},
-{
-  "id": 735,
-  "word": "Quarter",
-  "pronunciation": "",
-  "pos": "noun",
-  "definition": "Mercy or clemency shown to a defeated enemy",
-  "mnemonic": "quarter: Mercy...",
-  "example": "The quarter nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Forgiveness"
-},
-{
-  "id": 736,
-  "word": "Perilous",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Full of danger or risk",
-  "mnemonic": "perilous: Full...",
-  "example": "The perilous nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Danger"
-},
-{
-  "id": 737,
-  "word": "Hazardous",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Risky; dangerous",
-  "mnemonic": "hazardous: Risky;...",
-  "example": "The hazardous nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Danger"
-},
-{
-  "id": 738,
-  "word": "Treacherous",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Guilty of or involving betrayal or deception",
-  "mnemonic": "treacherous: Guilty...",
-  "example": "The treacherous nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Danger"
-},
-{
-  "id": 739,
-  "word": "Robust",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Strong and healthy; vigorous",
-  "mnemonic": "robust: Strong...",
-  "example": "The robust nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Strength"
-},
-{
-  "id": 740,
-  "word": "Vigorous",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Strong, healthy, and full of energy",
-  "mnemonic": "vigorous: Strong,...",
-  "example": "The vigorous nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Strength"
-},
-{
-  "id": 741,
-  "word": "Stalwart",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Loyal, reliable, and hardworking",
-  "mnemonic": "stalwart: Loyal,...",
-  "example": "The stalwart nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Strength"
-},
-{
-  "id": 742,
-  "word": "Prolific",
-  "pronunciation": "",
-  "pos": "adj",
-  "definition": "Present in large numbers or quantities",
-  "mnemonic": "prolific: Present...",
-  "example": "The prolific nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Strength"
-},
-{
-  "id": 743,
-  "word": "Debilitate",
-  "pronunciation": "",
-  "pos": "verb",
-  "definition": "Make weak or feeble",
-  "mnemonic": "debilitate: Make...",
-  "example": "The debilitate nature of the problem made it hard to solve.",
-  "difficulty": 2,
-  "category": "Strength"
-},
+  },
+{
+    "id": 657,
+    "word": "Abstruse",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Difficult to understand; obscure",
+    "mnemonic": "abstruse: Difficult...",
+    "example": "The abstruse nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Abstract Concepts"
+  },
+{
+    "id": 658,
+    "word": "Inscrutable",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Impossible to understand or interpret",
+    "mnemonic": "inscrutable: Impossible...",
+    "example": "The inscrutable nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Abstract Concepts"
+  },
+{
+    "id": 659,
+    "word": "Transmute",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Change in form, nature, or substance",
+    "mnemonic": "transmute: Change...",
+    "example": "The transmute nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Change"
+  },
+{
+    "id": 660,
+    "word": "Wax",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "To increase gradually (opposite of wane)",
+    "mnemonic": "wax: To...",
+    "example": "The wax nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Change"
+  },
+{
+    "id": 661,
+    "word": "Wane",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "To decrease gradually",
+    "mnemonic": "wane: To...",
+    "example": "The wane nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Change"
+  },
+{
+    "id": 662,
+    "word": "Acquiesce",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Accept something reluctantly but without protest",
+    "mnemonic": "acquiesce: Accept...",
+    "example": "The acquiesce nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Communication"
+  },
+{
+    "id": 663,
+    "word": "Prattle",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Chatter or babble pointlessly",
+    "mnemonic": "prattle: Chatter...",
+    "example": "The prattle nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Communication"
+  },
+{
+    "id": 664,
+    "word": "Pontificate",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Express one's opinions in a pompous way",
+    "mnemonic": "pontificate: Express...",
+    "example": "The pontificate nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Communication"
+  },
+{
+    "id": 665,
+    "word": "Enunciate",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Pronounce clearly; announce",
+    "mnemonic": "enunciate: Pronounce...",
+    "example": "The enunciate nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Communication"
+  },
+{
+    "id": 666,
+    "word": "Sanguine",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Optimistic or positive, especially in a difficult situation",
+    "mnemonic": "sanguine: Optimistic...",
+    "example": "The sanguine nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Emotions"
+  },
+{
+    "id": 667,
+    "word": "Lugubrious",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Looking or sounding sad and dismal",
+    "mnemonic": "lugubrious: Looking...",
+    "example": "The lugubrious nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Emotions"
+  },
+{
+    "id": 668,
+    "word": "Sardonic",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Disdainfully or skeptically humorous",
+    "mnemonic": "sardonic: Disdainfully...",
+    "example": "The sardonic nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Emotions"
+  },
+{
+    "id": 669,
+    "word": "Truculent",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Eager or quick to argue or fight; aggressively defiant",
+    "mnemonic": "truculent: Eager...",
+    "example": "The truculent nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Emotions"
+  },
+{
+    "id": 670,
+    "word": "Sagacious",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Having or showing keen mental discernment and good judgment",
+    "mnemonic": "sagacious: Having...",
+    "example": "The sagacious nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Intelligence"
+  },
+{
+    "id": 671,
+    "word": "Perspicacious",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Having a ready insight into and understanding of things",
+    "mnemonic": "perspicacious: Having...",
+    "example": "The perspicacious nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Intelligence"
+  },
+{
+    "id": 672,
+    "word": "Dearth",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A scarcity or lack of something",
+    "mnemonic": "dearth: A...",
+    "example": "The dearth nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Quantity"
+  },
+{
+    "id": 673,
+    "word": "Surfeit",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "An excessive amount of something",
+    "mnemonic": "surfeit: An...",
+    "example": "The surfeit nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Quantity"
+  },
+{
+    "id": 674,
+    "word": "Modicum",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A small or moderate amount",
+    "mnemonic": "modicum: A...",
+    "example": "The modicum nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Quantity"
+  },
+{
+    "id": 675,
+    "word": "Scintilla",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A tiny trace or spark of a specified quality",
+    "mnemonic": "scintilla: A...",
+    "example": "The scintilla nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Quantity"
+  },
+{
+    "id": 676,
+    "word": "Myriad",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A countless or extremely great number",
+    "mnemonic": "myriad: A...",
+    "example": "The myriad nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Quantity"
+  },
+{
+    "id": 677,
+    "word": "Evanescent",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Soon passing out of sight, memory, or existence",
+    "mnemonic": "evanescent: Soon...",
+    "example": "The evanescent nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Time"
+  },
+{
+    "id": 678,
+    "word": "Transitory",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Not permanent",
+    "mnemonic": "transitory: Not...",
+    "example": "The transitory nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Time"
+  },
+{
+    "id": 679,
+    "word": "Quotidian",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Daily; everyday, ordinary",
+    "mnemonic": "quotidian: Daily;...",
+    "example": "The quotidian nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Time"
+  },
+{
+    "id": 680,
+    "word": "Belittle",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Make someone or something seem unimportant",
+    "mnemonic": "belittle: Make...",
+    "example": "The belittle nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Criticism"
+  },
+{
+    "id": 681,
+    "word": "Pillory",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Attack or ridicule publicly",
+    "mnemonic": "pillory: Attack...",
+    "example": "The pillory nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Criticism"
+  },
+{
+    "id": 682,
+    "word": "Execrate",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Curse or declare to be evil",
+    "mnemonic": "execrate: Curse...",
+    "example": "The execrate nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Criticism"
+  },
+{
+    "id": 683,
+    "word": "Inveigh",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Speak or write about something with great hostility",
+    "mnemonic": "inveigh: Speak...",
+    "example": "The inveigh nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Criticism"
+  },
+{
+    "id": 684,
+    "word": "Perjury",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "The offense of willfully telling an untruth",
+    "mnemonic": "perjury: The...",
+    "example": "The perjury nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Deception"
+  },
+{
+    "id": 685,
+    "word": "Artifice",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Clever or cunning devices or expedients",
+    "mnemonic": "artifice: Clever...",
+    "example": "The artifice nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Deception"
+  },
+{
+    "id": 686,
+    "word": "Intransigent",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Uncompromising; refusing to change",
+    "mnemonic": "intransigent: Uncompromising;...",
+    "example": "The intransigent nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Behavior"
+  },
+{
+    "id": 687,
+    "word": "Pliable",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Easily bent; flexible or easily influenced",
+    "mnemonic": "pliable: Easily...",
+    "example": "The pliable nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Behavior"
+  },
+{
+    "id": 688,
+    "word": "Trite",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Overused and consequently of little import",
+    "mnemonic": "trite: Overused...",
+    "example": "The trite nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Appearance"
+  },
+{
+    "id": 689,
+    "word": "Prosaic",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Lacking poetic beauty; commonplace",
+    "mnemonic": "prosaic: Lacking...",
+    "example": "The prosaic nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Appearance"
+  },
+{
+    "id": 690,
+    "word": "Vapid",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Offering nothing that is stimulating or challenging",
+    "mnemonic": "vapid: Offering...",
+    "example": "The vapid nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Appearance"
+  },
+{
+    "id": 691,
+    "word": "Pedestrian",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Lacking inspiration or excitement; dull",
+    "mnemonic": "pedestrian: Lacking...",
+    "example": "The pedestrian nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Appearance"
+  },
+{
+    "id": 692,
+    "word": "Ascendancy",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Occupation of a position of dominant power",
+    "mnemonic": "ascendancy: Occupation...",
+    "example": "The ascendancy nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Power"
+  },
+{
+    "id": 693,
+    "word": "Predominance",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "The state or quality of being predominant",
+    "mnemonic": "predominance: The...",
+    "example": "The predominance nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Power"
+  },
+{
+    "id": 694,
+    "word": "Supremacy",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "The state or condition of being superior",
+    "mnemonic": "supremacy: The...",
+    "example": "The supremacy nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Power"
+  },
+{
+    "id": 695,
+    "word": "Profligate",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Recklessly extravagant or wasteful",
+    "mnemonic": "profligate: Recklessly...",
+    "example": "The profligate nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Money"
+  },
+{
+    "id": 696,
+    "word": "Parsimonious",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Unwilling to spend money; stingy",
+    "mnemonic": "parsimonious: Unwilling...",
+    "example": "The parsimonious nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Money"
+  },
+{
+    "id": 697,
+    "word": "Miserly",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Reluctant to spend money; stingy",
+    "mnemonic": "miserly: Reluctant...",
+    "example": "The miserly nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Money"
+  },
+{
+    "id": 698,
+    "word": "Munificent",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "More generous than is usual or expected",
+    "mnemonic": "munificent: More...",
+    "example": "The munificent nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Money"
+  },
+{
+    "id": 699,
+    "word": "Bountiful",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Large in quantity; abundant",
+    "mnemonic": "bountiful: Large...",
+    "example": "The bountiful nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Money"
+  },
+{
+    "id": 700,
+    "word": "Consonant",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "In agreement; consistent",
+    "mnemonic": "consonant: In...",
+    "example": "The consonant nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Agreement"
+  },
+{
+    "id": 701,
+    "word": "Concord",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Agreement or harmony between people or groups",
+    "mnemonic": "concord: Agreement...",
+    "example": "The concord nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Agreement"
+  },
+{
+    "id": 702,
+    "word": "Amity",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Friendly relations",
+    "mnemonic": "amity: Friendly...",
+    "example": "The amity nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Agreement"
+  },
+{
+    "id": 703,
+    "word": "Rapport",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A close and harmonious relationship",
+    "mnemonic": "rapport: A...",
+    "example": "The rapport nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Agreement"
+  },
+{
+    "id": 704,
+    "word": "Strife",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Angry or bitter disagreement over fundamental issues",
+    "mnemonic": "strife: Angry...",
+    "example": "The strife nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Disagreement"
+  },
+{
+    "id": 705,
+    "word": "Dissension",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Disagreement that leads to discord",
+    "mnemonic": "dissension: Disagreement...",
+    "example": "The dissension nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Disagreement"
+  },
+{
+    "id": 706,
+    "word": "Sedulous",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Showing dedication and diligence",
+    "mnemonic": "sedulous: Showing...",
+    "example": "The sedulous nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Work"
+  },
+{
+    "id": 707,
+    "word": "Industrious",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Diligent and hard-working",
+    "mnemonic": "industrious: Diligent...",
+    "example": "The industrious nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Work"
+  },
+{
+    "id": 708,
+    "word": "Diligent",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Having or showing care and conscientiousness",
+    "mnemonic": "diligent: Having...",
+    "example": "The diligent nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Work"
+  },
+{
+    "id": 709,
+    "word": "Remiss",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Lacking care or attention to duty; negligent",
+    "mnemonic": "remiss: Lacking...",
+    "example": "The remiss nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Neglect"
+  },
+{
+    "id": 710,
+    "word": "Derelict",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "In a very poor condition as a result of disuse and neglect",
+    "mnemonic": "derelict: In...",
+    "example": "The derelict nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Neglect"
+  },
+{
+    "id": 711,
+    "word": "Neglectful",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Not giving proper care or attention",
+    "mnemonic": "neglectful: Not...",
+    "example": "The neglectful nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Neglect"
+  },
+{
+    "id": 712,
+    "word": "Slapdash",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Done too hurriedly and carelessly",
+    "mnemonic": "slapdash: Done...",
+    "example": "The slapdash nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Neglect"
+  },
+{
+    "id": 713,
+    "word": "Trepidation",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A feeling of fear or agitation about something",
+    "mnemonic": "trepidation: A...",
+    "example": "The trepidation nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Fear"
+  },
+{
+    "id": 714,
+    "word": "Consternation",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Feelings of anxiety or dismay",
+    "mnemonic": "consternation: Feelings...",
+    "example": "The consternation nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Fear"
+  },
+{
+    "id": 715,
+    "word": "Disquiet",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "A feeling of anxiety or worry",
+    "mnemonic": "disquiet: A...",
+    "example": "The disquiet nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Fear"
+  },
+{
+    "id": 716,
+    "word": "Foreboding",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Fearful apprehension",
+    "mnemonic": "foreboding: Fearful...",
+    "example": "The foreboding nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Fear"
+  },
+{
+    "id": 717,
+    "word": "Aplomb",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Self-confidence or assurance",
+    "mnemonic": "aplomb: Self-confidence...",
+    "example": "The aplomb nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Confidence"
+  },
+{
+    "id": 718,
+    "word": "Nonchalant",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Feeling or appearing casually calm",
+    "mnemonic": "nonchalant: Feeling...",
+    "example": "The nonchalant nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Confidence"
+  },
+{
+    "id": 719,
+    "word": "Equivocal",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Open to more than one interpretation",
+    "mnemonic": "equivocal: Open...",
+    "example": "The equivocal nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Doubt"
+  },
+{
+    "id": 720,
+    "word": "Nebulous",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "In the form of a cloud or haze; vague",
+    "mnemonic": "nebulous: In...",
+    "example": "The nebulous nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Doubt"
+  },
+{
+    "id": 721,
+    "word": "Incipient",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "In an initial stage; beginning to happen",
+    "mnemonic": "incipient: In...",
+    "example": "The incipient nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Beginning"
+  },
+{
+    "id": 722,
+    "word": "Nascent",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Just coming into existence",
+    "mnemonic": "nascent: Just...",
+    "example": "The nascent nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Beginning"
+  },
+{
+    "id": 723,
+    "word": "Embryonic",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "In a rudimentary stage",
+    "mnemonic": "embryonic: In...",
+    "example": "The embryonic nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Beginning"
+  },
+{
+    "id": 724,
+    "word": "Moribund",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "At the point of death; terminal",
+    "mnemonic": "moribund: At...",
+    "example": "The moribund nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Beginning"
+  },
+{
+    "id": 725,
+    "word": "Sundry",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Various; several",
+    "mnemonic": "sundry: Various;...",
+    "example": "The sundry nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Mixture"
+  },
+{
+    "id": 726,
+    "word": "Motley",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Incongruously varied in appearance or character",
+    "mnemonic": "motley: Incongruously...",
+    "example": "The motley nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Mixture"
+  },
+{
+    "id": 727,
+    "word": "Extol",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Praise enthusiastically",
+    "mnemonic": "extol: Praise...",
+    "example": "The extol nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Praise"
+  },
+{
+    "id": 728,
+    "word": "Eulogize",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Praise highly in speech or writing",
+    "mnemonic": "eulogize: Praise...",
+    "example": "The eulogize nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Praise"
+  },
+{
+    "id": 729,
+    "word": "Revere",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Feel deep respect or admiration for",
+    "mnemonic": "revere: Feel...",
+    "example": "The revere nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Praise"
+  },
+{
+    "id": 730,
+    "word": "Reprehend",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Rebuke or criticize",
+    "mnemonic": "reprehend: Rebuke...",
+    "example": "The reprehend nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Blame"
+  },
+{
+    "id": 731,
+    "word": "Chastise",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Rebuke or reprimand severely",
+    "mnemonic": "chastise: Rebuke...",
+    "example": "The chastise nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Blame"
+  },
+{
+    "id": 732,
+    "word": "Upbraid",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Find fault with; scold",
+    "mnemonic": "upbraid: Find...",
+    "example": "The upbraid nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Blame"
+  },
+{
+    "id": 733,
+    "word": "Clemency",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Mercy; lenience",
+    "mnemonic": "clemency: Mercy;...",
+    "example": "The clemency nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Forgiveness"
+  },
+{
+    "id": 734,
+    "word": "Leniency",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "The fact or quality of being more merciful",
+    "mnemonic": "leniency: The...",
+    "example": "The leniency nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Forgiveness"
+  },
+{
+    "id": 735,
+    "word": "Quarter",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "Mercy or clemency shown to a defeated enemy",
+    "mnemonic": "quarter: Mercy...",
+    "example": "The quarter nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Forgiveness"
+  },
+{
+    "id": 736,
+    "word": "Perilous",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Full of danger or risk",
+    "mnemonic": "perilous: Full...",
+    "example": "The perilous nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Danger"
+  },
+{
+    "id": 737,
+    "word": "Hazardous",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Risky; dangerous",
+    "mnemonic": "hazardous: Risky;...",
+    "example": "The hazardous nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Danger"
+  },
+{
+    "id": 738,
+    "word": "Treacherous",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Guilty of or involving betrayal or deception",
+    "mnemonic": "treacherous: Guilty...",
+    "example": "The treacherous nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Danger"
+  },
+{
+    "id": 739,
+    "word": "Robust",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Strong and healthy; vigorous",
+    "mnemonic": "robust: Strong...",
+    "example": "The robust nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Strength"
+  },
+{
+    "id": 740,
+    "word": "Vigorous",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Strong, healthy, and full of energy",
+    "mnemonic": "vigorous: Strong,...",
+    "example": "The vigorous nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Strength"
+  },
+{
+    "id": 741,
+    "word": "Stalwart",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Loyal, reliable, and hardworking",
+    "mnemonic": "stalwart: Loyal,...",
+    "example": "The stalwart nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Strength"
+  },
+{
+    "id": 742,
+    "word": "Prolific",
+    "pronunciation": "",
+    "pos": "adj",
+    "definition": "Present in large numbers or quantities",
+    "mnemonic": "prolific: Present...",
+    "example": "The prolific nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Strength"
+  },
+{
+    "id": 743,
+    "word": "Debilitate",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "Make weak or feeble",
+    "mnemonic": "debilitate: Make...",
+    "example": "The debilitate nature of the problem made it hard to solve.",
+    "difficulty": 2,
+    "category": "Strength"
+  },
 {
     "id": 744,
     "word": "Abrogate",
@@ -9430,7 +8799,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 745,
     "word": "Bowdlerize",
     "pronunciation": "",
@@ -9441,7 +8810,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 746,
     "word": "Cavil",
     "pronunciation": "",
@@ -9452,7 +8821,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 747,
     "word": "Comport",
     "pronunciation": "",
@@ -9463,7 +8832,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 748,
     "word": "Deprecate",
     "pronunciation": "",
@@ -9474,7 +8843,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 749,
     "word": "Discomfit",
     "pronunciation": "",
@@ -9485,7 +8854,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 750,
     "word": "Edify",
     "pronunciation": "",
@@ -9496,7 +8865,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 751,
     "word": "Efface",
     "pronunciation": "",
@@ -9507,7 +8876,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 752,
     "word": "Emanate",
     "pronunciation": "",
@@ -9518,7 +8887,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 753,
     "word": "Excoriate",
     "pronunciation": "",
@@ -9529,7 +8898,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 754,
     "word": "Expiate",
     "pronunciation": "",
@@ -9540,7 +8909,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 755,
     "word": "Expunge",
     "pronunciation": "",
@@ -9551,7 +8920,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 756,
     "word": "Extirpate",
     "pronunciation": "",
@@ -9562,7 +8931,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 757,
     "word": "Fetter",
     "pronunciation": "",
@@ -9573,7 +8942,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 758,
     "word": "Inculcate",
     "pronunciation": "",
@@ -9584,7 +8953,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 759,
     "word": "Lumber",
     "pronunciation": "",
@@ -9595,7 +8964,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 760,
     "word": "Malinger",
     "pronunciation": "",
@@ -9606,7 +8975,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 761,
     "word": "Obfuscate",
     "pronunciation": "",
@@ -9617,7 +8986,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 762,
     "word": "Palliate",
     "pronunciation": "",
@@ -9628,7 +8997,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 763,
     "word": "Ponder",
     "pronunciation": "",
@@ -9639,7 +9008,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 764,
     "word": "Presage",
     "pronunciation": "",
@@ -9650,7 +9019,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 765,
     "word": "Pulverize",
     "pronunciation": "",
@@ -9661,7 +9030,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 766,
     "word": "Redress",
     "pronunciation": "",
@@ -9672,7 +9041,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 767,
     "word": "Remonstrate",
     "pronunciation": "",
@@ -9683,7 +9052,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 768,
     "word": "Stultify",
     "pronunciation": "",
@@ -9694,7 +9063,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 769,
     "word": "Supplant",
     "pronunciation": "",
@@ -9705,7 +9074,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 770,
     "word": "Transgress",
     "pronunciation": "",
@@ -9716,7 +9085,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 771,
     "word": "Undermine",
     "pronunciation": "",
@@ -9727,7 +9096,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 772,
     "word": "Vituperate",
     "pronunciation": "",
@@ -9738,7 +9107,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 773,
     "word": "Winnow",
     "pronunciation": "",
@@ -9749,7 +9118,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 774,
     "word": "Adventitious",
     "pronunciation": "",
@@ -9760,7 +9129,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 775,
     "word": "Alimentary",
     "pronunciation": "",
@@ -9771,7 +9140,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 776,
     "word": "Arrant",
     "pronunciation": "",
@@ -9782,7 +9151,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 777,
     "word": "Callow",
     "pronunciation": "",
@@ -9793,7 +9162,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 778,
     "word": "Captious",
     "pronunciation": "",
@@ -9804,7 +9173,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 779,
     "word": "Chary",
     "pronunciation": "",
@@ -9815,7 +9184,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 780,
     "word": "Churlish",
     "pronunciation": "",
@@ -9826,7 +9195,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 781,
     "word": "Circuitous",
     "pronunciation": "",
@@ -9837,7 +9206,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 782,
     "word": "Concomitant",
     "pronunciation": "",
@@ -9848,7 +9217,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 783,
     "word": "Corporeal",
     "pronunciation": "",
@@ -9859,7 +9228,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 784,
     "word": "Effulgent",
     "pronunciation": "",
@@ -9870,7 +9239,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 785,
     "word": "Egregious",
     "pronunciation": "",
@@ -9881,7 +9250,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 786,
     "word": "Ersatz",
     "pronunciation": "",
@@ -9892,7 +9261,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 787,
     "word": "Execrable",
     "pronunciation": "",
@@ -9903,7 +9272,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 788,
     "word": "Insidious",
     "pronunciation": "",
@@ -9914,7 +9283,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 789,
     "word": "Inviolate",
     "pronunciation": "",
@@ -9925,7 +9294,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 790,
     "word": "Jocose",
     "pronunciation": "",
@@ -9936,7 +9305,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 791,
     "word": "Limpid",
     "pronunciation": "",
@@ -9947,7 +9316,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 792,
     "word": "Mellifluous",
     "pronunciation": "",
@@ -9958,7 +9327,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 793,
     "word": "Aegis",
     "pronunciation": "",
@@ -9969,7 +9338,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 794,
     "word": "Atavism",
     "pronunciation": "",
@@ -9980,7 +9349,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 795,
     "word": "Bailiwick",
     "pronunciation": "",
@@ -9991,7 +9360,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 796,
     "word": "Chimera",
     "pronunciation": "",
@@ -10002,7 +9371,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 797,
     "word": "Cynosure",
     "pronunciation": "",
@@ -10013,7 +9382,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 798,
     "word": "Denouement",
     "pronunciation": "",
@@ -10024,7 +9393,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 799,
     "word": "Blandishment",
     "pronunciation": "",
@@ -10035,7 +9404,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 800,
     "word": "Bilious",
     "pronunciation": "",
@@ -10046,7 +9415,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 801,
     "word": "Bungler",
     "pronunciation": "",
@@ -10057,7 +9426,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 802,
     "word": "Burlesque",
     "pronunciation": "",
@@ -10068,7 +9437,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 803,
     "word": "Cabal",
     "pronunciation": "",
@@ -10079,7 +9448,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 804,
     "word": "Cadge",
     "pronunciation": "",
@@ -10090,7 +9459,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 805,
     "word": "Cajole",
     "pronunciation": "",
@@ -10101,7 +9470,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 806,
     "word": "Cant",
     "pronunciation": "",
@@ -10112,7 +9481,7 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 807,
     "word": "Choleric",
     "pronunciation": "",
@@ -10123,19 +9492,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
+{
     "id": 808,
-    "word": "Clamor",
-    "pronunciation": "",
-    "pos": "noun",
-    "definition": "A loud and confused noise, especially of people shouting vehemently.",
-    "mnemonic": "clamor: A loud and confused ...",
-    "example": "The clamor nature of the situation was evident.",
-    "difficulty": 2,
-    "category": "General"
-  },
-  {
-    "id": 809,
     "word": "Clinch",
     "pronunciation": "",
     "pos": "verb",
@@ -10145,8 +9503,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 810,
+{
+    "id": 809,
     "word": "Cloister",
     "pronunciation": "",
     "pos": "verb",
@@ -10156,8 +9514,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 811,
+{
+    "id": 810,
     "word": "Conscript",
     "pronunciation": "",
     "pos": "verb",
@@ -10167,8 +9525,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 812,
+{
+    "id": 811,
     "word": "Coven",
     "pronunciation": "",
     "pos": "noun",
@@ -10178,8 +9536,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 813,
+{
+    "id": 812,
     "word": "Dalliance",
     "pronunciation": "",
     "pos": "noun",
@@ -10189,8 +9547,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 814,
+{
+    "id": 813,
     "word": "Damp",
     "pronunciation": "",
     "pos": "verb",
@@ -10200,8 +9558,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 815,
+{
+    "id": 814,
     "word": "Dastardly",
     "pronunciation": "",
     "pos": "adj",
@@ -10211,8 +9569,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 816,
+{
+    "id": 815,
     "word": "Dawdler",
     "pronunciation": "",
     "pos": "noun",
@@ -10222,8 +9580,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 817,
+{
+    "id": 816,
     "word": "Depredation",
     "pronunciation": "",
     "pos": "noun",
@@ -10233,8 +9591,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 818,
+{
+    "id": 817,
     "word": "Descry",
     "pronunciation": "",
     "pos": "verb",
@@ -10244,8 +9602,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 819,
+{
+    "id": 818,
     "word": "Desuetude",
     "pronunciation": "",
     "pos": "noun",
@@ -10255,8 +9613,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 820,
+{
+    "id": 819,
     "word": "Detumescence",
     "pronunciation": "",
     "pos": "noun",
@@ -10266,8 +9624,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 821,
+{
+    "id": 820,
     "word": "Doggerel",
     "pronunciation": "",
     "pos": "noun",
@@ -10277,8 +9635,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 822,
+{
+    "id": 821,
     "word": "Dross",
     "pronunciation": "",
     "pos": "noun",
@@ -10288,8 +9646,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 823,
+{
+    "id": 822,
     "word": "Dyspeptic",
     "pronunciation": "",
     "pos": "adj",
@@ -10299,8 +9657,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 824,
+{
+    "id": 823,
     "word": "Eddy",
     "pronunciation": "",
     "pos": "noun",
@@ -10310,8 +9668,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 825,
+{
+    "id": 824,
     "word": "Emaciated",
     "pronunciation": "",
     "pos": "adj",
@@ -10321,8 +9679,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 826,
+{
+    "id": 825,
     "word": "Ennui",
     "pronunciation": "",
     "pos": "noun",
@@ -10332,8 +9690,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 827,
+{
+    "id": 826,
     "word": "Epicure",
     "pronunciation": "",
     "pos": "noun",
@@ -10343,8 +9701,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 828,
+{
+    "id": 827,
     "word": "Epistle",
     "pronunciation": "",
     "pos": "noun",
@@ -10354,8 +9712,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 829,
+{
+    "id": 828,
     "word": "Epitome",
     "pronunciation": "",
     "pos": "noun",
@@ -10365,8 +9723,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 830,
+{
+    "id": 829,
     "word": "Ethereal",
     "pronunciation": "",
     "pos": "adj",
@@ -10376,8 +9734,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 831,
+{
+    "id": 830,
     "word": "Euphony",
     "pronunciation": "",
     "pos": "noun",
@@ -10387,8 +9745,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 832,
+{
+    "id": 831,
     "word": "Exegesis",
     "pronunciation": "",
     "pos": "noun",
@@ -10398,8 +9756,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 833,
+{
+    "id": 832,
     "word": "Exscind",
     "pronunciation": "",
     "pos": "verb",
@@ -10409,8 +9767,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 834,
+{
+    "id": 833,
     "word": "Extempore",
     "pronunciation": "",
     "pos": "adj",
@@ -10420,8 +9778,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 835,
+{
+    "id": 834,
     "word": "Fanatic",
     "pronunciation": "",
     "pos": "noun",
@@ -10431,8 +9789,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 836,
+{
+    "id": 835,
     "word": "Feckless",
     "pronunciation": "",
     "pos": "adj",
@@ -10442,8 +9800,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 837,
+{
+    "id": 836,
     "word": "Filibuster",
     "pronunciation": "",
     "pos": "noun",
@@ -10453,8 +9811,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 838,
+{
+    "id": 837,
     "word": "Fission",
     "pronunciation": "",
     "pos": "noun",
@@ -10464,8 +9822,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 839,
+{
+    "id": 838,
     "word": "Frowzy",
     "pronunciation": "",
     "pos": "adj",
@@ -10475,8 +9833,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 840,
+{
+    "id": 839,
     "word": "Gambit",
     "pronunciation": "",
     "pos": "noun",
@@ -10486,8 +9844,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 841,
+{
+    "id": 840,
     "word": "Gaucherie",
     "pronunciation": "",
     "pos": "noun",
@@ -10497,8 +9855,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 842,
+{
+    "id": 841,
     "word": "Gerrymander",
     "pronunciation": "",
     "pos": "verb",
@@ -10508,8 +9866,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 843,
+{
+    "id": 842,
     "word": "Gibe",
     "pronunciation": "",
     "pos": "noun",
@@ -10519,8 +9877,8 @@ export const ALL_GRE_WORDS: Word[] = [
     "difficulty": 2,
     "category": "General"
   },
-  {
-    "id": 844,
+{
+    "id": 843,
     "word": "Gossamer",
     "pronunciation": "",
     "pos": "noun",
@@ -10529,5 +9887,1204 @@ export const ALL_GRE_WORDS: Word[] = [
     "example": "The gossamer nature of the situation was evident.",
     "difficulty": 2,
     "category": "General"
+  },
+{
+    "id": 844,
+    "word": "arresting",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "capturing one's attention",
+    "mnemonic": "arresting: capturing one's attention",
+    "example": "The painting had an arresting quality that drew viewers in.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 845,
+    "word": "assertive",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "forceful and confident",
+    "mnemonic": "assertive: forceful and confident",
+    "example": "She gave an assertive presentation that convinced the board.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 846,
+    "word": "assertion",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a forceful and confident statement",
+    "mnemonic": "assertion: a forceful and confident statement",
+    "example": "His assertion was met with skepticism.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 847,
+    "word": "assert",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to state forcefully and confidently",
+    "mnemonic": "assert: to state forcefully and confidently",
+    "example": "She asserted her right to speak.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 848,
+    "word": "astronomical",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "relating to astronomy; extremely large (of an amount)",
+    "mnemonic": "astronomical: relating to astronomy; extremely large (of an amount)",
+    "example": "The project cost an astronomical amount of money.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 849,
+    "word": "averse",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "having a strong dislike (toward something or someone)",
+    "mnemonic": "averse: having a strong dislike (toward something or someone)",
+    "example": "I am not averse to working late occasionally.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 850,
+    "word": "aversion",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a strong dislike",
+    "mnemonic": "aversion: a strong dislike",
+    "example": "She has an aversion to spicy food.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 851,
+    "word": "baffle",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to completely confuse or frustrate",
+    "mnemonic": "baffle: to completely confuse or frustrate",
+    "example": "The mystery continues to baffle investigators.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 852,
+    "word": "beget",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to bring into existence (of offspring); to bring about or give rise to",
+    "mnemonic": "beget: to bring into existence (of offspring); to bring about or give rise to",
+    "example": "Violence begets more violence.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 853,
+    "word": "banality",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the quality of being boring, ordinary, and not original; something boring, ordinary, and unoriginal",
+    "mnemonic": "banality: the quality of being boring, ordinary, and not original",
+    "example": "The banality of his speech put everyone to sleep.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 854,
+    "word": "betray",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to be disloyal; to reveal, esp. unintentionally",
+    "mnemonic": "betray: to be disloyal; to reveal, esp. unintentionally",
+    "example": "His trembling hands betrayed his nervousness.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 855,
+    "word": "bewilder",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to greatly confuse",
+    "mnemonic": "bewilder: to greatly confuse",
+    "example": "The complex instructions bewildered the new employee.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 856,
+    "word": "bias",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a prejudice for or against something",
+    "mnemonic": "bias: a prejudice for or against something",
+    "example": "The study was criticized for its gender bias.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 857,
+    "word": "blatant",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "very obvious; done openly and shamelessly (of something negative)",
+    "mnemonic": "blatant: very obvious; done openly and shamelessly (of something negative)",
+    "example": "It was a blatant lie that everyone could see through.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 858,
+    "word": "bleak",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "lacking warmth or life; depressing",
+    "mnemonic": "bleak: lacking warmth or life; depressing",
+    "example": "The bleak winter landscape stretched for miles.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 859,
+    "word": "blunder",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a careless or stupid mistake",
+    "mnemonic": "blunder: a careless or stupid mistake",
+    "example": "The diplomat's blunder caused an international incident.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 860,
+    "word": "blunt",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "direct and to the point, esp. in an insensitive way",
+    "mnemonic": "blunt: direct and to the point, esp. in an insensitive way",
+    "example": "His blunt criticism hurt her feelings.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 861,
+    "word": "boisterous",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "noisy and lively",
+    "mnemonic": "boisterous: noisy and lively",
+    "example": "The boisterous crowd cheered for their team.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 862,
+    "word": "brash",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "overly assertive; bold or harsh (of colors, etc.)",
+    "mnemonic": "brash: overly assertive; bold or harsh (of colors, etc.)",
+    "example": "His brash behavior offended the other guests.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 863,
+    "word": "brevity",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "briefness",
+    "mnemonic": "brevity: briefness",
+    "example": "Brevity is the soul of wit.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 864,
+    "word": "brusque",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "brief and direct, esp. in a rude way (of speech or manner)",
+    "mnemonic": "brusque: brief and direct, esp. in a rude way (of speech or manner)",
+    "example": "His brusque manner intimidated new employees.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 865,
+    "word": "bumbling",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "awkwardly clumsy or prone to mistakes",
+    "mnemonic": "bumbling: awkwardly clumsy or prone to mistakes",
+    "example": "The bumbling detective kept missing obvious clues.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 866,
+    "word": "canny",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "clever and showing good judgment",
+    "mnemonic": "canny: clever and showing good judgment",
+    "example": "The canny investor knew when to sell.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 867,
+    "word": "captivating",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "holding one's attention or interest",
+    "mnemonic": "captivating: holding one's attention or interest",
+    "example": "The captivating story kept me reading all night.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 868,
+    "word": "captivate",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to hold one's attention or interest",
+    "mnemonic": "captivate: to hold one's attention or interest",
+    "example": "Her performance captivated the audience.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 869,
+    "word": "celestial",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "of or relating to the sky or heaven",
+    "mnemonic": "celestial: of or relating to the sky or heaven",
+    "example": "The telescope revealed celestial bodies millions of miles away.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 870,
+    "word": "cerebral",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "relating to the brain; intellectual",
+    "mnemonic": "cerebral: relating to the brain; intellectual",
+    "example": "The film was too cerebral for casual viewers.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 871,
+    "word": "certitude",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "certainty",
+    "mnemonic": "certitude: certainty",
+    "example": "She spoke with certitude about the facts.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 872,
+    "word": "charismatic",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "charming and appealing",
+    "mnemonic": "charismatic: charming and appealing",
+    "example": "The charismatic leader inspired thousands of followers.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 873,
+    "word": "charisma",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a charming and attractive quality",
+    "mnemonic": "charisma: a charming and attractive quality",
+    "example": "His natural charisma made him popular.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 874,
+    "word": "circumvent",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to find a way around something; to cleverly avoid",
+    "mnemonic": "circumvent: to find a way around something; to cleverly avoid",
+    "example": "They found a way to circumvent the regulations.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 875,
+    "word": "civil",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "relating to citizens; courteous and polite",
+    "mnemonic": "civil: relating to citizens; courteous and polite",
+    "example": "Please be civil to your opponents during the debate.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 876,
+    "word": "civility",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "courtesy and politeness",
+    "mnemonic": "civility: courtesy and politeness",
+    "example": "Civility is essential in public discourse.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 877,
+    "word": "clan",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a family, esp. a large one; a group of people with a shared interest or shared characteristics",
+    "mnemonic": "clan: a family, esp. a large one; a group of people with a shared interest or shared characteristics",
+    "example": "The clan gathered for their annual reunion.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 878,
+    "word": "coercion",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "persuasion by force or threats",
+    "mnemonic": "coercion: persuasion by force or threats",
+    "example": "The confession was obtained through coercion.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 879,
+    "word": "cohesive",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "closely united, sticking together",
+    "mnemonic": "cohesive: closely united, sticking together",
+    "example": "The team was cohesive and worked well together.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 880,
+    "word": "coin",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to invent (a word or phrase)",
+    "mnemonic": "coin: to invent (a word or phrase)",
+    "example": "Shakespeare coined many words still in use today.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 881,
+    "word": "collaborative",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "involving working together",
+    "mnemonic": "collaborative: involving working together",
+    "example": "The project requires a collaborative effort.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 882,
+    "word": "collaborate",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to work together",
+    "mnemonic": "collaborate: to work together",
+    "example": "The two artists decided to collaborate on the mural.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 883,
+    "word": "compelling",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "powerfully interesting or attention-holding; convincing",
+    "mnemonic": "compelling: powerfully interesting or attention-holding; convincing",
+    "example": "She made a compelling argument for the proposal.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 884,
+    "word": "compel",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to force",
+    "mnemonic": "compel: to force",
+    "example": "The evidence compelled him to confess.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 885,
+    "word": "compromise",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to make an agreement based on mutual concession; to weaken",
+    "mnemonic": "compromise: to make an agreement based on mutual concession; to weaken",
+    "example": "We need to compromise to reach a solution.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 886,
+    "word": "comradery",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "friendliness and familiarity among a group of people",
+    "mnemonic": "comradery: friendliness and familiarity among a group of people",
+    "example": "The comradery among teammates was evident.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 887,
+    "word": "conceal",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to hide from sight; to keep secret",
+    "mnemonic": "conceal: to hide from sight; to keep secret",
+    "example": "He tried to conceal his disappointment.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 888,
+    "word": "concise",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "brief and to the point (of writing or speech)",
+    "mnemonic": "concise: brief and to the point (of writing or speech)",
+    "example": "Please keep your report concise.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 889,
+    "word": "concoct",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to make up or invent (a plan, story, etc.); to make by mixing different things together (of food or drink)",
+    "mnemonic": "concoct: to make up or invent (a plan, story, etc.); to make by mixing different things together (of food or drink)",
+    "example": "She concocted an elaborate excuse for being late.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 890,
+    "word": "concoction",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a mixture of various things; an elaborate story",
+    "mnemonic": "concoction: a mixture of various things; an elaborate story",
+    "example": "The drink was a strange concoction of fruit juices.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 891,
+    "word": "condemn",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to express strong or complete disapproval of; to cause someone to live in unpleasant conditions, to doom",
+    "mnemonic": "condemn: to express strong or complete disapproval of; to cause someone to live in unpleasant conditions, to doom",
+    "example": "The international community condemned the invasion.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 892,
+    "word": "condemnation",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the expression of very strong disapproval",
+    "mnemonic": "condemnation: the expression of very strong disapproval",
+    "example": "The condemnation was unanimous across all parties.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 893,
+    "word": "conducive",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "making something likely or possible",
+    "mnemonic": "conducive: making something likely or possible",
+    "example": "A quiet environment is conducive to studying.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 894,
+    "word": "connotation",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "an implied meaning of a word",
+    "mnemonic": "connotation: an implied meaning of a word",
+    "example": "The word has negative connotations for many people.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 895,
+    "word": "consensus",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a general agreement among a group",
+    "mnemonic": "consensus: a general agreement among a group",
+    "example": "The committee reached a consensus on the proposal.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 896,
+    "word": "conservative",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "favoring traditional views and values; tending to oppose change; cautious and moderate",
+    "mnemonic": "conservative: favoring traditional views and values; tending to oppose change; cautious and moderate",
+    "example": "He has a conservative approach to investing.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 897,
+    "word": "considerable",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "great in amount, size, importance, etc.",
+    "mnemonic": "considerable: great in amount, size, importance, etc.",
+    "example": "The project requires considerable effort.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 898,
+    "word": "conspicuous",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "obvious, noticeable",
+    "mnemonic": "conspicuous: obvious, noticeable",
+    "example": "Her bright red dress made her conspicuous.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 899,
+    "word": "conspire",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "make secret plans with others to do a harmful or illegal act",
+    "mnemonic": "conspire: make secret plans with others to do a harmful or illegal act",
+    "example": "They conspired to overthrow the government.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 900,
+    "word": "conspiracy",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a secret plan by a group to do something harmful or illegal",
+    "mnemonic": "conspiracy: a secret plan by a group to do something harmful or illegal",
+    "example": "The conspiracy was uncovered by investigators.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 901,
+    "word": "constrain",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to limit or restrict",
+    "mnemonic": "constrain: to limit or restrict",
+    "example": "Budget constraints will constrain our options.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 902,
+    "word": "constraint",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a restriction",
+    "mnemonic": "constraint: a restriction",
+    "example": "Time is a major constraint on the project.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 903,
+    "word": "contemporary",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "occurring or living in the same time period; belonging to the present time",
+    "mnemonic": "contemporary: occurring or living in the same time period; belonging to the present time",
+    "example": "The artist is contemporary with Picasso.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 904,
+    "word": "contempt",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the feeling that someone or something is unworthy of respect or approval",
+    "mnemonic": "contempt: the feeling that someone or something is unworthy of respect or approval",
+    "example": "She looked at him with contempt.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 905,
+    "word": "contend",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to assert as true",
+    "mnemonic": "contend: to assert as true",
+    "example": "I contend that this is the best solution.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 906,
+    "word": "controversial",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "causing disagreement or argument",
+    "mnemonic": "controversial: causing disagreement or argument",
+    "example": "The controversial decision sparked protests.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 907,
+    "word": "conventional",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "usual or customary, traditional",
+    "mnemonic": "conventional: usual or customary, traditional",
+    "example": "She rejected conventional wisdom.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 908,
+    "word": "convention",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a way that something is usually done, an accepted way of doing something",
+    "mnemonic": "convention: a way that something is usually done, an accepted way of doing something",
+    "example": "By convention, the eldest speaks first.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 909,
+    "word": "convergent",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "coming together",
+    "mnemonic": "convergent: coming together",
+    "example": "The convergent trends suggest a common cause.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 910,
+    "word": "cordial",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "politely pleasant and friendly",
+    "mnemonic": "cordial: politely pleasant and friendly",
+    "example": "They maintained a cordial relationship despite their differences.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 911,
+    "word": "correlation",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the relationship between two things that occur or change together",
+    "mnemonic": "correlation: the relationship between two things that occur or change together",
+    "example": "There is a strong correlation between smoking and lung cancer.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 912,
+    "word": "crass",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "undignified or vulgar",
+    "mnemonic": "crass: undignified or vulgar",
+    "example": "His crass behavior embarrassed everyone.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 913,
+    "word": "credible",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "believable, convincing",
+    "mnemonic": "credible: believable, convincing",
+    "example": "The witness provided a credible account.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 914,
+    "word": "culmination",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the highest point or end, climax",
+    "mnemonic": "culmination: the highest point or end, climax",
+    "example": "The award was the culmination of years of hard work.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 915,
+    "word": "cumbersome",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "difficult to handle or use because of large size and weight; slow-moving",
+    "mnemonic": "cumbersome: difficult to handle or use because of large size and weight; slow-moving",
+    "example": "The cumbersome equipment was hard to transport.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 916,
+    "word": "cunning",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "clever and skillful in achieving one's aims, esp. by deceit",
+    "mnemonic": "cunning: clever and skillful in achieving one's aims, esp. by deceit",
+    "example": "The cunning fox escaped the trap.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 917,
+    "word": "curt",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "rudely brief",
+    "mnemonic": "curt: rudely brief",
+    "example": "His curt reply showed his impatience.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 918,
+    "word": "curtail",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to restrict or cut back, to reduce",
+    "mnemonic": "curtail: to restrict or cut back, to reduce",
+    "example": "We need to curtail our spending.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 919,
+    "word": "daunting",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "intimidating, seeming difficult to deal with",
+    "mnemonic": "daunting: intimidating, seeming difficult to deal with",
+    "example": "The task seemed daunting at first.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 920,
+    "word": "dazzle",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to impress and fascinate, to amaze",
+    "mnemonic": "dazzle: to impress and fascinate, to amaze",
+    "example": "The performance dazzled the audience.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 921,
+    "word": "debacle",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a total failure, a disaster",
+    "mnemonic": "debacle: a total failure, a disaster",
+    "example": "The project was a complete debacle.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 922,
+    "word": "decadent",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "indulgent and pleasurable; involving pleasure-seeking and a lack of morals",
+    "mnemonic": "decadent: indulgent and pleasurable; involving pleasure-seeking and a lack of morals",
+    "example": "The decadent dessert was rich with chocolate.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 923,
+    "word": "decipher",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to decode; to make out the meaning of something difficult to understand",
+    "mnemonic": "decipher: to decode; to make out the meaning of something difficult to understand",
+    "example": "It took years to decipher the ancient text.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 924,
+    "word": "decisive",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "determining, deciding; firm and determined; unmistakable",
+    "mnemonic": "decisive: determining, deciding; firm and determined; unmistakable",
+    "example": "The battle was a decisive victory.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 925,
+    "word": "decree",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "an official order",
+    "mnemonic": "decree: an official order",
+    "example": "The king issued a decree banning the practice.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 926,
+    "word": "deft",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "skillful and quick (of the mind or body)",
+    "mnemonic": "deft: skillful and quick (of the mind or body)",
+    "example": "The deft surgeon completed the operation in minutes.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 927,
+    "word": "defy",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to resist; to refuse to obey",
+    "mnemonic": "defy: to resist; to refuse to obey",
+    "example": "She defied her parents and went anyway.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 928,
+    "word": "demise",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the end or failure of something, downfall or death",
+    "mnemonic": "demise: the end or failure of something, downfall or death",
+    "example": "The company faced its demise after the scandal.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 929,
+    "word": "deplorable",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "shockingly bad, disgraceful",
+    "mnemonic": "deplorable: shockingly bad, disgraceful",
+    "example": "The living conditions were deplorable.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 930,
+    "word": "derive",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to obtain from a source; to come from (something else)",
+    "mnemonic": "derive: to obtain from a source; to come from (something else)",
+    "example": "The word algebra derives from Arabic.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 931,
+    "word": "despicable",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "deserving hatred, offensively bad",
+    "mnemonic": "despicable: deserving hatred, offensively bad",
+    "example": "His despicable actions shocked everyone.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 932,
+    "word": "deter",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to discourage, to prevent",
+    "mnemonic": "deter: to discourage, to prevent",
+    "example": "High prices deter many potential buyers.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 933,
+    "word": "detrimental",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "damaging, harmful",
+    "mnemonic": "detrimental: damaging, harmful",
+    "example": "Smoking is detrimental to your health.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 934,
+    "word": "dictator",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a ruler with absolute power",
+    "mnemonic": "dictator: a ruler with absolute power",
+    "example": "The dictator ruled with an iron fist.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 935,
+    "word": "diligence",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "showing careful and persistent effort, hard-working",
+    "mnemonic": "diligence: showing careful and persistent effort, hard-working",
+    "example": "Her diligence paid off when she got the promotion.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 936,
+    "word": "diminish",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "to lessen",
+    "mnemonic": "diminish: to lessen",
+    "example": "The threat will diminish over time.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 937,
+    "word": "diplomacy",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "the profession or activity of conducting negotiations or maintaining good relations between countries; skill in dealing with people without causing offense or upset",
+    "mnemonic": "diplomacy: the profession or activity of conducting negotiations or maintaining good relations between countries; skill in dealing with people without causing offense or upset",
+    "example": "Diplomacy prevented a war between the nations.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 938,
+    "word": "diplomatic",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "relating to maintaining good relations between countries; showing skill in dealing with people in a sensitive and polite way",
+    "mnemonic": "diplomatic: relating to maintaining good relations between countries; showing skill in dealing with people in a sensitive and polite way",
+    "example": "She handled the situation in a diplomatic manner.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 939,
+    "word": "discern",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to detect, to become aware of",
+    "mnemonic": "discern: to detect, to become aware of",
+    "example": "It was hard to discern the truth from the lies.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 940,
+    "word": "discount",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to disregard or ignore, to minimize the importance of",
+    "mnemonic": "discount: to disregard or ignore, to minimize the importance of",
+    "example": "We cannot discount the possibility of rain.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 941,
+    "word": "disdain",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a strong dislike for something or someone regarded as unworthy",
+    "mnemonic": "disdain: a strong dislike for something or someone regarded as unworthy",
+    "example": "He treated their suggestions with disdain.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 942,
+    "word": "disenchant",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to free from illusion; to disappoint",
+    "mnemonic": "disenchant: to free from illusion; to disappoint",
+    "example": "The scandal disenchanted many of his followers.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 943,
+    "word": "disillusion",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to cause to stop having a mistaken belief that something is good or true",
+    "mnemonic": "disillusion: to cause to stop having a mistaken belief that something is good or true",
+    "example": "The harsh reality disillusioned the young idealist.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 944,
+    "word": "dismay",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "severe disappointment, esp. mixed with worry or shock",
+    "mnemonic": "dismay: severe disappointment, esp. mixed with worry or shock",
+    "example": "To my dismay, the tickets were sold out.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 945,
+    "word": "dispel",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to drive out, to make go away",
+    "mnemonic": "dispel: to drive out, to make go away",
+    "example": "The explanation helped dispel their fears.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 946,
+    "word": "divergent",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "differing from each other, going in different directions",
+    "mnemonic": "divergent: differing from each other, going in different directions",
+    "example": "The two theories are divergent in their approach.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 947,
+    "word": "diverse",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "different from each other, varied",
+    "mnemonic": "diverse: different from each other, varied",
+    "example": "The school has a diverse student body.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 948,
+    "word": "divert",
+    "pronunciation": "",
+    "pos": "verb",
+    "definition": "to cause to change course; to distract",
+    "mnemonic": "divert: to cause to change course; to distract",
+    "example": "The police diverted traffic around the accident.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 949,
+    "word": "divisive",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "causing disagreement",
+    "mnemonic": "divisive: causing disagreement",
+    "example": "The issue proved to be highly divisive.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 950,
+    "word": "doctrine",
+    "pronunciation": "",
+    "pos": "noun",
+    "definition": "a principle or belief held by a group",
+    "mnemonic": "doctrine: a principle or belief held by a group",
+    "example": "The doctrine was accepted by all members.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 951,
+    "word": "domineering",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "imposing of one's will, overbearing",
+    "mnemonic": "domineering: imposing of one's will, overbearing",
+    "example": "His domineering personality made teamwork difficult.",
+    "difficulty": 1,
+    "category": "Easy"
+  },
+{
+    "id": 952,
+    "word": "dubious",
+    "pronunciation": "",
+    "pos": "adjective",
+    "definition": "doubtful; questionable",
+    "mnemonic": "dubious: doubtful; questionable",
+    "example": "I am dubious about his claims.",
+    "difficulty": 1,
+    "category": "Easy"
   }
 ];

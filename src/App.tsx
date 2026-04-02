@@ -25,6 +25,7 @@ import {
   X,
   Search,
   BookMarked,
+  Book,
   ChevronDown,
   CheckCircle2,
   Clock,
@@ -47,6 +48,9 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GameAnalysis } from './components/GameAnalysis';
+import MathCheatSheet from './components/MathCheatSheet';
+import MentalMath from './components/MentalMath';
+import QuantitativeNotes from './components/QuantitativeNotes';
 import { NewsContainer } from './components/news/NewsContainer';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
 import { ALL_GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
@@ -2524,6 +2528,8 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
         return <PronunciationQuiz onXpChange={onXpChange} soundEnabled={soundEnabled} />;
       case 'memory-palace':
         return <MemoryPalace onXpChange={onXpChange} soundEnabled={soundEnabled} />;
+      case 'mental-math':
+        return <MentalMath onXpChange={onXpChange} onClose={() => setActiveGame(null)} />;
       case 'number-memory':
         return (
           <div className="max-w-2xl mx-auto w-full text-center space-y-12">
@@ -2758,6 +2764,22 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                 <div className="space-y-2">
                   <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Memory Palace</h3>
                   <p className="text-sm font-sans text-ink/60 leading-relaxed">Associate words with spatial positions in a 3x3 grid. Sharpen your visual-spatial recall.</p>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
+                  Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+
+              <button 
+                onClick={() => { setActiveGame('mental-math'); incrementStat('gamesPlayed'); }}
+                className="group text-left space-y-6"
+              >
+                <div className="w-16 h-16 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold group-hover:bg-ink group-hover:text-white transition-all duration-500">
+                  <Zap size={24} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-serif font-bold text-ink group-hover:text-accent-gold transition-colors">Mental Math Blitz</h3>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed">Fast-paced quantitative patterns. Exponents, squares, and quick arithmetic.</p>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] group-hover:text-ink transition-colors">
                   Initiate Protocol <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
@@ -3363,6 +3385,43 @@ const Verbal = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   );
 };
 
+const StudyNotes = () => {
+  const [activeTab, setActiveTab] = useState<'verbal' | 'quantitative'>('verbal');
+
+  return (
+    <div className="space-y-8">
+      <div className="flex justify-center">
+        <div className="flex bg-bg-primary p-1 rounded-sm border border-ink/5">
+          <button 
+            onClick={() => setActiveTab('verbal')}
+            className={`px-8 py-3 text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${activeTab === 'verbal' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
+          >
+            Verbal Lexicon
+          </button>
+          <button 
+            onClick={() => setActiveTab('quantitative')}
+            className={`px-8 py-3 text-[10px] font-sans font-bold uppercase tracking-widest transition-all ${activeTab === 'quantitative' ? 'bg-white text-ink shadow-sm' : 'text-ink/30 hover:text-ink/60'}`}
+          >
+            Quantitative Guide
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.3 }}
+        >
+          {activeTab === 'verbal' ? <VerbalNotes /> : <QuantitativeNotes />}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -3373,6 +3432,7 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [calcValue, setCalcValue] = useState('0');
   const [neInput, setNeInput] = useState('');
+  const [showCheatSheet, setShowCheatSheet] = useState(false);
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionTotal, setSessionTotal] = useState(0);
   const [mistakes, setMistakes] = useState<Mistake[]>([]);
@@ -3565,6 +3625,14 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
     );
   }
 
+  if (showCheatSheet) {
+    return (
+      <div className="py-12">
+        <MathCheatSheet onClose={() => setShowCheatSheet(false)} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-ink/5 pb-8 md:pb-12">
@@ -3584,6 +3652,12 @@ const Quantitative = ({ onXpChange }: { onXpChange: (xp: number) => void }) => {
             className={`w-10 h-10 md:w-12 md:h-12 rounded-sm border flex items-center justify-center transition-all ${showCalculator ? 'bg-ink text-white border-ink' : 'bg-white text-ink/40 border-ink/5 hover:border-ink/20'}`}
           >
             <Calculator size={18} className="md:w-5 md:h-5" />
+          </button>
+          <button 
+            onClick={() => setShowCheatSheet(!showCheatSheet)}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-sm border flex items-center justify-center transition-all ${showCheatSheet ? 'bg-ink text-white border-ink' : 'bg-white text-ink/40 border-ink/5 hover:border-ink/20'}`}
+          >
+            <Book size={18} className="md:w-5 md:h-5" />
           </button>
         </div>
       </header>
@@ -4710,7 +4784,7 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
   return null;
 };
 
-const VocabularyNotes = () => {
+const VerbalNotes = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [viewMode, setViewMode] = useState<'lexicon' | 'flashcards'>('lexicon');
@@ -6141,7 +6215,7 @@ const App = () => {
       case 'vocabulary':
         return <Vocabulary onBack={() => setActiveSection('dashboard')} onXpChange={handleXpChange} globalSearch={globalSearch} onSearchClear={() => setGlobalSearch('')} />;
       case 'notes':
-        return <VocabularyNotes />;
+        return <StudyNotes />;
       case 'quantitative':
         return <Quantitative onXpChange={handleXpChange} />;
       case 'verbal':

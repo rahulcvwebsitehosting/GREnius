@@ -65,6 +65,42 @@ import {
   GoalItem, 
   StudySectionCard 
 } from './components/DashboardComponents';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+
+// ─── ROUTE MAP ─────────────────────────────────────────────────────────────────
+// Maps section IDs (used throughout the app) to their URL paths and back
+
+const SECTION_TO_PATH: Record<string, string> = {
+  dashboard:      '/',
+  vocabulary:     '/vocabulary',
+  notes:          '/notes',
+  quantitative:   '/quantitative',
+  verbal:         '/verbal',
+  mindgames:      '/games',
+  news:           '/news',
+  worlddays:      '/world-days',
+  achievements:   '/achievements',
+  leaderboard:    '/leaderboard',
+  progress:       '/progress',
+  settings:       '/settings',
+  'daily-challenge': '/daily-challenge',
+};
+
+const PATH_TO_SECTION: Record<string, string> = {
+  '/':              'dashboard',
+  '/vocabulary':    'vocabulary',
+  '/notes':         'notes',
+  '/quantitative':  'quantitative',
+  '/verbal':        'verbal',
+  '/games':         'mindgames',
+  '/news':          'news',
+  '/world-days':    'worlddays',
+  '/achievements':  'achievements',
+  '/leaderboard':   'leaderboard',
+  '/progress':      'progress',
+  '/settings':      'settings',
+  '/daily-challenge': 'daily-challenge',
+};
 
 // Components for different sections
 const Settings = () => {
@@ -6293,7 +6329,23 @@ const Leaderboard = () => {
 };
 
 const App = () => {
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const knownPaths = Object.keys(PATH_TO_SECTION);
+  if (!knownPaths.includes(location.pathname)) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Derive active section from the current URL path
+  const activeSection = PATH_TO_SECTION[location.pathname] ?? 'dashboard';
+
+  // Use this function everywhere instead of setActiveSection directly
+  const setActiveSection = (section: string) => {
+    const path = SECTION_TO_PATH[section] ?? '/';
+    navigate(path);
+  };
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [globalSearch, setGlobalSearch] = useState('');
@@ -6328,6 +6380,26 @@ const App = () => {
     const currentStreak = getStorage(STORAGE_KEYS.streak, 0);
     setXp(currentXp);
     setStreak(currentStreak);
+  }, [activeSection]);
+
+  // Update the browser tab title to match the current section
+  useEffect(() => {
+    const titles: Record<string, string> = {
+      dashboard:    'GREnius — Dashboard',
+      vocabulary:   'GREnius — Vocabulary',
+      notes:        'GREnius — Notes',
+      quantitative: 'GREnius — Quantitative',
+      verbal:       'GREnius — Verbal Practice',
+      mindgames:    'GREnius — Mind Games',
+      news:         'GREnius — News & Affairs',
+      worlddays:    'GREnius — World Days',
+      achievements: 'GREnius — Achievements',
+      leaderboard:  'GREnius — Leaderboard',
+      progress:     'GREnius — My Progress',
+      settings:     'GREnius — Settings',
+      'daily-challenge': 'GREnius — Daily Challenge',
+    };
+    document.title = titles[activeSection] ?? 'GREnius';
   }, [activeSection]);
 
   const handleXpChange = (newXp: number) => {

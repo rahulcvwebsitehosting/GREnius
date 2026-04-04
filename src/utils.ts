@@ -188,10 +188,8 @@ export function recordQuizResult(type: string, correct: number, total: number, m
   const updated = [...history, entry].slice(-50);
   setStorage(STORAGE_KEYS.quizHistory, updated);
 
-  if (score === 100) {
-    return awardXP(XP_REWARDS.perfectQuiz);
-  }
-  return getStorage(STORAGE_KEYS.xp, 0);
+  const xpToAward = score === 100 ? XP_REWARDS.perfectQuiz : XP_REWARDS.correctVerbal;
+  return awardXP(xpToAward);
 }
 
 export function trackWeakWord(wordId: number) {
@@ -256,8 +254,12 @@ export function getDailyChallenge(): Word[] {
   // Seeded shuffle
   let s = seed;
   const rng = () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
-  const shuffled = [...ALL_GRE_WORDS].sort(() => rng() - 0.5);
-  return shuffled.slice(0, 10);
+  const arr = [...ALL_GRE_WORDS];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(0, 10);
 }
 
 export function getDailyChallengeKey(): string {

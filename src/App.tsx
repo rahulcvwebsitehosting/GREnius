@@ -8,6 +8,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import useSWR from 'swr';
 import { 
   Brain, 
   LayoutDashboard, 
@@ -54,6 +55,7 @@ import MentalMath from './components/MentalMath';
 import QuantitativeNotes from './components/QuantitativeNotes';
 import SpellingPractice from './components/SpellingPractice';
 import { NewsContainer } from './components/news/NewsContainer';
+import { fetchNews } from './lib/newsApi';
 import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
 import { ALL_GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
 import { QuizResult, UserSettings, Word, Achievement, UserStats, WorldDay, Mistake } from './types';
@@ -616,6 +618,12 @@ function isSquareAttacked(board: Board, row: number, col: number, byColor: 'w'|'
     const nr = row + dr, nc = col + dc;
     if (isInBounds(nr, nc) && board[nr][nc]?.type === 'N' && board[nr][nc]?.color === byColor) return true;
   }
+  // King attacks
+  const kMoves = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+  for (const [dr, dc] of kMoves) {
+    const kr = row + dr, kc = col + dc;
+    if (isInBounds(kr, kc) && board[kr][kc]?.type === 'K' && board[kr][kc]?.color === byColor) return true;
+  }
   // Sliding pieces
   const dirs = [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]];
   for (let i = 0; i < 8; i++) {
@@ -627,7 +635,6 @@ function isSquareAttacked(board: Board, row: number, col: number, byColor: 'w'|'
         if (p.color === byColor) {
           if (i < 4 && (p.type === 'B' || p.type === 'Q')) return true;
           if (i >= 4 && (p.type === 'R' || p.type === 'Q')) return true;
-          if (Math.abs(r-row) <= 1 && Math.abs(c-col) <= 1 && p.type === 'K') return true;
         }
         break;
       }
@@ -973,7 +980,7 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
 
         const from = selected;
         const to = { row, col };
-        const piece = gameState.board[from.row][from.col]!;
+        const movingPiece = gameState.board[from.row][from.col]!;
         const stateBefore = JSON.parse(JSON.stringify(gameState));
 
         const nextState = performMove(gameState, from, to);
@@ -990,8 +997,8 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
           player: 'w',
           from,
           to,
-          piece,
-          captured: captured || undefined,
+          piece: movingPiece,
+          captured: captured ?? null,
           stateBefore,
           stateAfter: JSON.parse(JSON.stringify(nextState)),
           evaluation: evaluateBoard(nextState.board)
@@ -1034,7 +1041,7 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
             from: aiMv.from,
             to: aiMv.to,
             piece: aiPiece,
-            captured: aiCaptured || undefined,
+            captured: aiCaptured ?? null,
             stateBefore: JSON.parse(JSON.stringify(nextState)),
             stateAfter: JSON.parse(JSON.stringify(finalState)),
             evaluation: evaluateBoard(finalState.board)
@@ -1459,7 +1466,7 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
     setAssembled(prev => [...prev, letters[idx].char]);
   };
 
-  const handleAssembledClick = (idx: number) => {
+  const handleAssembledClick = useCallback((idx: number) => {
     if (feedback === 'correct') return;
     const char = assembled[idx];
     const newAssembled = assembled.filter((_, i) => i !== idx);
@@ -1474,7 +1481,28 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
       }
     }
     setLetters(newLetters);
-  };
+  }, [assembled, letters, feedback]);
+
+  const handleSubmit = useCallback(() => {
+    const guess = assembled.join('').toUpperCase();
+    const target = currentWord.word.toUpperCase();
+    setAttempts(a => a + 1);
+    if (guess === target) {
+      setFeedback('correct');
+      const pts = showHint ? 5 : 10;
+      setScore(s => s + pts);
+      setStreak(s => s + 1);
+      playSound('correct', soundEnabled);
+      const newXp = awardXP(10);
+      onXpChange(newXp);
+      setTimeout(loadNew, 1800);
+    } else {
+      setFeedback('wrong');
+      setStreak(0);
+      playSound('wrong', soundEnabled);
+      setTimeout(() => setFeedback(null), 800);
+    }
+  }, [assembled, currentWord, showHint, soundEnabled, onXpChange]);
 
   const handleReset = () => {
     setLetters(prev => prev.map(l => ({ ...l, used: false })));
@@ -1500,28 +1528,7 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [letters, assembled, feedback, currentWord]);
-
-  const handleSubmit = () => {
-    const guess = assembled.join('').toUpperCase();
-    const target = currentWord.word.toUpperCase();
-    setAttempts(a => a + 1);
-    if (guess === target) {
-      setFeedback('correct');
-      const pts = showHint ? 5 : 10;
-      setScore(s => s + pts);
-      setStreak(s => s + 1);
-      playSound('correct', soundEnabled);
-      const newXp = awardXP(10);
-      onXpChange(newXp);
-      setTimeout(loadNew, 1800);
-    } else {
-      setFeedback('wrong');
-      setStreak(0);
-      playSound('wrong', soundEnabled);
-      setTimeout(() => setFeedback(null), 800);
-    }
-  };
+  }, [letters, assembled, feedback, currentWord, handleSubmit, handleAssembledClick]);
 
   const handleSkip = () => { 
     setMistakes(prev => [...prev, {
@@ -1689,6 +1696,9 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
   const [correctCount, setCorrectCount] = useState(0);
   const [mistakes, setMistakes] = useState<Mistake[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const gameStateRef = useRef(gameState);
+
+  useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
 
   const pickQuestion = () => {
     const word = ALL_GRE_WORDS[Math.floor(Math.random() * ALL_GRE_WORDS.length)];
@@ -1753,7 +1763,7 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
         explanation: current.mnemonic
       }]);
     }
-    setTimeout(() => { if (gameState === 'playing') pickQuestion(); }, 500);
+    setTimeout(() => { if (gameStateRef.current === 'playing') pickQuestion(); }, 500);
   };
 
   const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
@@ -5660,6 +5670,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
   const { level, title, progress, nextXP } = getLevelInfo(xp);
 
   const [timeLeft, setTimeLeft] = useState('');
+  const [showMoreInsights, setShowMoreInsights] = useState(false);
   const dailyDone = hasDoneToday();
   const dailyWords = getDailyChallenge();
   const difficultyDist = {
@@ -5672,6 +5683,19 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayKey = `daily_${yesterday.getFullYear()}_${yesterday.getMonth()+1}_${yesterday.getDate()}`;
   const yesterdayResult = JSON.parse(localStorage.getItem(yesterdayKey) || 'null');
+
+  const todayDate = new Date();
+  const currentWorldDay = WORLD_DAYS.find(d => d.month === todayDate.getMonth() + 1 && d.day === todayDate.getDate());
+  
+  const { data: newsArticles } = useSWR(
+    'hottest-news-dashboard',
+    () => fetchNews('India'),
+    { 
+      revalidateOnFocus: false,
+      dedupingInterval: 600000 // 10 minutes
+    }
+  );
+  const hottestNews = newsArticles?.[0];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -5781,6 +5805,125 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
           label="Total Study Time" 
         />
       </div>
+
+      {/* Daily Insights Section */}
+      {(currentWorldDay || hottestNews) && (
+        <section className="bg-white border border-ink/5 rounded-sm overflow-hidden shadow-sm">
+          <div className="p-6 md:p-10 space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-accent-gold/10 flex items-center justify-center text-accent-gold">
+                <Globe size={20} />
+              </div>
+              <div className="space-y-1">
+                <h2 className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.4em]">Daily Insights</h2>
+                <p className="text-xs font-sans font-bold text-ink uppercase tracking-widest">Global Context & Current Affairs</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
+              {currentWorldDay && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{currentWorldDay.icon}</span>
+                    <h3 className="text-xl font-serif font-bold text-ink">{currentWorldDay.name}</h3>
+                  </div>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed line-clamp-2">
+                    {currentWorldDay.description}
+                  </p>
+                  <div className="pt-2 flex items-center gap-3">
+                    <span className="px-2 py-1 bg-accent-gold/10 text-accent-gold text-[9px] font-sans font-bold uppercase tracking-widest rounded-full">
+                      GRE Word: {currentWorldDay.greWord}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {hottestNews && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Newspaper size={20} className="text-accent-gold" />
+                    <h3 className="text-xl font-serif font-bold text-ink line-clamp-1">{hottestNews.title}</h3>
+                  </div>
+                  <p className="text-sm font-sans text-ink/60 leading-relaxed line-clamp-2">
+                    {hottestNews.summary}
+                  </p>
+                  <div className="pt-2 flex items-center gap-3">
+                    <span className="text-[9px] font-sans font-bold text-ink/30 uppercase tracking-widest">
+                      Source: {hottestNews.source.name}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <AnimatePresence>
+              {showMoreInsights && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden border-t border-ink/5 pt-8 space-y-10"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
+                    {currentWorldDay && (
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <h4 className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest">Historical Significance</h4>
+                          <p className="text-sm font-sans text-ink/70 leading-relaxed">
+                            {currentWorldDay.description} This day serves as a critical reminder of {currentWorldDay.category} milestones in our global history.
+                          </p>
+                        </div>
+                        <div className="p-4 bg-bg-primary border border-ink/5 rounded-sm space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest">Lexical Integration</span>
+                            <Book size={12} className="text-accent-gold" />
+                          </div>
+                          <p className="text-lg font-serif font-bold text-ink">{currentWorldDay.greWord}</p>
+                          <p className="text-xs font-sans text-ink/50 italic leading-relaxed">{currentWorldDay.greWordDef}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {hottestNews && (
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <h4 className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-widest">Full Briefing</h4>
+                          <p className="text-sm font-sans text-ink/70 leading-relaxed">
+                            {hottestNews.content || hottestNews.summary}
+                          </p>
+                        </div>
+                        <a 
+                          href={hottestNews.originalUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-[10px] font-sans font-bold text-accent-gold uppercase tracking-widest hover:gap-3 transition-all"
+                        >
+                          Read Original Article <ExternalLink size={12} />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="flex justify-center border-t border-ink/5 pt-6">
+              <button 
+                onClick={() => setShowMoreInsights(!showMoreInsights)}
+                className="group flex items-center gap-2 text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.3em] hover:text-ink transition-colors"
+              >
+                {showMoreInsights ? 'Condense Briefing' : 'Expand Daily Briefing'}
+                <motion.div
+                  animate={{ rotate: showMoreInsights ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronDown size={14} />
+                </motion.div>
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 md:gap-20">
         <div className="lg:col-span-2 space-y-12 md:space-y-20">

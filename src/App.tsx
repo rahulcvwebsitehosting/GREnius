@@ -56,7 +56,7 @@ import QuantitativeNotes from './components/QuantitativeNotes';
 import SpellingPractice from './components/SpellingPractice';
 import { NewsContainer } from './components/news/NewsContainer';
 import { fetchNews } from './lib/newsApi';
-import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat } from './utils';
+import { playSound, fireConfetti, getStorage, setStorage, XP_REWARDS, LEVELS, STORAGE_KEYS, getLevelInfo, awardXP, updateStreak, recordQuizResult, getDailyChallenge, getDailyChallengeKey, hasDoneToday, markDailyDone, getUserStats, incrementStat, shareContent } from './utils';
 import { ALL_GRE_WORDS, GRE_QUANT, GRE_VERBAL, ETYMOLOGY_ROOTS, ACHIEVEMENTS, WORLD_DAYS } from './data';
 import { QuizResult, UserSettings, Word, Achievement, UserStats, WorldDay, Mistake } from './types';
 import { 
@@ -2562,6 +2562,15 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
     }
   };
 
+  const handleShare = (platform: string) => {
+    shareContent(platform, {
+      title: 'Number Memory Challenge',
+      text: `I just reached Level ${level} in Number Memory on GREnius! My score: ${score}. Can you beat me?`,
+      url: '',
+      websitePath: '/mindgames'
+    });
+  };
+
   const renderGame = () => {
     switch (activeGame) {
       case 'chess':
@@ -2684,6 +2693,21 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                     >
                       Restart Protocol
                     </button>
+
+                    <div className="pt-8 border-t border-ink/5">
+                      <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] mb-4">Share your Score</p>
+                      <div className="flex gap-3 justify-center">
+                        {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                          <button 
+                            key={platform} 
+                            onClick={() => handleShare(platform)}
+                            className="px-4 py-2 bg-bg-primary text-[10px] font-sans font-bold text-ink/60 rounded-sm border border-ink/5 hover:bg-ink hover:text-white transition-all"
+                          >
+                            {platform}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="text-left">
@@ -2697,14 +2721,35 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
       default:
         return (
           <div className="space-y-16">
-            <header className="max-w-3xl">
-              <h1 className="text-7xl md:text-8xl font-serif font-bold text-ink leading-[0.9] mb-8">
-                Cognitive<br />Acuity.
-              </h1>
-              <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
-                Scientific exercises designed to enhance mnemonic retention, 
-                processing speed, and logical deduction.
-              </p>
+            <header className="max-w-3xl flex flex-col md:flex-row md:items-end justify-between gap-8">
+              <div className="space-y-6">
+                <h1 className="text-7xl md:text-8xl font-serif font-bold text-ink leading-[0.9] mb-8">
+                  Cognitive<br />Acuity.
+                </h1>
+                <p className="text-xl font-sans text-ink/60 leading-relaxed max-w-2xl">
+                  Scientific exercises designed to enhance mnemonic retention, 
+                  processing speed, and logical deduction.
+                </p>
+              </div>
+              <div className="flex flex-col items-start md:items-end gap-4 pb-4">
+                <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em]">Share GREnius Games</p>
+                <div className="flex gap-2">
+                  {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                    <button 
+                      key={platform} 
+                      onClick={() => shareContent(platform, {
+                        title: 'GREnius Mind Games',
+                        text: 'Sharpen your cognitive skills with GREnius Mind Games! Chess, Word Scramble, and more.',
+                        url: '',
+                        websitePath: '/mindgames'
+                      })}
+                      className="px-3 py-1.5 bg-bg-primary text-[8px] md:text-[10px] font-sans font-bold text-ink/60 rounded-sm border border-ink/5 hover:bg-ink hover:text-white transition-all"
+                    >
+                      {platform}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-ink/5 pt-12">
@@ -4124,6 +4169,15 @@ const EtymologyExplorer = ({ onWordClick }: { onWordClick: (word: string) => voi
     item.words.some(w => w.toLowerCase().includes(searchQuery.toLowerCase()))
   ), [searchQuery]);
 
+  const handleShare = (platform: string, item: any) => {
+    shareContent(platform, {
+      title: `Etymology: ${item.root}`,
+      text: `Exploring the root "${item.root}" (${item.meaning}) on GREnius! It's the origin of words like ${item.words.slice(0, 3).join(', ')}.`,
+      url: '',
+      websitePath: `/vocabulary?etymology=${encodeURIComponent(item.root)}`
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="relative group">
@@ -4192,11 +4246,24 @@ const EtymologyExplorer = ({ onWordClick }: { onWordClick: (word: string) => voi
                       </div>
                     </div>
                     
-                    <div className="p-4 bg-white rounded-sm border border-ink/5">
-                      <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-2">Mnemonic Aid</h4>
-                      <p className="text-sm text-ink/60 italic leading-relaxed">
-                        {item.mnemonic}
-                      </p>
+                    <div className="p-4 bg-white rounded-sm border border-ink/5 flex justify-between items-start gap-4">
+                      <div className="space-y-2">
+                        <h4 className="text-[10px] font-sans font-bold text-accent-gold uppercase tracking-[0.2em] mb-2">Mnemonic Aid</h4>
+                        <p className="text-sm text-ink/60 italic leading-relaxed">
+                          {item.mnemonic}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2 shrink-0">
+                        {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                          <button 
+                            key={platform} 
+                            onClick={() => handleShare(platform, item)}
+                            className="px-2 py-1 bg-bg-primary text-[8px] font-sans font-bold text-ink/30 rounded-sm border border-ink/5 hover:bg-ink hover:text-white transition-all"
+                          >
+                            {platform[0]}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -4289,6 +4356,15 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
     } else {
       playSound('flip', soundEnabled);
     }
+  };
+
+  const handleShare = (platform: string, word: Word) => {
+    shareContent(platform, {
+      title: word.word,
+      text: `Mastered a new GRE word: ${word.word} (${word.definition})`,
+      url: '',
+      websitePath: `/vocabulary?word=${encodeURIComponent(word.word)}`
+    });
   };
 
   const nextWord = () => {
@@ -4695,6 +4771,21 @@ const Vocabulary = ({ onBack, onXpChange, globalSearch, onSearchClear }: { onBac
                   <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Contextual Usage</h4>
                   <p className="text-base md:text-lg font-sans text-ink/60 leading-relaxed italic">"{currentWord.example}"</p>
                 </div>
+
+                <div className="pt-8 border-t border-ink/5">
+                  <h4 className="text-[8px] md:text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em] mb-4">Share Word</h4>
+                  <div className="flex gap-2">
+                    {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                      <button 
+                        key={platform} 
+                        onClick={(e) => { e.stopPropagation(); handleShare(platform, currentWord); }}
+                        className="px-3 py-1.5 bg-ink/5 text-[8px] md:text-[10px] font-sans font-bold text-ink/60 rounded-sm hover:bg-ink hover:text-white transition-all"
+                      >
+                        {platform}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -4891,6 +4982,15 @@ const VerbalNotes = () => {
     setCurrentFlashcardIndex((prev) => (prev - 1 + filteredWords.length) % filteredWords.length);
   };
 
+  const handleShare = (platform: string, word: Word) => {
+    shareContent(platform, {
+      title: word.word,
+      text: `Mastered a new GRE word: ${word.word} (${word.definition})`,
+      url: '',
+      websitePath: `/vocabulary?word=${encodeURIComponent(word.word)}`
+    });
+  };
+
   return (
     <div className="space-y-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 border-b border-ink/5 pb-8 md:pb-12 px-4 md:px-0">
@@ -4980,6 +5080,18 @@ const VerbalNotes = () => {
                     >
                       <Volume2 size={18} />
                     </button>
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                        <button 
+                          key={platform} 
+                          onClick={(e) => { e.stopPropagation(); handleShare(platform, word); }}
+                          className="p-1.5 rounded-sm bg-bg-primary text-[8px] font-sans font-bold text-ink/30 hover:bg-ink hover:text-white transition-all"
+                          title={`Share on ${platform}`}
+                        >
+                          {platform[0]}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -5219,6 +5331,8 @@ interface DayCardProps {
   day: WorldDay & { daysUntil?: number };
   showCountdown?: boolean;
   defaultExpanded?: boolean;
+  onNavigate?: (section: string) => void;
+  onSearch?: (query: string) => void;
   key?: string | number;
 }
 
@@ -5226,6 +5340,8 @@ const DayCard = ({
   day,
   showCountdown = false,
   defaultExpanded = false,
+  onNavigate,
+  onSearch,
 }: DayCardProps) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const todayBadge = isTodayCheck(day.month, day.day);
@@ -5235,6 +5351,15 @@ const DayCard = ({
   const linkedWord = day.greWordId
     ? ALL_GRE_WORDS.find(w => w.id === day.greWordId) ?? null
     : ALL_GRE_WORDS.find(w => w.word.toLowerCase() === day.greWord?.toLowerCase()) ?? null;
+
+  const handleShare = (platform: string) => {
+    shareContent(platform, {
+      title: day.name,
+      text: `Today is ${day.name}! 🌍\n\nGRE Word: ${day.greWord} - ${day.greWordDef}`,
+      url: '',
+      websitePath: `/worlddays?day=${day.month}-${day.day}`
+    });
+  };
 
   return (
     <div
@@ -5306,19 +5431,36 @@ const DayCard = ({
 
           {/* GRE Word Connection */}
           {day.greWord && (
-            <div className="rounded-xl border border-accent-gold/25 bg-accent-gold/8 p-3 flex gap-3 items-start">
+            <div 
+              onClick={(e) => {
+                if (onNavigate && onSearch) {
+                  e.stopPropagation();
+                  onSearch(day.greWord!);
+                  onNavigate('vocabulary');
+                }
+              }}
+              className={`rounded-xl border border-accent-gold/25 bg-accent-gold/8 p-3 flex gap-3 items-start transition-all
+                ${onNavigate && onSearch ? 'hover:bg-accent-gold/15 hover:border-accent-gold/40 cursor-pointer' : ''}`}
+            >
               <span className="text-lg flex-shrink-0">📝</span>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] text-accent-gold/70 uppercase tracking-widest font-semibold mb-1">
-                  GRE Word Connection
-                </p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] text-accent-gold/70 uppercase tracking-widest font-semibold">
+                    GRE Word Connection
+                  </p>
+                  {onNavigate && onSearch && (
+                    <span className="text-[9px] text-accent-gold font-bold uppercase tracking-tighter flex items-center gap-1">
+                      View Full Details <ArrowRight size={8} />
+                    </span>
+                  )}
+                </div>
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className="text-accent-gold font-bold text-base">
                     {day.greWord}
                   </span>
                   <span className="text-xs text-ink/50 dark:text-ink-dark/50 italic">
                     {linkedWord
-                      ? `— ${linkedWord.definition.slice(0, 70)}${linkedWord.definition.length > 70 ? '...' : ''}`
+                      ? `— ${linkedWord.definition}`
                       : day.greWordDef
                         ? `— ${day.greWordDef}`
                         : ''}
@@ -5334,6 +5476,21 @@ const DayCard = ({
                     💡 This word will appear in GRE verbal questions — today is a great time to learn it.
                   </p>
                 )}
+
+                <div className="mt-4 pt-4 border-t border-accent-gold/10">
+                  <p className="text-[9px] text-accent-gold/60 uppercase tracking-widest font-bold mb-2">Share this Day</p>
+                  <div className="flex gap-2">
+                    {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                      <button 
+                        key={platform} 
+                        onClick={(e) => { e.stopPropagation(); handleShare(platform); }}
+                        className="px-2.5 py-1 bg-accent-gold/10 text-[9px] font-bold text-accent-gold rounded-lg hover:bg-accent-gold hover:text-white transition-all"
+                      >
+                        {platform}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -5345,7 +5502,7 @@ const DayCard = ({
 
 // ─── MAIN WORLD DAYS COMPONENT ─────────────────────────────────────────────────
 
-function WorldDays() {
+function WorldDays({ onNavigate, onSearch }: { onNavigate: (section: string) => void, onSearch: (query: string) => void }) {
   const today = new Date();
   const currentMonth = today.getMonth() + 1;
 
@@ -5437,7 +5594,12 @@ function WorldDays() {
               : `${searchResults.length} result${searchResults.length !== 1 ? 's' : ''} for "${search}"`}
           </p>
           {searchResults.map(d => (
-            <DayCard key={`${d.month}-${d.day}-${d.name}`} day={d} />
+            <DayCard 
+              key={`${d.month}-${d.day}-${d.name}`} 
+              day={d} 
+              onNavigate={onNavigate}
+              onSearch={onSearch}
+            />
           ))}
         </div>
       ) : (
@@ -5507,7 +5669,13 @@ function WorldDays() {
                 </div>
               ) : (
                 todaysDays.map(d => (
-                  <DayCard key={`${d.month}-${d.day}-${d.name}`} day={d} defaultExpanded={true} />
+                  <DayCard 
+                    key={`${d.month}-${d.day}-${d.name}`} 
+                    day={d} 
+                    defaultExpanded={true} 
+                    onNavigate={onNavigate}
+                    onSearch={onSearch}
+                  />
                 ))
               )}
             </div>
@@ -5526,6 +5694,8 @@ function WorldDays() {
                   key={`${d.month}-${d.day}-${d.name}`}
                   day={d}
                   showCountdown
+                  onNavigate={onNavigate}
+                  onSearch={onSearch}
                 />
               ))}
             </div>
@@ -5615,7 +5785,12 @@ function WorldDays() {
               ) : (
                 <div className="flex flex-col gap-3">
                   {browseDays.map(d => (
-                    <DayCard key={`${d.month}-${d.day}-${d.name}`} day={d} />
+                    <DayCard 
+                      key={`${d.month}-${d.day}-${d.name}`} 
+                      day={d} 
+                      onNavigate={onNavigate}
+                      onSearch={onSearch}
+                    />
                   ))}
                 </div>
               )}
@@ -5772,6 +5947,15 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
   const quizHistoryData = getStorage(STORAGE_KEYS.quizHistory, []) as any[];
   const quantCorrect = getStorage('grenius_quant_correct', 0);
 
+  const handleShare = (platform: string) => {
+    shareContent(platform, {
+      title: 'My GREnius Progress',
+      text: `I'm currently at Level ${level} (${title}) on GREnius! I've mastered ${masteredWords.length} words and have a ${streak}-day streak. Join me in mastering the GRE!`,
+      url: '',
+      websitePath: '/'
+    });
+  };
+
   const goals = [
     {
       text: 'Master 10 vocabulary words',
@@ -5813,14 +5997,31 @@ const Dashboard = ({ onNavigate }: { onNavigate: (section: string) => void }) =>
   
   return (
     <div className="space-y-8 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="max-w-4xl">
-        <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-bold text-ink leading-[0.85] mb-8 md:mb-12 tracking-tighter">
-          Academic<br />Attainment.
-        </h1>
-        <p className="text-lg md:text-2xl font-sans text-ink/60 leading-relaxed max-w-2xl font-light">
-          A comprehensive audit of your cognitive progression across the Digital Lexicon. 
-          Your trajectory indicates a significant mastery of high-frequency verbal patterns from our unified pool of {ALL_GRE_WORDS.length} words.
-        </p>
+      <header className="max-w-4xl flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="space-y-6">
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-bold text-ink leading-[0.85] mb-8 md:mb-12 tracking-tighter">
+            Academic<br />Attainment.
+          </h1>
+          <p className="text-lg md:text-2xl font-sans text-ink/60 leading-relaxed max-w-2xl font-light">
+            A comprehensive audit of your cognitive progression across the Digital Lexicon. 
+            Your trajectory indicates a significant mastery of high-frequency verbal patterns from our unified pool of {ALL_GRE_WORDS.length} words.
+          </p>
+        </div>
+        <div className="flex flex-col items-start md:items-end gap-4 pb-4">
+          <p className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.3em]">Share Progress</p>
+          <div className="flex gap-2">
+            {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+              <button 
+                key={platform} 
+                onClick={() => handleShare(platform)}
+                className="px-3 py-1.5 bg-bg-primary text-[8px] md:text-[10px] font-sans font-bold text-ink/60 rounded-sm border border-ink/5 hover:bg-ink hover:text-white transition-all"
+                title={`Share on ${platform}`}
+              >
+                {platform}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-16 border-y border-ink/5 py-12 md:py-20">
@@ -6460,7 +6661,7 @@ const App = () => {
       case 'news':
         return <NewsContainer />;
       case 'worlddays':
-        return <WorldDays />;
+        return <WorldDays onNavigate={setActiveSection} onSearch={setGlobalSearch} />;
       case 'achievements':
         return <Achievements onXpChange={handleXpChange} />;
       case 'leaderboard':

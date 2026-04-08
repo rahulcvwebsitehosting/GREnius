@@ -300,3 +300,27 @@ export function incrementStat(key: keyof typeof STORAGE_KEYS, amount = 1) {
   const current = getStorage(STORAGE_KEYS[key], 0) as number;
   setStorage(STORAGE_KEYS[key], current + amount);
 }
+
+export function shareContent(platform: string, config: { title: string, text: string, url: string, websitePath?: string }) {
+  const websiteUrl = `https://grenius.vercel.app${config.websitePath || ''}`;
+  const fullText = encodeURIComponent(`${config.text}\n\nExplore more on GREnius: `);
+  const siteUrl = encodeURIComponent(websiteUrl);
+  const contentUrl = encodeURIComponent(config.url);
+  
+  let shareUrl = '';
+  switch (platform) {
+    case 'Twitter':
+      shareUrl = `https://twitter.com/intent/tweet?text=${fullText}${siteUrl}&url=${contentUrl}`;
+      break;
+    case 'LinkedIn':
+      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${contentUrl || siteUrl}`;
+      break;
+    case 'WhatsApp':
+      shareUrl = `https://api.whatsapp.com/send?text=${fullText}${siteUrl}%20${contentUrl}`;
+      break;
+  }
+  
+  if (shareUrl) {
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  }
+}

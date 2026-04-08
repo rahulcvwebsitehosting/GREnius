@@ -14,6 +14,7 @@ interface NewsCardProps {
 }
 
 export const NewsCard = ({ article, onClick, isHero = false }: NewsCardProps) => {
+  const [imageError, setImageError] = React.useState(false);
   const vocab = useVocabularyScan(article.title + ' ' + article.summary);
   const hasVocab = vocab.length > 0;
 
@@ -35,12 +36,13 @@ export const NewsCard = ({ article, onClick, isHero = false }: NewsCardProps) =>
         )}
         onClick={() => onClick(article)}
       >
-        {article.imageUrl ? (
+        {article.imageUrl && !imageError ? (
           <img
             src={article.imageUrl}
             alt={article.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             referrerPolicy="no-referrer"
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-ink/10">
@@ -55,6 +57,7 @@ export const NewsCard = ({ article, onClick, isHero = false }: NewsCardProps) =>
                 alt="" 
                 className="w-3 h-3 rounded-full"
                 referrerPolicy="no-referrer"
+                onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
               />
             )}
             <span className="text-white text-[8px] font-sans font-bold uppercase tracking-widest">

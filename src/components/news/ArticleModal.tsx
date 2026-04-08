@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { NewsCard as NewsCardType } from '../../types';
 import { cn } from '../../utils';
 import { useVocabularyScan } from '../../hooks/useVocabularyScan';
+import { shareContent } from '../../utils';
 
 interface ArticleModalProps {
   article: NewsCardType | null;
@@ -13,6 +14,16 @@ interface ArticleModalProps {
 
 export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
   const vocab = useVocabularyScan(article?.title + ' ' + article?.summary + ' ' + article?.content);
+
+  const handleShare = (platform: string) => {
+    if (!article) return;
+    shareContent(platform, {
+      title: article.title,
+      text: `Check out this story on GREnius: ${article.title}`,
+      url: article.originalUrl,
+      websitePath: '/news'
+    });
+  };
 
   if (!article) return null;
 
@@ -43,6 +54,7 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
                     alt="" 
                     className="w-4 h-4 rounded-full"
                     referrerPolicy="no-referrer"
+                    onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
                   />
                 )}
                 <span className="text-white text-[10px] font-sans font-bold uppercase tracking-[0.2em]">
@@ -89,6 +101,10 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
                   alt={article.title}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                  }}
                 />
               </div>
             )}
@@ -154,7 +170,11 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
                   <h4 className="text-[10px] font-sans font-bold text-ink/40 uppercase tracking-[0.2em]">Share Story</h4>
                   <div className="flex gap-2">
                     {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
-                      <button key={platform} className="px-3 py-1.5 bg-ink/5 text-[10px] font-sans font-bold text-ink/60 rounded-sm hover:bg-ink hover:text-white transition-all">
+                      <button 
+                        key={platform} 
+                        onClick={() => handleShare(platform)}
+                        className="px-3 py-1.5 bg-ink/5 text-[10px] font-sans font-bold text-ink/60 rounded-sm hover:bg-ink hover:text-white transition-all"
+                      >
                         {platform}
                       </button>
                     ))}

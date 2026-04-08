@@ -5344,6 +5344,7 @@ const DayCard = ({
   onSearch,
 }: DayCardProps) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [showFullWord, setShowFullWord] = useState(false);
   const todayBadge = isTodayCheck(day.month, day.day);
   const cfg = CATEGORY_CONFIG[day.category] ?? CATEGORY_CONFIG.global;
 
@@ -5433,67 +5434,125 @@ const DayCard = ({
           {day.greWord && (
             <div 
               onClick={(e) => {
-                if (onNavigate && onSearch) {
-                  e.stopPropagation();
-                  onSearch(day.greWord!);
-                  onNavigate('vocabulary');
-                }
+                e.stopPropagation();
+                setShowFullWord(!showFullWord);
               }}
-              className={`rounded-xl border border-accent-gold/25 bg-accent-gold/8 p-3 flex gap-3 items-start transition-all
-                ${onNavigate && onSearch ? 'hover:bg-accent-gold/15 hover:border-accent-gold/40 cursor-pointer' : ''}`}
+              className={`rounded-xl border border-accent-gold/25 bg-accent-gold/8 p-3 flex flex-col gap-3 transition-all
+                hover:bg-accent-gold/15 hover:border-accent-gold/40 cursor-pointer`}
             >
-              <span className="text-lg flex-shrink-0">📝</span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-[10px] text-accent-gold/70 uppercase tracking-widest font-semibold">
-                    GRE Word Connection
-                  </p>
-                  {onNavigate && onSearch && (
+              <div className="flex gap-3 items-start">
+                <span className="text-lg flex-shrink-0">📝</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-[10px] text-accent-gold/70 uppercase tracking-widest font-semibold">
+                      GRE Word Connection
+                    </p>
                     <span className="text-[9px] text-accent-gold font-bold uppercase tracking-tighter flex items-center gap-1">
-                      View Full Details <ArrowRight size={8} />
+                      {showFullWord ? 'Show Less' : 'View Full Details'} 
+                      <ChevronDown size={8} className={`transition-transform duration-200 ${showFullWord ? 'rotate-180' : ''}`} />
                     </span>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="text-accent-gold font-bold text-base">
-                    {day.greWord}
-                  </span>
-                  <span className="text-xs text-ink/50 dark:text-ink-dark/50 italic">
-                    {linkedWord
-                      ? `— ${linkedWord.definition}`
-                      : day.greWordDef
-                        ? `— ${day.greWordDef}`
-                        : ''}
-                  </span>
-                </div>
-                {linkedWord && (
-                  <p className="text-[11px] text-ink/45 dark:text-ink-dark/45 mt-1.5 leading-relaxed">
-                    💡 This day embodies what <em>{day.greWord}</em> means — a real-world anchor to remember it.
-                  </p>
-                )}
-                {!linkedWord && day.greWordDef && (
-                  <p className="text-[11px] text-ink/45 dark:text-ink-dark/45 mt-1.5 leading-relaxed">
-                    💡 This word will appear in GRE verbal questions — today is a great time to learn it.
-                  </p>
-                )}
-
-                <div className="mt-4 pt-4 border-t border-accent-gold/10">
-                  <p className="text-[9px] text-accent-gold/60 uppercase tracking-widest font-bold mb-2">Share this Day</p>
-                  <div className="flex gap-2">
-                    {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
-                      <button 
-                        key={platform} 
-                        onClick={(e) => { e.stopPropagation(); handleShare(platform); }}
-                        className="px-2.5 py-1 bg-accent-gold/10 text-[9px] font-bold text-accent-gold rounded-lg hover:bg-accent-gold hover:text-white transition-all"
-                      >
-                        {platform}
-                      </button>
-                    ))}
                   </div>
+                  <div className="flex flex-wrap items-baseline gap-2">
+                    <span className="text-accent-gold font-bold text-base">
+                      {day.greWord}
+                    </span>
+                    <span className="text-xs text-ink/50 dark:text-ink-dark/50 italic">
+                      {linkedWord
+                        ? `— ${linkedWord.definition}`
+                        : day.greWordDef
+                          ? `— ${day.greWordDef}`
+                          : ''}
+                    </span>
+                  </div>
+
+                  {showFullWord && linkedWord && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-4 space-y-4 pt-4 border-t border-accent-gold/10 overflow-hidden"
+                    >
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Mnemonic</p>
+                          <p className="text-xs text-ink/70 dark:text-ink-dark/70 italic leading-relaxed">
+                            {linkedWord.mnemonic}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Usage</p>
+                          <p className="text-xs text-ink/70 dark:text-ink-dark/70 italic leading-relaxed">
+                            "{linkedWord.example}"
+                          </p>
+                        </div>
+                      </div>
+
+                      {linkedWord.synonyms && linkedWord.synonyms.length > 0 && (
+                        <div className="space-y-1">
+                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Synonyms</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {linkedWord.synonyms.map(syn => (
+                              <span key={syn} className="px-2 py-0.5 bg-accent-gold/10 text-accent-gold text-[10px] rounded-md">
+                                {syn}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-4 pt-2">
+                        <div className="flex flex-col">
+                          <p className="text-[8px] text-accent-gold/40 uppercase font-bold">Part of Speech</p>
+                          <p className="text-[10px] text-ink/60 dark:text-ink-dark/60 font-semibold">{linkedWord.pos}</p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-[8px] text-accent-gold/40 uppercase font-bold">Pronunciation</p>
+                          <p className="text-[10px] text-ink/60 dark:text-ink-dark/60 font-semibold">{linkedWord.pronunciation}</p>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onNavigate && onSearch) {
+                              onSearch(day.greWord!);
+                              onNavigate('vocabulary');
+                            }
+                          }}
+                          className="ml-auto text-[9px] text-accent-gold font-bold uppercase tracking-widest hover:underline"
+                        >
+                          Go to Vocabulary Section →
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {!showFullWord && linkedWord && (
+                    <p className="text-[11px] text-ink/45 dark:text-ink-dark/45 mt-1.5 leading-relaxed">
+                      💡 This day embodies what <em>{day.greWord}</em> means — a real-world anchor to remember it.
+                    </p>
+                  )}
+                  {!linkedWord && day.greWordDef && (
+                    <p className="text-[11px] text-ink/45 dark:text-ink-dark/45 mt-1.5 leading-relaxed">
+                      💡 This word will appear in GRE verbal questions — today is a great time to learn it.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           )}
+
+          <div className="mt-4 pt-4 border-t border-accent-gold/10">
+            <p className="text-[9px] text-accent-gold/60 uppercase tracking-widest font-bold mb-2">Share this Day</p>
+            <div className="flex gap-2">
+              {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                <button 
+                  key={platform} 
+                  onClick={(e) => { e.stopPropagation(); handleShare(platform); }}
+                  className="px-2.5 py-1 bg-accent-gold/10 text-[9px] font-bold text-accent-gold rounded-lg hover:bg-accent-gold hover:text-white transition-all"
+                >
+                  {platform}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

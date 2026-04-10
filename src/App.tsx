@@ -5465,62 +5465,76 @@ const DayCard = ({
                     </span>
                   </div>
 
-                  {showFullWord && linkedWord && (
+                  {showFullWord && (
                     <motion.div 
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       className="mt-4 space-y-4 pt-4 border-t border-accent-gold/10 overflow-hidden"
                     >
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Mnemonic</p>
-                          <p className="text-xs text-ink/70 dark:text-ink-dark/70 italic leading-relaxed">
-                            {linkedWord.mnemonic}
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Usage</p>
-                          <p className="text-xs text-ink/70 dark:text-ink-dark/70 italic leading-relaxed">
-                            "{linkedWord.example}"
-                          </p>
-                        </div>
-                      </div>
-
-                      {linkedWord.synonyms && linkedWord.synonyms.length > 0 && (
-                        <div className="space-y-1">
-                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Synonyms</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {linkedWord.synonyms.map(syn => (
-                              <span key={syn} className="px-2 py-0.5 bg-accent-gold/10 text-accent-gold text-[10px] rounded-md">
-                                {syn}
-                              </span>
-                            ))}
+                      {linkedWord ? (
+                        <>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                              <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Mnemonic</p>
+                              <p className="text-xs text-ink/70 dark:text-ink-dark/70 italic leading-relaxed">
+                                {linkedWord.mnemonic}
+                              </p>
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Usage</p>
+                              <p className="text-xs text-ink/70 dark:text-ink-dark/70 italic leading-relaxed">
+                                "{linkedWord.example}"
+                              </p>
+                            </div>
                           </div>
+
+                          {linkedWord.synonyms && linkedWord.synonyms.length > 0 && (
+                            <div className="space-y-1">
+                              <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Synonyms</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {linkedWord.synonyms.map(syn => (
+                                  <span key={syn} className="px-2 py-0.5 bg-accent-gold/10 text-accent-gold text-[10px] rounded-md">
+                                    {syn}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="flex items-center gap-4 pt-2">
+                            <div className="flex flex-col">
+                              <p className="text-[8px] text-accent-gold/40 uppercase font-bold">Part of Speech</p>
+                              <p className="text-[10px] text-ink/60 dark:text-ink-dark/60 font-semibold">{linkedWord.pos}</p>
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="text-[8px] text-accent-gold/40 uppercase font-bold">Pronunciation</p>
+                              <p className="text-[10px] text-ink/60 dark:text-ink-dark/60 font-semibold">{linkedWord.pronunciation}</p>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (onNavigate && onSearch) {
+                                  onSearch(day.greWord!);
+                                  onNavigate('vocabulary');
+                                }
+                              }}
+                              className="ml-auto text-[9px] text-accent-gold font-bold uppercase tracking-widest hover:underline"
+                            >
+                              Go to Vocabulary Section →
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-[9px] text-accent-gold/50 uppercase font-bold">Full Definition</p>
+                          <p className="text-sm text-ink/80 dark:text-ink-dark/80 leading-relaxed font-medium">
+                            {day.greWordDef}
+                          </p>
+                          <p className="text-[10px] text-ink/40 dark:text-ink-dark/40 italic">
+                            Detailed mnemonic and examples for this specific word are being curated.
+                          </p>
                         </div>
                       )}
-
-                      <div className="flex items-center gap-4 pt-2">
-                        <div className="flex flex-col">
-                          <p className="text-[8px] text-accent-gold/40 uppercase font-bold">Part of Speech</p>
-                          <p className="text-[10px] text-ink/60 dark:text-ink-dark/60 font-semibold">{linkedWord.pos}</p>
-                        </div>
-                        <div className="flex flex-col">
-                          <p className="text-[8px] text-accent-gold/40 uppercase font-bold">Pronunciation</p>
-                          <p className="text-[10px] text-ink/60 dark:text-ink-dark/60 font-semibold">{linkedWord.pronunciation}</p>
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onNavigate && onSearch) {
-                              onSearch(day.greWord!);
-                              onNavigate('vocabulary');
-                            }
-                          }}
-                          className="ml-auto text-[9px] text-accent-gold font-bold uppercase tracking-widest hover:underline"
-                        >
-                          Go to Vocabulary Section →
-                        </button>
-                      </div>
                     </motion.div>
                   )}
 

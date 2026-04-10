@@ -13,6 +13,7 @@ interface ArticleModalProps {
 }
 
 export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
+  const [imageError, setImageError] = React.useState(false);
   const vocab = useVocabularyScan(article?.title + ' ' + article?.summary + ' ' + article?.content);
 
   const handleShare = (platform: string) => {
@@ -21,7 +22,7 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
       title: article.title,
       text: `Check out this story on GREnius: ${article.title}`,
       url: article.originalUrl,
-      websitePath: '/news'
+      websitePath: `/news?article=${encodeURIComponent(article.title)}`
     });
   };
 
@@ -66,9 +67,18 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
               </span>
             </div>
             <div className="flex items-center gap-4">
-              <button className="p-2 text-ink/40 hover:text-ink transition-colors">
-                <Share2 size={18} />
-              </button>
+              <div className="hidden md:flex items-center gap-2 mr-4">
+                {['Twitter', 'LinkedIn', 'WhatsApp'].map(platform => (
+                  <button 
+                    key={platform} 
+                    onClick={() => handleShare(platform)}
+                    className="p-2 text-ink/40 hover:text-ink transition-colors"
+                    title={`Share on ${platform}`}
+                  >
+                    <Share2 size={16} />
+                  </button>
+                ))}
+              </div>
               <button className="p-2 text-ink/40 hover:text-ink transition-colors">
                 <Bookmark size={18} />
               </button>
@@ -94,17 +104,14 @@ export const ArticleModal = ({ article, onClose }: ArticleModalProps) => {
               </h2>
             </div>
 
-            {article.imageUrl && (
+            {article.imageUrl && !imageError && (
               <div className="aspect-[21/9] rounded-sm overflow-hidden bg-ink/5">
                 <img
                   src={article.imageUrl}
                   alt={article.title}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.style.display = 'none';
-                  }}
+                  onError={() => setImageError(true)}
                 />
               </div>
             )}

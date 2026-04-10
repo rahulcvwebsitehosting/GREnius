@@ -303,20 +303,21 @@ export function incrementStat(key: keyof typeof STORAGE_KEYS, amount = 1) {
 
 export function shareContent(platform: string, config: { title: string, text: string, url: string, websitePath?: string }) {
   const websiteUrl = `https://grenius.vercel.app${config.websitePath || ''}`;
-  const fullText = encodeURIComponent(`${config.text}\n\nExplore more on GREnius: `);
-  const siteUrl = encodeURIComponent(websiteUrl);
-  const contentUrl = encodeURIComponent(config.url);
+  const shareText = `${config.text}\n\nRead more on GREnius: ${websiteUrl}`;
+  const encodedText = encodeURIComponent(shareText);
+  const encodedUrl = encodeURIComponent(config.url || websiteUrl);
   
   let shareUrl = '';
   switch (platform) {
     case 'Twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${fullText}${siteUrl}&url=${contentUrl}`;
+      shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}${config.url ? `&url=${encodeURIComponent(config.url)}` : ''}`;
       break;
     case 'LinkedIn':
-      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${contentUrl || siteUrl}`;
+      // LinkedIn works best with just a URL, it will scrape the metadata
+      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
       break;
     case 'WhatsApp':
-      shareUrl = `https://api.whatsapp.com/send?text=${fullText}${siteUrl}%20${contentUrl}`;
+      shareUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
       break;
   }
   

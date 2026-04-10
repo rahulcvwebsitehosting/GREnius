@@ -45,8 +45,11 @@ export const NewsCard = ({ article, onClick, isHero = false }: NewsCardProps) =>
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-ink/10">
-            <BookOpen size={48} />
+          <div className="w-full h-full flex flex-col items-center justify-center bg-ink/5 text-ink/20 p-6 text-center">
+            <BookOpen size={48} className="mb-2 opacity-20" />
+            <span className="text-[10px] font-sans font-bold uppercase tracking-widest leading-tight">
+              Visual content unavailable
+            </span>
           </div>
         )}
         <div className="absolute top-3 left-3 flex gap-2">

@@ -811,7 +811,34 @@ function negamax(state: GameState, depth: number, alpha: number, beta: number, c
   return maxEval;
 }
 
-function aiMove(state: GameState): { from: ChessPos; to: ChessPos } | null {
+const OPENING_BOOK: Record<string, { from: ChessPos, to: ChessPos }> = {
+  // Sicilian Defense
+  "e2e4": { from: { row: 1, col: 2 }, to: { row: 3, col: 2 } }, // c7c5
+  // Ruy Lopez
+  "e2e4,e7e5,g1f3": { from: { row: 7, col: 1 }, to: { row: 5, col: 2 } }, // b8c6
+  "e2e4,e7e5,g1f3,b8c6": { from: { row: 0, col: 5 }, to: { row: 3, col: 1 } }, // f1b5
+  // Queen's Gambit
+  "d2d4": { from: { row: 1, col: 3 }, to: { row: 3, col: 3 } }, // d7d5
+  "d2d4,d7d5": { from: { row: 6, col: 2 }, to: { row: 4, col: 2 } }, // c2c4
+  // French Defense
+  "e2e4,e7e6": { from: { row: 6, col: 3 }, to: { row: 4, col: 3 } }, // d2d4
+  // Caro-Kann
+  "e2e4,c7c6": { from: { row: 6, col: 3 }, to: { row: 4, col: 3 } }, // d2d4
+  // Italian Game
+  "e2e4,e7e5,g1f3,b8c6,f1c4": { from: { row: 0, col: 5 }, to: { row: 3, col: 2 } }, // f8c5
+};
+
+function posToCoord(pos: ChessPos): string {
+  return 'abcdefgh'[pos.col] + (8 - pos.row);
+}
+
+function aiMove(state: GameState, history: MoveRecord[]): { from: ChessPos; to: ChessPos } | null {
+  // 1. Opening Book Check
+  const historyKey = history.map(m => posToCoord(m.from) + posToCoord(m.to)).join(',');
+  if (OPENING_BOOK[historyKey]) {
+    return OPENING_BOOK[historyKey];
+  }
+
   const moves = getLegalMoves(state);
   if (moves.length === 0) return null;
 
@@ -828,7 +855,6 @@ function aiMove(state: GameState): { from: ChessPos; to: ChessPos } | null {
 
   for (const move of moves) {
     const next = performMove(state, move.from, move.to);
-    // Depth 3 is usually good enough for a web app and fast enough
     const val = -negamax(next, 3, -Infinity, Infinity, -color);
     if (val > bestValue) {
       bestValue = val;
@@ -849,7 +875,8 @@ interface MoveRecord {
   stateAfter: GameState;
   evaluation: number;
   bestMoves?: { move: {from: ChessPos, to: ChessPos}, val: number }[];
-  classification?: 'Excellent' | 'Good' | 'Inaccuracy' | 'Mistake' | 'Blunder';
+  classification?: 'Great' | 'Best' | 'Excellent' | 'Book' | 'Inaccuracy' | 'Mistake' | 'Blunder';
+  explanation?: string;
 }
 
 function analyzePosition(state: GameState, depth: number = 3) {
@@ -1021,6 +1048,20 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
       const bestMoves = analyzePosition(record.stateBefore, 3);
       record.bestMoves = bestMoves;
       record.classification = classifyMove({from: record.from, to: record.to}, bestMoves, record.player);
+      
+      // Generate explanation for mistakes/blunders
+      if (record.classification === 'Mistake' || record.classification === 'Blunder') {
+        const best = bestMoves[0];
+        const target = record.stateBefore.board[best.move.to.row][best.move.to.col];
+        if (target) {
+          record.explanation = `Wins a ${target.type === 'P' ? 'pawn' : target.type === 'N' ? 'knight' : target.type === 'B' ? 'bishop' : target.type === 'R' ? 'rook' : 'queen'}.`;
+        } else if (isInCheck(performMove(record.stateBefore, best.move.from, best.move.to).board, record.player === 'w' ? 'b' : 'w')) {
+          record.explanation = "Delivers a powerful check.";
+        } else {
+          record.explanation = "Controls the center and improves piece activity.";
+        }
+      }
+
       if (i % 3 === 0) await new Promise(r => setTimeout(r, 0));
     }
     
@@ -1118,11 +1159,12 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
           stateAfter: JSON.parse(JSON.stringify(nextState)),
           evaluation: evaluateBoard(nextState.board)
         };
-        setHistory(prev => [...prev, moveRecord]);
+        const updatedHistory = [...history, moveRecord];
+        setHistory(updatedHistory);
 
         // AI Turn
         setTimeout(() => {
-          const aiMv = aiMove(nextState);
+          const aiMv = aiMove(nextState, updatedHistory);
           if (!aiMv) {
             const inCheck = isInCheck(nextState.board, 'b');
             if (inCheck) {
@@ -1227,6 +1269,44 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
     setShowResignConfirm(false);
   };
 
+  const getCapturedPieces = (board: Board) => {
+    const initial = {
+      w: { P: 8, N: 2, B: 2, R: 2, Q: 1, K: 1 },
+      b: { P: 8, N: 2, B: 2, R: 2, Q: 1, K: 1 }
+    };
+    const current = {
+      w: { P: 0, N: 0, B: 0, R: 0, Q: 0, K: 0 },
+      b: { P: 0, N: 0, B: 0, R: 0, Q: 0, K: 0 }
+    };
+    board.forEach(row => row.forEach(p => {
+      if (p) current[p.color][p.type as keyof typeof current['w']]++;
+    }));
+
+    const capturedW: Piece[] = [];
+    const capturedB: Piece[] = [];
+
+    (['P', 'N', 'B', 'R', 'Q'] as PieceType[]).forEach(type => {
+      for (let i = 0; i < initial.b[type as keyof typeof initial['b']] - current.b[type as keyof typeof current['b']]; i++) {
+        capturedW.push({ type, color: 'b' });
+      }
+      for (let i = 0; i < initial.w[type as keyof typeof initial['w']] - current.w[type as keyof typeof current['w']]; i++) {
+        capturedB.push({ type, color: 'w' });
+      }
+    });
+
+    return { capturedW, capturedB };
+  };
+
+  const { capturedW: derivedW, capturedB: derivedB } = getCapturedPieces(gameState.board);
+  
+  const getMaterialValue = (pieces: Piece[]) => {
+    const vals = { P: 1, N: 3, B: 3, R: 5, Q: 9, K: 0 };
+    return pieces.reduce((sum, p) => sum + vals[p.type], 0);
+  };
+
+  const valW = getMaterialValue(derivedB); // Pieces White has captured
+  const valB = getMaterialValue(derivedW); // Pieces Black has captured
+  const materialBalance = valW - valB;
   const inCheck = !gameOver && isInCheck(gameState.board, 'w');
 
   return (
@@ -1244,23 +1324,44 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
         <p className={`text-sm font-medium ${inCheck ? 'text-red-500' : 'text-ink/70 dark:text-ink-dark/70'}`}>{status}</p>
       </div>
 
-      {!isFullscreen && (
-        <div className="w-full max-w-xs text-xs text-ink/60 dark:text-ink-dark/60 flex justify-between">
-          <div className="flex flex-wrap gap-0.5">AI: {capturedB.map((p,i) => <span key={i} className="text-lg">{p ? PIECE_UNICODE[p.color+p.type] : ''}</span>)}</div>
-          <div className="flex flex-wrap gap-0.5 text-right">You: {capturedW.map((p,i) => <span key={i} className="text-lg">{p ? PIECE_UNICODE[p.color+p.type] : ''}</span>)}</div>
+      <div className="w-full max-w-md flex flex-col gap-2">
+        {/* Black's Info (Top) */}
+        <div className="flex justify-between items-center px-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold">AI</div>
+            <div className="flex flex-wrap gap-0.5">
+              {derivedB.map((p, i) => (
+                <span key={i} className="text-lg leading-none opacity-60">{PIECE_UNICODE[p.color + p.type]}</span>
+              ))}
+              {materialBalance < 0 && <span className="text-[10px] font-bold text-ink/40 ml-1">+{Math.abs(materialBalance)}</span>}
+            </div>
+          </div>
         </div>
-      )}
 
-      <ChessBoard 
-        board={gameState.board}
-        selected={selected}
-        legalMoves={legalMoves}
-        lastMove={lastMove}
-        inCheck={inCheck}
-        hint={hint}
-        onSquareClick={handleSquareClick}
-        isFullscreen={isFullscreen}
-      />
+        <ChessBoard 
+          board={gameState.board}
+          selected={selected}
+          legalMoves={legalMoves}
+          lastMove={lastMove}
+          inCheck={inCheck}
+          hint={hint}
+          onSquareClick={handleSquareClick}
+          isFullscreen={isFullscreen}
+        />
+
+        {/* White's Info (Bottom) */}
+        <div className="flex justify-between items-center px-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-ink/10 rounded-full flex items-center justify-center text-ink text-xs font-bold">YOU</div>
+            <div className="flex flex-wrap gap-0.5">
+              {derivedW.map((p, i) => (
+                <span key={i} className="text-lg leading-none opacity-60">{PIECE_UNICODE[p.color + p.type]}</span>
+              ))}
+              {materialBalance > 0 && <span className="text-[10px] font-bold text-ink/40 ml-1">+{materialBalance}</span>}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="flex flex-wrap justify-center gap-3">
         <button onClick={resetGame} className="px-6 py-2 bg-ink text-white rounded-lg font-semibold hover:opacity-90 transition-all text-sm shadow-md flex items-center gap-2">
@@ -1469,17 +1570,55 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
                                history[reviewIndex].classification === 'Best' ? "The engine's top choice in this position." :
                                history[reviewIndex].classification === 'Book' ? "Standard opening theory." :
                                history[reviewIndex].classification === 'Blunder' ? "A serious error that changes the outcome of the game." :
+                               history[reviewIndex].classification === 'Mistake' ? "A poor move that significantly worsens your position." :
                                "A solid move, though the engine found better alternatives."}
                             </p>
                           </div>
 
-                          {history[reviewIndex].bestMoves && history[reviewIndex].bestMoves![0] && (
+                          {(history[reviewIndex].classification === 'Mistake' || history[reviewIndex].classification === 'Blunder') && (
+                            <div className="p-4 bg-red-50 border border-red-100 rounded-xl space-y-3">
+                              <div className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Correction Section</div>
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="text-ink/40">You Played:</span>
+                                  <span className="font-bold text-red-600">
+                                    {posToCoord(history[reviewIndex].from)}→{posToCoord(history[reviewIndex].to)}
+                                  </span>
+                                </div>
+                                {history[reviewIndex].bestMoves && history[reviewIndex].bestMoves![0] && (
+                                  <>
+                                    <div className="flex items-center justify-between text-xs">
+                                      <span className="text-ink/40">Engine Choice:</span>
+                                      <span className="font-bold text-green-600">
+                                        {posToCoord(history[reviewIndex].bestMoves![0].move.from)}→{posToCoord(history[reviewIndex].bestMoves![0].move.to)}
+                                      </span>
+                                    </div>
+                                    <p className="text-[10px] text-ink/60 italic">"{history[reviewIndex].explanation}"</p>
+                                    <button 
+                                      onClick={() => {
+                                        setGameState(JSON.parse(JSON.stringify(history[reviewIndex].stateBefore)));
+                                        setGameOver(false);
+                                        setShowAnalysis(false);
+                                        setStatus('Try the better move!');
+                                        setHistory(history.slice(0, reviewIndex));
+                                      }}
+                                      className="w-full py-2 bg-white border border-red-200 text-red-600 rounded-lg text-[10px] font-bold hover:bg-red-50 transition-all flex items-center justify-center gap-2"
+                                    >
+                                      <RotateCcw size={12} /> Show me how
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {history[reviewIndex].bestMoves && history[reviewIndex].bestMoves![0] && history[reviewIndex].classification !== 'Mistake' && history[reviewIndex].classification !== 'Blunder' && (
                             <div className="p-4 bg-bg-primary rounded-xl border border-ink/5">
                               <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-2">Engine's Best Move</div>
                               <div className="font-bold text-ink flex items-center gap-2">
                                 {PIECE_UNICODE[history[reviewIndex].piece.color + history[reviewIndex].piece.type]}
-                                {'abcdefgh'[history[reviewIndex].bestMoves![0].move.from.col]}{8-history[reviewIndex].bestMoves![0].move.from.row} → 
-                                {'abcdefgh'[history[reviewIndex].bestMoves![0].move.to.col]}{8-history[reviewIndex].bestMoves![0].move.to.row}
+                                {posToCoord(history[reviewIndex].bestMoves![0].move.from)} → 
+                                {posToCoord(history[reviewIndex].bestMoves![0].move.to)}
                               </div>
                             </div>
                           )}

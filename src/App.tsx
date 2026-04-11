@@ -748,14 +748,20 @@ function performMove(state: GameState, from: ChessPos, to: ChessPos, promotion: 
   };
 }
 
-function evaluateBoard(board: Board): number {
+function evaluateBoard(board: Board, fuzziness: number = 0): number {
   let score = 0;
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
       const p = board[r][c];
       if (p) {
         const val = PIECE_VALUES[p.type];
-        const pstVal = p.color === 'w' ? PST[p.type][r][c] : PST[p.type][7-r][c];
+        let pstVal = p.color === 'w' ? PST[p.type][r][c] : PST[p.type][7-r][c];
+        
+        // Add fuzziness for beginner difficulty
+        if (fuzziness > 0) {
+          pstVal += (Math.random() - 0.5) * fuzziness;
+        }
+
         const total = val + pstVal;
         score += p.color === 'w' ? total : -total;
       }
@@ -782,13 +788,38 @@ function getLegalMoves(state: GameState): {from: ChessPos, to: ChessPos}[] {
   return moves;
 }
 
-function negamax(state: GameState, depth: number, alpha: number, beta: number, color: number): number {
-  if (depth === 0) return color * evaluateBoard(state.board);
+function quiescenceSearch(state: GameState, alpha: number, beta: number, color: number): number {
+  const standPat = color * evaluateBoard(state.board);
+  if (standPat >= beta) return beta;
+  if (alpha < standPat) alpha = standPat;
+
+  const moves = getLegalMoves(state).filter(m => state.board[m.to.row][m.to.col] !== null);
+  
+  // Move ordering for captures
+  moves.sort((a, b) => {
+    const targetA = state.board[a.to.row][a.to.col]!;
+    const targetB = state.board[b.to.row][b.to.col]!;
+    return PIECE_VALUES[targetB.type] - PIECE_VALUES[targetA.type];
+  });
+
+  for (const move of moves) {
+    const next = performMove(state, move.from, move.to);
+    const ev = -quiescenceSearch(next, -beta, -alpha, -color);
+    if (ev >= beta) return beta;
+    if (ev > alpha) alpha = ev;
+  }
+  return alpha;
+}
+
+function negamax(state: GameState, depth: number, alpha: number, beta: number, color: number, useQuiescence: boolean = false): number {
+  if (depth === 0) {
+    return useQuiescence ? quiescenceSearch(state, alpha, beta, color) : color * evaluateBoard(state.board);
+  }
 
   const moves = getLegalMoves(state);
   if (moves.length === 0) {
-    if (isInCheck(state.board, state.turn)) return -100000 - depth; // Prefer shorter mate
-    return 0; // Stalemate
+    if (isInCheck(state.board, state.turn)) return -100000 - depth;
+    return 0;
   }
 
   // Move ordering: captures first
@@ -803,7 +834,7 @@ function negamax(state: GameState, depth: number, alpha: number, beta: number, c
   let maxEval = -Infinity;
   for (const move of moves) {
     const next = performMove(state, move.from, move.to);
-    const ev = -negamax(next, depth - 1, -beta, -alpha, -color);
+    const ev = -negamax(next, depth - 1, -beta, -alpha, -color, useQuiescence);
     maxEval = Math.max(maxEval, ev);
     alpha = Math.max(alpha, ev);
     if (alpha >= beta) break;
@@ -832,7 +863,7 @@ function posToCoord(pos: ChessPos): string {
   return 'abcdefgh'[pos.col] + (8 - pos.row);
 }
 
-function aiMove(state: GameState, history: MoveRecord[]): { from: ChessPos; to: ChessPos } | null {
+function aiMove(state: GameState, history: MoveRecord[], difficulty: string = 'Intermediate (1200 Elo)'): { from: ChessPos; to: ChessPos } | null {
   // 1. Opening Book Check
   const historyKey = history.map(m => posToCoord(m.from) + posToCoord(m.to)).join(',');
   if (OPENING_BOOK[historyKey]) {
@@ -842,9 +873,20 @@ function aiMove(state: GameState, history: MoveRecord[]): { from: ChessPos; to: 
   const moves = getLegalMoves(state);
   if (moves.length === 0) return null;
 
-  let bestMove = moves[0];
-  let bestValue = -Infinity;
-  const color = state.turn === 'w' ? 1 : -1;
+  // Difficulty settings
+  let depth = 3;
+  let fuzziness = 0;
+  let useQuiescence = false;
+  let blunderChance = 0;
+
+  if (difficulty === 'Beginner (600 Elo)') {
+    depth = 1;
+    fuzziness = 20;
+    blunderChance = 0.25;
+  } else if (difficulty === 'Advanced (1800+ Elo)') {
+    depth = 4;
+    useQuiescence = true;
+  }
 
   // Move ordering
   moves.sort((a, b) => {
@@ -853,15 +895,25 @@ function aiMove(state: GameState, history: MoveRecord[]): { from: ChessPos; to: 
     return (targetB ? PIECE_VALUES[targetB.type] : 0) - (targetA ? PIECE_VALUES[targetA.type] : 0);
   });
 
+  const color = state.turn === 'w' ? 1 : -1;
+  const moveEvaluations: { move: {from: ChessPos, to: ChessPos}, val: number }[] = [];
+
   for (const move of moves) {
     const next = performMove(state, move.from, move.to);
-    const val = -negamax(next, 3, -Infinity, Infinity, -color);
-    if (val > bestValue) {
-      bestValue = val;
-      bestMove = move;
-    }
+    const val = -negamax(next, depth - 1, -Infinity, Infinity, -color, useQuiescence);
+    moveEvaluations.push({ move, val });
   }
-  return bestMove;
+
+  // Sort by value descending
+  moveEvaluations.sort((a, b) => b.val - a.val);
+
+  // Handle blunders for Beginner
+  if (blunderChance > 0 && Math.random() < blunderChance && moveEvaluations.length > 1) {
+    const index = Math.min(moveEvaluations.length - 1, Math.floor(Math.random() * 2) + 1);
+    return moveEvaluations[index].move;
+  }
+
+  return moveEvaluations[0].move;
 }
 
 interface MoveRecord {
@@ -962,9 +1014,12 @@ const ChessBoard = ({
   );
 };
 
+type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)';
+
 function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: number) => void, soundEnabled: boolean, currentXp: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [difficulty, setDifficulty] = useState<Difficulty>('Intermediate (1200 Elo)');
   const [gameState, setGameState] = useState<GameState>({
     board: INIT_BOARD.map(r => r.map(p => p ? {...p} : null)),
     turn: 'w',
@@ -1176,7 +1231,7 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
 
         // AI Turn
         setTimeout(() => {
-          const aiMv = aiMove(nextState, updatedHistory);
+          const aiMv = aiMove(nextState, updatedHistory, difficulty);
           if (!aiMv) {
             const inCheck = isInCheck(nextState.board, 'b');
             if (inCheck) {
@@ -1321,6 +1376,46 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
   const materialBalance = valW - valB;
   const inCheck = !gameOver && isInCheck(gameState.board, 'w');
 
+  const calculateEloAssessment = () => {
+    if (history.length < 20) return { elo: null, feedback: "Game too short for accurate ELO assessment." };
+    
+    let baseElo = difficulty === 'Beginner (600 Elo)' ? 600 : difficulty === 'Intermediate (1200 Elo)' ? 1200 : 1800;
+    let performance = baseElo;
+
+    const lastMove = history[history.length - 1];
+    const isWin = gameOver && status.includes('Checkmate') && lastMove.player === 'w';
+    const isLoss = gameOver && (status.includes('Checkmate') || status.includes('resigned')) && lastMove.player === 'b';
+    const isDraw = gameOver && status.includes('Stalemate');
+
+    if (isWin) performance += 400;
+    else if (isLoss) performance -= 400;
+
+    // Refinement based on accuracy
+    const playerMoves = history.filter(m => m.player === 'w');
+    const blunders = playerMoves.filter(m => m.classification === 'Blunder').length;
+    const excellent = playerMoves.filter(m => m.classification === 'Excellent' || m.classification === 'Great' || m.classification === 'Best').length;
+    
+    const accuracyBonus = (excellent * 20) - (blunders * 50);
+    performance += accuracyBonus;
+
+    // Clamp ELO
+    performance = Math.max(400, Math.min(2500, performance));
+
+    let feedback = "";
+    if (performance < 800) feedback = "You are mastering the basics. Focus on piece safety.";
+    else if (performance < 1200) feedback = "You have a solid foundation. Work on simple tactics (pins, forks).";
+    else if (performance < 1500) feedback = "Strong intermediate play. Study endgames and opening principles.";
+    else feedback = "Advanced level confirmed. Highly strategic play observed.";
+
+    if (isLoss && blunders === 0 && excellent > 5) {
+      feedback = "Estimated Playing Strength: " + (performance + 200) + ". Loss due to minor inaccuracies.";
+    }
+
+    return { elo: Math.round(performance), feedback };
+  };
+
+  const eloAssessment = calculateEloAssessment();
+
   return (
     <div ref={containerRef} className={`flex flex-col items-center gap-4 p-4 transition-all relative ${isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-bg-dark overflow-auto py-12' : ''}`}>
       <button 
@@ -1333,6 +1428,18 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
 
       <div className="text-center">
         <h2 className="text-2xl font-bold text-accent-gold font-serif mb-1">Chess</h2>
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <select 
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+            disabled={history.length > 0 && !gameOver}
+            className="text-[10px] font-bold uppercase tracking-widest bg-ink/5 border-none rounded-full px-3 py-1 cursor-pointer hover:bg-ink/10 transition-all disabled:opacity-50"
+          >
+            <option>Beginner (600 Elo)</option>
+            <option>Intermediate (1200 Elo)</option>
+            <option>Advanced (1800+ Elo)</option>
+          </select>
+        </div>
         <p className={`text-sm font-medium ${inCheck ? 'text-red-500' : 'text-ink/70 dark:text-ink-dark/70'}`}>{status}</p>
       </div>
 
@@ -1512,7 +1619,18 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
                         <BarChart2 size={40} />
                       </div>
                       <h4 className="text-xl font-serif font-bold text-ink">Game Summary</h4>
-                      <p className="text-sm text-ink/60 max-w-xs">Click "Review Game" to step through every move and see engine analysis.</p>
+                      
+                      {eloAssessment.elo ? (
+                        <div className="bg-accent-gold/5 p-4 rounded-2xl border border-accent-gold/10 max-w-xs mx-auto">
+                          <div className="text-[10px] font-bold text-accent-gold uppercase tracking-widest mb-1">Performance Rating</div>
+                          <div className="text-3xl font-bold text-ink mb-2">{eloAssessment.elo}</div>
+                          <p className="text-xs text-ink/60 italic leading-relaxed">{eloAssessment.feedback}</p>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-ink/40 font-medium">{eloAssessment.feedback}</p>
+                      )}
+
+                      <p className="text-sm text-ink/60 max-w-xs mx-auto">Click "Review Game" to step through every move and see engine analysis.</p>
                       <button 
                         onClick={() => setReviewIndex(0)}
                         className="px-6 py-3 bg-ink text-white rounded-xl font-bold text-sm hover:bg-ink/90 transition-all shadow-lg"

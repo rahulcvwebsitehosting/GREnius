@@ -202,6 +202,2343 @@ export const GRE_QUANT: QuantQuestion[] = [
     options: ["1/2", "1/4", "1/8", "1/16", "1"],
     answer: "1/4",
     explanation: "The possible outcomes are HH, HT, TH, TT. Only HH is two heads. Probability = 1/4."
+  },
+  {
+    id: 21,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "2^5",
+    colB: "5^2",
+    answer: "A",
+    explanation: "2^5 = 32, 5^2 = 25. 32 > 25, so Quantity A is greater."
+  },
+  {
+    id: 22,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 4x - 12 = 20, what is the value of x + 5?",
+    options: ["8", "10", "13", "15", "18"],
+    answer: "13",
+    explanation: "4x - 12 = 20 => 4x = 32 => x = 8. Then x + 5 = 8 + 5 = 13."
+  },
+  {
+    id: 23,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A cylinder has a radius of 4 and a height of 10. What is its total surface area? (Use π = 3.14)",
+    answer: "351.68",
+    explanation: "Surface Area = 2πr² + 2πrh = 2 * 3.14 * 4² + 2 * 3.14 * 4 * 10 = 100.48 + 251.2 = 351.68."
+  },
+  {
+    id: 24,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The number of permutations of 4 distinct items",
+    colB: "The number of combinations of 5 items taken 2 at a time",
+    answer: "A",
+    explanation: "Permutations of 4 items = 4! = 24. Combinations of 5 items taken 2 at a time = 5C2 = 10. 24 > 10."
+  },
+  {
+    id: 25,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the greatest common factor of 36 and 54?",
+    options: ["6", "9", "12", "18", "24"],
+    answer: "18",
+    explanation: "Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36. Factors of 54: 1, 2, 3, 6, 9, 18, 27, 54. GCF is 18."
+  },
+  {
+    id: 26,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "A tank can be filled by Pipe A in 5 hours and by Pipe B in 10 hours. If both pipes are opened together, how many hours will it take to fill the tank?",
+    answer: "3.33",
+    explanation: "Rate A = 1/5, Rate B = 1/10. Combined Rate = 1/5 + 1/10 = 3/10. Time = 10/3 ≈ 3.33 hours."
+  },
+  {
+    id: 27,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x",
+    colB: "-2",
+    question: "3x + 7 = 1",
+    answer: "C",
+    explanation: "3x = -6 => x = -2. Both quantities are equal."
+  },
+  {
+    id: 28,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "In a triangle, the angles are in the ratio 2:3:5. What is the measure of the largest angle?",
+    options: ["54°", "72°", "90°", "108°", "120°"],
+    answer: "90°",
+    explanation: "2x + 3x + 5x = 180 => 10x = 180 => x = 18. Largest angle = 5x = 5 * 18 = 90°."
+  },
+  {
+    id: 29,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "The average of 7, 12, 15, x, and 20 is 14. What is the value of x?",
+    answer: "16",
+    explanation: "(7 + 12 + 15 + x + 20) / 5 = 14 => 54 + x = 70 => x = 16."
+  },
+  {
+    id: 30,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "√0.49",
+    colB: "0.7",
+    answer: "C",
+    explanation: "√0.49 = 0.7. Both quantities are equal."
+  },
+  {
+    id: 31,
+    type: "MC",
+    difficulty: 1,
+    topic: "Arithmetic",
+    question: "What is 15% of 400?",
+    options: ["40", "50", "60", "70", "80"],
+    answer: "60",
+    explanation: "0.15 * 400 = 60."
+  },
+  {
+    id: 32,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If f(x) = 2x² - 3x + 1, what is the value of f(-2)?",
+    answer: "15",
+    explanation: "f(-2) = 2(-2)² - 3(-2) + 1 = 2(4) + 6 + 1 = 8 + 6 + 1 = 15."
+  },
+  {
+    id: 33,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The area of a square with perimeter 24",
+    colB: "The area of a rectangle with length 8 and width 4",
+    answer: "A",
+    explanation: "Side of square = 24/4 = 6. Area = 6² = 36. Area of rectangle = 8 * 4 = 32. 36 > 32."
+  },
+  {
+    id: 34,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "A car travels 180 miles at an average speed of 60 mph and then returns at an average speed of 45 mph. What is the average speed for the entire trip?",
+    options: ["50", "51.4", "52.5", "53.3", "55"],
+    answer: "51.4",
+    explanation: "Total distance = 360 miles. Time 1 = 180/60 = 3 hrs. Time 2 = 180/45 = 4 hrs. Total time = 7 hrs. Average speed = 360/7 ≈ 51.4 mph."
+  },
+  {
+    id: 35,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of (3/4) / (1/2)?",
+    answer: "1.5",
+    explanation: "(3/4) * (2/1) = 6/4 = 1.5."
+  },
+  {
+    id: 36,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The probability of rolling a sum of 7 with two fair dice",
+    colB: "1/6",
+    answer: "C",
+    explanation: "Ways to get 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) - 6 ways. Total outcomes = 36. Probability = 6/36 = 1/6."
+  },
+  {
+    id: 37,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x/3 + 5 = 11, what is the value of x?",
+    options: ["12", "15", "18", "21", "24"],
+    answer: "18",
+    explanation: "x/3 = 6 => x = 18."
+  },
+  {
+    id: 38,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A sphere has a volume of 36π. What is its radius?",
+    answer: "3",
+    explanation: "Volume = (4/3)πr³ = 36π => (4/3)r³ = 36 => r³ = 27 => r = 3."
+  },
+  {
+    id: 39,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "0.003 * 100",
+    colB: "0.3",
+    answer: "C",
+    explanation: "0.003 * 100 = 0.3. Both quantities are equal."
+  },
+  {
+    id: 40,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If 3 workers can paint a house in 12 days, how many days would it take 4 workers to paint the same house?",
+    options: ["8", "9", "10", "11", "12"],
+    answer: "9",
+    explanation: "Total man-days = 3 * 12 = 36. Days for 4 workers = 36 / 4 = 9."
+  },
+  {
+    id: 41,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 2^(x-1) = 8, what is the value of x?",
+    answer: "4",
+    explanation: "2^(x-1) = 2³ => x - 1 = 3 => x = 4."
+  },
+  {
+    id: 42,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The length of the diagonal of a square with area 50",
+    colB: "10",
+    answer: "C",
+    explanation: "Area = s² = 50 => s = √50. Diagonal = s√2 = √50 * √2 = √100 = 10."
+  },
+  {
+    id: 43,
+    type: "MC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "In a set of 100 numbers, the 75th percentile is 80. How many numbers in the set are greater than 80?",
+    options: ["20", "24", "25", "75", "80"],
+    answer: "25",
+    explanation: "The 75th percentile means 75% of the data is at or below 80. Thus, 25% of the data is above 80. 25% of 100 is 25."
+  },
+  {
+    id: 44,
+    type: "NE",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 10! / (8! * 2!)?",
+    answer: "45",
+    explanation: "(10 * 9) / 2 = 45."
+  },
+  {
+    id: 45,
+    type: "QC",
+    difficulty: 1,
+    topic: "Arithmetic",
+    colA: "1/4 + 1/4",
+    colB: "1/2",
+    answer: "C",
+    explanation: "1/4 + 1/4 = 2/4 = 1/2. Both quantities are equal."
+  },
+  {
+    id: 46,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x + y = 12 and xy = 32, what is the value of x² + y²?",
+    options: ["64", "80", "100", "144", "208"],
+    answer: "80",
+    explanation: "(x + y)² = x² + y² + 2xy => 12² = x² + y² + 2(32) => 144 = x² + y² + 64 => x² + y² = 80."
+  },
+  {
+    id: 47,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "A jacket's price is reduced from $120 to $90. What is the percentage decrease?",
+    answer: "25",
+    explanation: "Decrease = 120 - 90 = 30. Percentage = (30/120) * 100 = 25%."
+  },
+  {
+    id: 48,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a circle with radius 5",
+    colB: "The area of a square with side 9",
+    answer: "B",
+    explanation: "Area of circle = 25π ≈ 78.5. Area of square = 9² = 81. 81 > 78.5."
+  },
+  {
+    id: 49,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "Which of the following is divisible by 9?",
+    options: ["123", "456", "789", "1011", "1359"],
+    answer: "1359",
+    explanation: "A number is divisible by 9 if the sum of its digits is divisible by 9. 1+3+5+9 = 18, which is divisible by 9."
+  },
+  {
+    id: 50,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "A bag contains 5 red, 3 blue, and 2 green marbles. If two marbles are drawn without replacement, what is the probability that both are red?",
+    answer: "2/9",
+    explanation: "P(first red) = 5/10 = 1/2. P(second red) = 4/9. Combined probability = (1/2) * (4/9) = 2/9."
+  },
+  {
+    id: 51,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x^2",
+    colB: "x^3",
+    question: "0 < x < 1",
+    answer: "A",
+    explanation: "For 0 < x < 1, higher powers of x result in smaller values. For example, if x = 0.5, x^2 = 0.25 and x^3 = 0.125."
+  },
+  {
+    id: 52,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the sum of the interior angles of an octagon?",
+    options: ["720°", "900°", "1080°", "1260°", "1440°"],
+    answer: "1080°",
+    explanation: "Sum = (n - 2) * 180°. For an octagon, n = 8. (8 - 2) * 180° = 6 * 180° = 1080°."
+  },
+  {
+    id: 53,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of 2^3 * 3^2?",
+    answer: "72",
+    explanation: "8 * 9 = 72."
+  },
+  {
+    id: 54,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The price of an item after a 20% increase followed by a 20% decrease",
+    colB: "The original price of the item",
+    answer: "B",
+    explanation: "Let original price be P. After 20% increase: 1.2P. After 20% decrease: 1.2P * 0.8 = 0.96P. 0.96P < P."
+  },
+  {
+    id: 55,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 3(x - 4) = 2(x + 1), what is the value of x?",
+    options: ["10", "12", "14", "16", "18"],
+    answer: "14",
+    explanation: "3x - 12 = 2x + 2 => x = 14."
+  },
+  {
+    id: 56,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A right triangle has a hypotenuse of 13 and one leg of 5. What is the area of the triangle?",
+    answer: "30",
+    explanation: "Other leg = √(13² - 5²) = √(169 - 25) = √144 = 12. Area = (1/2) * 5 * 12 = 30."
+  },
+  {
+    id: 57,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "15% of 60",
+    colB: "60% of 15",
+    answer: "C",
+    explanation: "0.15 * 60 = 9. 0.60 * 15 = 9. Both quantities are equal."
+  },
+  {
+    id: 58,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "If the standard deviation of a set of numbers is 5, what is the variance?",
+    options: ["2.5", "5", "10", "25", "50"],
+    answer: "25",
+    explanation: "Variance = (Standard Deviation)² = 5² = 25."
+  },
+  {
+    id: 59,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If y = 3x - 4 and x = 5, what is the value of y?",
+    answer: "11",
+    explanation: "y = 3(5) - 4 = 15 - 4 = 11."
+  },
+  {
+    id: 60,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "3^4",
+    colB: "4^3",
+    answer: "A",
+    explanation: "3^4 = 81, 4^3 = 64. 81 > 64."
+  },
+  {
+    id: 61,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person can type 60 words per minute, how many words can they type in 45 minutes?",
+    options: ["2400", "2500", "2600", "2700", "2800"],
+    answer: "2700",
+    explanation: "60 * 45 = 2700."
+  },
+  {
+    id: 62,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A rectangular solid has dimensions 2, 3, and 4. What is its total surface area?",
+    answer: "52",
+    explanation: "Surface Area = 2(lw + lh + wh) = 2(2*3 + 2*4 + 3*4) = 2(6 + 8 + 12) = 2(26) = 52."
+  },
+  {
+    id: 63,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x + 5",
+    colB: "10",
+    question: "2x - 3 = 7",
+    answer: "C",
+    explanation: "2x = 10 => x = 5. Then x + 5 = 10. Both quantities are equal."
+  },
+  {
+    id: 64,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the remainder when 123 is divided by 7?",
+    options: ["1", "2", "3", "4", "5"],
+    answer: "4",
+    explanation: "123 = 17 * 7 + 4. The remainder is 4."
+  },
+  {
+    id: 65,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "The median of the set {12, 5, 18, 7, 10} is what?",
+    answer: "10",
+    explanation: "Sorted set: {5, 7, 10, 12, 18}. The median is 10."
+  },
+  {
+    id: 66,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The circumference of a circle with radius 3",
+    colB: "18",
+    answer: "A",
+    explanation: "Circumference = 2πr = 6π ≈ 18.84. 18.84 > 18."
+  },
+  {
+    id: 67,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x² = 49, what is the value of (x + 1)(x - 1)?",
+    options: ["47", "48", "49", "50", "51"],
+    answer: "48",
+    explanation: "(x + 1)(x - 1) = x² - 1 = 49 - 1 = 48."
+  },
+  {
+    id: 68,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person drives at 50 mph for 3 hours and then at 60 mph for 2 hours, what is their average speed for the entire trip?",
+    answer: "54",
+    explanation: "Total distance = (50*3) + (60*2) = 150 + 120 = 270 miles. Total time = 5 hours. Average speed = 270 / 5 = 54 mph."
+  },
+  {
+    id: 69,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "√100 - √64",
+    colB: "√36",
+    answer: "B",
+    explanation: "√100 - √64 = 10 - 8 = 2. √36 = 6. 6 > 2."
+  },
+  {
+    id: 70,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of an equilateral triangle with side length 4?",
+    options: ["4", "4√2", "4√3", "8", "8√3"],
+    answer: "4√3",
+    explanation: "Area = (s²√3) / 4 = (4²√3) / 4 = 4√3."
+  },
+  {
+    id: 71,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 5x - 2 = 3x + 10, what is the value of x?",
+    answer: "6",
+    explanation: "2x = 12 => x = 6."
+  },
+  {
+    id: 72,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The number of ways to choose 3 items from 5",
+    colB: "The number of ways to choose 2 items from 5",
+    answer: "C",
+    explanation: "5C3 = 5C2 = 10. Both quantities are equal."
+  },
+  {
+    id: 73,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of 0.2 * 0.3 * 0.4?",
+    options: ["0.024", "0.24", "2.4", "0.0024", "0.00024"],
+    answer: "0.024",
+    explanation: "2 * 3 * 4 = 24. Move decimal 3 places. Result = 0.024."
+  },
+  {
+    id: 74,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person invests $2000 at 6% simple annual interest, how much will the investment be worth after 5 years?",
+    answer: "2600",
+    explanation: "Interest = 2000 * 0.06 * 5 = 600. Total value = 2000 + 600 = 2600."
+  },
+  {
+    id: 75,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The area of a circle with diameter 10",
+    colB: "25π",
+    answer: "C",
+    explanation: "Radius = 5. Area = πr² = 25π. Both are equal."
+  },
+  {
+    id: 76,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x/2 + y/3 = 5 and x = 4, what is the value of y?",
+    options: ["3", "6", "9", "12", "15"],
+    answer: "9",
+    explanation: "4/2 + y/3 = 5 => 2 + y/3 = 5 => y/3 = 3 => y = 9."
+  },
+  {
+    id: 77,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of 3^0 + 3^1 + 3^2?",
+    answer: "13",
+    explanation: "1 + 3 + 9 = 13."
+  },
+  {
+    id: 78,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The time it takes to travel 100 miles at 40 mph",
+    colB: "2.5 hours",
+    answer: "C",
+    explanation: "100 / 40 = 2.5. Both quantities are equal."
+  },
+  {
+    id: 79,
+    type: "MC",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the volume of a rectangular solid with dimensions 4, 5, and 6?",
+    options: ["100", "120", "140", "150", "160"],
+    answer: "120",
+    explanation: "Volume = 4 * 5 * 6 = 120."
+  },
+  {
+    id: 80,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "If a set of 5 numbers has a mean of 10, and a 6th number is added such that the new mean is 12, what is the 6th number?",
+    answer: "22",
+    explanation: "Sum of 5 numbers = 50. Sum of 6 numbers = 6 * 12 = 72. 6th number = 72 - 50 = 22."
+  },
+  {
+    id: 81,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x",
+    colB: "y",
+    question: "x + y = 10 and x - y = 2",
+    answer: "A",
+    explanation: "Add equations: 2x = 12 => x = 6. Then y = 4. 6 > 4."
+  },
+  {
+    id: 82,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the smallest positive integer that is a multiple of both 12 and 18?",
+    options: ["24", "30", "36", "48", "72"],
+    answer: "36",
+    explanation: "LCM of 12 and 18 is 36."
+  },
+  {
+    id: 83,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If 5 pounds of sugar cost $3.50, how much do 8 pounds cost?",
+    answer: "5.60",
+    explanation: "Cost per pound = 3.50 / 5 = 0.70. Cost for 8 pounds = 8 * 0.70 = 5.60."
+  },
+  {
+    id: 84,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a trapezoid with bases 8 and 12 and height 5",
+    colB: "50",
+    answer: "C",
+    explanation: "Area = 0.5 * (8 + 12) * 5 = 0.5 * 20 * 5 = 50. Both are equal."
+  },
+  {
+    id: 85,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If f(x) = x² - 2x, what is f(4)?",
+    options: ["4", "6", "8", "10", "12"],
+    answer: "8",
+    explanation: "f(4) = 4² - 2(4) = 16 - 8 = 8."
+  },
+  {
+    id: 86,
+    type: "NE",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the sum of the first 10 positive integers?",
+    answer: "55",
+    explanation: "Sum = (10 * 11) / 2 = 55."
+  },
+  {
+    id: 87,
+    type: "QC",
+    difficulty: 1,
+    topic: "Arithmetic",
+    colA: "0.5",
+    colB: "1/2",
+    answer: "C",
+    explanation: "0.5 = 1/2. Both quantities are equal."
+  },
+  {
+    id: 88,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "If a fair coin is flipped 4 times, what is the probability of getting exactly 4 heads?",
+    options: ["1/4", "1/8", "1/16", "1/32", "1/64"],
+    answer: "1/16",
+    explanation: "Probability = (1/2)^4 = 1/16."
+  },
+  {
+    id: 89,
+    type: "NE",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the perimeter of a square with area 81?",
+    answer: "36",
+    explanation: "Side = √81 = 9. Perimeter = 4 * 9 = 36."
+  },
+  {
+    id: 90,
+    type: "QC",
+    difficulty: 3,
+    topic: "Algebra",
+    colA: "x",
+    colB: "1",
+    question: "x² + 2x + 1 = 0",
+    answer: "B",
+    explanation: "(x + 1)² = 0 => x = -1. 1 > -1."
+  },
+  {
+    id: 91,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of 1.2 * 0.5?",
+    options: ["0.06", "0.6", "6", "60", "0.006"],
+    answer: "0.6",
+    explanation: "1.2 * 0.5 = 0.6."
+  },
+  {
+    id: 92,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person can paint a room in 6 hours, what fraction of the room can they paint in 2 hours?",
+    answer: "1/3",
+    explanation: "2 / 6 = 1/3."
+  },
+  {
+    id: 93,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The average of {10, 20, 30, 40, 50}",
+    colB: "30",
+    answer: "C",
+    explanation: "Average = 150 / 5 = 30. Both are equal."
+  },
+  {
+    id: 94,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A circle has an area of 49π. What is its circumference?",
+    options: ["7π", "14π", "21π", "28π", "49π"],
+    answer: "14π",
+    explanation: "Area = πr² = 49π => r = 7. Circumference = 2πr = 14π."
+  },
+  {
+    id: 95,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 4x + 3 = 19, what is the value of x?",
+    answer: "4",
+    explanation: "4x = 16 => x = 4."
+  },
+  {
+    id: 96,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "√2 + √2",
+    colB: "√8",
+    answer: "C",
+    explanation: "√2 + √2 = 2√2. √8 = √(4*2) = 2√2. Both are equal."
+  },
+  {
+    id: 97,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person buys 3 shirts for $15 each and 2 pairs of pants for $30 each, what is the total cost?",
+    options: ["$75", "$90", "$105", "$120", "$135"],
+    answer: "$105",
+    explanation: "(3 * 15) + (2 * 30) = 45 + 60 = 105."
+  },
+  {
+    id: 98,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "In how many ways can 4 people be seated in a row of 4 chairs?",
+    answer: "24",
+    explanation: "4! = 4 * 3 * 2 * 1 = 24."
+  },
+  {
+    id: 99,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The area of a rectangle with length 12 and width 5",
+    colB: "60",
+    answer: "C",
+    explanation: "Area = 12 * 5 = 60. Both are equal."
+  },
+  {
+    id: 100,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x² - 9 = 0, what is the sum of the possible values of x?",
+    options: ["-3", "0", "3", "6", "9"],
+    answer: "0",
+    explanation: "x² = 9 => x = 3 or x = -3. Sum = 3 + (-3) = 0."
+  },
+  {
+    id: 101,
+    type: "NE",
+    difficulty: 1,
+    topic: "Arithmetic",
+    question: "What is the value of 100 / 0.5?",
+    answer: "200",
+    explanation: "100 / 0.5 = 200."
+  },
+  {
+    id: 102,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The price of an item after a 50% discount",
+    colB: "Half the original price of the item",
+    answer: "C",
+    explanation: "A 50% discount is the same as half the price. Both are equal."
+  },
+  {
+    id: 103,
+    type: "MC",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the measure of each interior angle of a regular pentagon?",
+    options: ["72°", "108°", "120°", "144°", "180°"],
+    answer: "108°",
+    explanation: "Sum = (5-2)*180 = 540. Each angle = 540 / 5 = 108°."
+  },
+  {
+    id: 104,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If 3^(x+2) = 27, what is the value of x?",
+    answer: "1",
+    explanation: "3^(x+2) = 3³ => x + 2 = 3 => x = 1."
+  },
+  {
+    id: 105,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "10% of 50",
+    colB: "5",
+    answer: "C",
+    explanation: "0.10 * 50 = 5. Both are equal."
+  },
+  {
+    id: 106,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a car travels at 60 mph, how many miles does it travel in 15 minutes?",
+    options: ["10", "12", "15", "18", "20"],
+    answer: "15",
+    explanation: "15 minutes = 0.25 hours. Distance = 60 * 0.25 = 15 miles."
+  },
+  {
+    id: 107,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the average of {2, 4, 6, 8, 10, 12}?",
+    answer: "7",
+    explanation: "Sum = 42. Average = 42 / 6 = 7."
+  },
+  {
+    id: 108,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a circle with radius 1",
+    colB: "π",
+    answer: "C",
+    explanation: "Area = π(1)² = π. Both are equal."
+  },
+  {
+    id: 109,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x = 2 and y = 3, what is the value of 2x + 3y?",
+    options: ["10", "11", "12", "13", "14"],
+    answer: "13",
+    explanation: "2(2) + 3(3) = 4 + 9 = 13."
+  },
+  {
+    id: 110,
+    type: "NE",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 2^4 - 2^3?",
+    answer: "8",
+    explanation: "16 - 8 = 8."
+  },
+  {
+    id: 111,
+    type: "QC",
+    difficulty: 2,
+    topic: "Word Problems",
+    colA: "The number of seconds in 10 minutes",
+    colB: "600",
+    answer: "C",
+    explanation: "10 * 60 = 600. Both are equal."
+  },
+  {
+    id: 112,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "If a set of 4 numbers has a mean of 5, what is the sum of the numbers?",
+    options: ["10", "15", "20", "25", "30"],
+    answer: "20",
+    explanation: "Sum = Mean * Count = 5 * 4 = 20."
+  },
+  {
+    id: 113,
+    type: "NE",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the area of a triangle with base 10 and height 5?",
+    answer: "25",
+    explanation: "Area = 0.5 * 10 * 5 = 25."
+  },
+  {
+    id: 114,
+    type: "QC",
+    difficulty: 3,
+    topic: "Algebra",
+    colA: "x",
+    colB: "5",
+    question: "x/2 + 3 = 5.5",
+    answer: "C",
+    explanation: "x/2 = 2.5 => x = 5. Both are equal."
+  },
+  {
+    id: 115,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of 0.1 + 0.01 + 0.001?",
+    options: ["0.111", "0.3", "0.0111", "1.11", "0.11"],
+    answer: "0.111",
+    explanation: "0.1 + 0.01 + 0.001 = 0.111."
+  },
+  {
+    id: 116,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person can read 20 pages in 30 minutes, how many pages can they read in 3 hours?",
+    answer: "120",
+    explanation: "Rate = 20/30 = 2/3 pages/min. 3 hours = 180 minutes. Pages = (2/3) * 180 = 120."
+  },
+  {
+    id: 117,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The range of {10, 20, 30}",
+    colB: "20",
+    answer: "C",
+    explanation: "Range = 30 - 10 = 20. Both are equal."
+  },
+  {
+    id: 118,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square if its diagonal is √2?",
+    options: ["1", "2", "4", "√2", "0.5"],
+    answer: "1",
+    explanation: "Diagonal = s√2 => √2 = s√2 => s = 1. Area = 1² = 1."
+  },
+  {
+    id: 119,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 3x + 2 = 11, what is the value of x?",
+    answer: "3",
+    explanation: "3x = 9 => x = 3."
+  },
+  {
+    id: 120,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "2^10",
+    colB: "1000",
+    answer: "A",
+    explanation: "2^10 = 1024. 1024 > 1000."
+  },
+  {
+    id: 121,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x + y",
+    colB: "10",
+    question: "x = 4, y = 6",
+    answer: "C",
+    explanation: "4 + 6 = 10. Both quantities are equal."
+  },
+  {
+    id: 122,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A cylinder has a radius of 5 and a height of 12. What is its volume? (Use π = 3.14)",
+    options: ["314", "628", "942", "1256", "1570"],
+    answer: "942",
+    explanation: "Volume = πr²h = 3.14 * 5² * 12 = 3.14 * 25 * 12 = 942."
+  },
+  {
+    id: 123,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of (2/5) * (10/3)?",
+    answer: "1.33",
+    explanation: "20 / 15 = 4/3 ≈ 1.33."
+  },
+  {
+    id: 124,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The number of ways to arrange 5 people in a circle",
+    colB: "24",
+    answer: "C",
+    explanation: "Circular arrangement of n items = (n-1)! = 4! = 24. Both are equal."
+  },
+  {
+    id: 125,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person can walk 10 miles in 2.5 hours, what is their speed in mph?",
+    options: ["3", "4", "5", "6", "7"],
+    answer: "4",
+    explanation: "Speed = Distance / Time = 10 / 2.5 = 4 mph."
+  },
+  {
+    id: 126,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x² - 7x + 12 = 0, what is the product of the possible values of x?",
+    answer: "12",
+    explanation: "Product of roots = c/a = 12/1 = 12."
+  },
+  {
+    id: 127,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The perimeter of a rectangle with length 15 and width 5",
+    colB: "40",
+    answer: "C",
+    explanation: "Perimeter = 2(15 + 5) = 40. Both are equal."
+  },
+  {
+    id: 128,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 5^3 - 4^3?",
+    options: ["61", "71", "81", "91", "101"],
+    answer: "61",
+    explanation: "125 - 64 = 61."
+  },
+  {
+    id: 129,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "The average of 10, 20, 30, 40 is what?",
+    answer: "25",
+    explanation: "100 / 4 = 25."
+  },
+  {
+    id: 130,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The price of an item after a 25% increase",
+    colB: "1.25 times the original price",
+    answer: "C",
+    explanation: "A 25% increase is the same as multiplying by 1.25. Both are equal."
+  },
+  {
+    id: 131,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 2x + 5 = 15, what is the value of x - 2?",
+    options: ["1", "2", "3", "4", "5"],
+    answer: "3",
+    explanation: "2x = 10 => x = 5. Then x - 2 = 3."
+  },
+  {
+    id: 132,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A right triangle has legs of 8 and 15. What is the length of the hypotenuse?",
+    answer: "17",
+    explanation: "√(8² + 15²) = √(64 + 225) = √289 = 17."
+  },
+  {
+    id: 133,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "0.25 * 4",
+    colB: "1",
+    answer: "C",
+    explanation: "0.25 * 4 = 1. Both are equal."
+  },
+  {
+    id: 134,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "If a set of 6 numbers has a mean of 15, what is the sum of the numbers?",
+    options: ["60", "75", "90", "105", "120"],
+    answer: "90",
+    explanation: "Sum = 15 * 6 = 90."
+  },
+  {
+    id: 135,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $100 per month, how many months will it take to save $2500?",
+    answer: "25",
+    explanation: "2500 / 100 = 25."
+  },
+  {
+    id: 136,
+    type: "QC",
+    difficulty: 3,
+    topic: "Algebra",
+    colA: "x^2",
+    colB: "9",
+    question: "x = -3",
+    answer: "C",
+    explanation: "(-3)² = 9. Both are equal."
+  },
+  {
+    id: 137,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is the value of (1/4) + (1/2)?",
+    options: ["1/2", "3/4", "1", "5/4", "3/2"],
+    answer: "3/4",
+    explanation: "1/4 + 2/4 = 3/4."
+  },
+  {
+    id: 138,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "A square has an area of 144. What is its perimeter?",
+    answer: "48",
+    explanation: "Side = √144 = 12. Perimeter = 4 * 12 = 48."
+  },
+  {
+    id: 139,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The median of {1, 3, 5, 7, 9}",
+    colB: "5",
+    answer: "C",
+    explanation: "Median is 5. Both are equal."
+  },
+  {
+    id: 140,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If 5 workers can build a wall in 4 hours, how many hours would it take 2 workers to build the same wall?",
+    options: ["8", "10", "12", "14", "16"],
+    answer: "10",
+    explanation: "Total man-hours = 5 * 4 = 20. Hours for 2 workers = 20 / 2 = 10."
+  },
+  {
+    id: 141,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If 3x - 4 = 11, what is the value of x?",
+    answer: "5",
+    explanation: "3x = 15 => x = 5."
+  },
+  {
+    id: 142,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "√100",
+    colB: "10",
+    answer: "C",
+    explanation: "√100 = 10. Both are equal."
+  },
+  {
+    id: 143,
+    type: "MC",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the area of a rectangle with length 10 and width 4?",
+    options: ["20", "30", "40", "50", "60"],
+    answer: "40",
+    explanation: "10 * 4 = 40."
+  },
+  {
+    id: 144,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person drives at 60 mph, how many minutes does it take to travel 30 miles?",
+    answer: "30",
+    explanation: "Time = 30/60 = 0.5 hours = 30 minutes."
+  },
+  {
+    id: 145,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The average of {5, 15}",
+    colB: "10",
+    answer: "C",
+    explanation: "20 / 2 = 10. Both are equal."
+  },
+  {
+    id: 146,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x + y = 10 and x - y = 4, what is the value of x?",
+    options: ["3", "5", "7", "9", "11"],
+    answer: "7",
+    explanation: "2x = 14 => x = 7."
+  },
+  {
+    id: 147,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 20% of 150?",
+    answer: "30",
+    explanation: "0.20 * 150 = 30."
+  },
+  {
+    id: 148,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a circle with radius 2",
+    colB: "4π",
+    answer: "C",
+    explanation: "Area = π(2)² = 4π. Both are equal."
+  },
+  {
+    id: 149,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person buys 4 items for $10 each, what is the total cost?",
+    options: ["$20", "$30", "$40", "$50", "$60"],
+    answer: "$40",
+    explanation: "4 * 10 = 40."
+  },
+  {
+    id: 150,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "In how many ways can 3 items be chosen from 5?",
+    answer: "10",
+    explanation: "5C3 = 10."
+  },
+  {
+    id: 151,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x + 2",
+    colB: "5",
+    question: "x = 3",
+    answer: "C",
+    explanation: "3 + 2 = 5. Both are equal."
+  },
+  {
+    id: 152,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 2^5 - 2^4?",
+    options: ["8", "12", "16", "24", "32"],
+    answer: "16",
+    explanation: "32 - 16 = 16."
+  },
+  {
+    id: 153,
+    type: "NE",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the perimeter of a rectangle with length 8 and width 6?",
+    answer: "28",
+    explanation: "2(8 + 6) = 28."
+  },
+  {
+    id: 154,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The number of minutes in 1.5 hours",
+    colB: "90",
+    answer: "C",
+    explanation: "1.5 * 60 = 90. Both are equal."
+  },
+  {
+    id: 155,
+    type: "MC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the average of {10, 20, 30}?",
+    options: ["10", "15", "20", "25", "30"],
+    answer: "20",
+    explanation: "60 / 3 = 20."
+  },
+  {
+    id: 156,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If 2x + 3 = 11, what is the value of x?",
+    answer: "4",
+    explanation: "2x = 8 => x = 4."
+  },
+  {
+    id: 157,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "0.1 * 10",
+    colB: "1",
+    answer: "C",
+    explanation: "0.1 * 10 = 1. Both are equal."
+  },
+  {
+    id: 158,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 5?",
+    options: ["10", "15", "20", "25", "30"],
+    answer: "25",
+    explanation: "5 * 5 = 25."
+  },
+  {
+    id: 159,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $20 per week, how many weeks will it take to save $400?",
+    answer: "20",
+    explanation: "400 / 20 = 20."
+  },
+  {
+    id: 160,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The probability of rolling a 1 on a fair die",
+    colB: "1/6",
+    answer: "C",
+    explanation: "Probability is 1/6. Both are equal."
+  },
+  {
+    id: 161,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x = 5, what is the value of x²?",
+    options: ["10", "15", "20", "25", "30"],
+    answer: "25",
+    explanation: "5 * 5 = 25."
+  },
+  {
+    id: 162,
+    type: "NE",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 3^3?",
+    answer: "27",
+    explanation: "3 * 3 * 3 = 27."
+  },
+  {
+    id: 163,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The area of a rectangle with length 6 and width 4",
+    colB: "24",
+    answer: "C",
+    explanation: "6 * 4 = 24. Both are equal."
+  },
+  {
+    id: 164,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person drives at 40 mph for 2 hours, how many miles do they travel?",
+    options: ["60", "70", "80", "90", "100"],
+    answer: "80",
+    explanation: "40 * 2 = 80."
+  },
+  {
+    id: 165,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the median of {10, 20, 30}?",
+    answer: "20",
+    explanation: "Median is 20."
+  },
+  {
+    id: 166,
+    type: "QC",
+    difficulty: 3,
+    topic: "Algebra",
+    colA: "x + 1",
+    colB: "4",
+    question: "x = 3",
+    answer: "C",
+    explanation: "3 + 1 = 4. Both are equal."
+  },
+  {
+    id: 167,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 50% of 80?",
+    options: ["30", "40", "50", "60", "70"],
+    answer: "40",
+    explanation: "0.50 * 80 = 40."
+  },
+  {
+    id: 168,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 4?",
+    answer: "16",
+    explanation: "4 * 4 = 16."
+  },
+  {
+    id: 169,
+    type: "QC",
+    difficulty: 2,
+    topic: "Word Problems",
+    colA: "The number of hours in 2 days",
+    colB: "48",
+    answer: "C",
+    explanation: "2 * 24 = 48. Both are equal."
+  },
+  {
+    id: 170,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "What is the average of {1, 2, 3, 4, 5}?",
+    options: ["1", "2", "3", "4", "5"],
+    answer: "3",
+    explanation: "15 / 5 = 3."
+  },
+  {
+    id: 171,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x - 5 = 10, what is the value of x?",
+    answer: "15",
+    explanation: "x = 15."
+  },
+  {
+    id: 172,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "2 * 3",
+    colB: "6",
+    answer: "C",
+    explanation: "2 * 3 = 6. Both are equal."
+  },
+  {
+    id: 173,
+    type: "MC",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the perimeter of a square with side 3?",
+    options: ["6", "9", "12", "15", "18"],
+    answer: "12",
+    explanation: "4 * 3 = 12."
+  },
+  {
+    id: 174,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person buys 2 items for $5 each, what is the total cost?",
+    answer: "10",
+    explanation: "2 * 5 = 10."
+  },
+  {
+    id: 175,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The average of {10, 10}",
+    colB: "10",
+    answer: "C",
+    explanation: "20 / 2 = 10. Both are equal."
+  },
+  {
+    id: 176,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x = 1, what is the value of x + 5?",
+    options: ["4", "5", "6", "7", "8"],
+    answer: "6",
+    explanation: "1 + 5 = 6."
+  },
+  {
+    id: 177,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 10% of 200?",
+    answer: "20",
+    explanation: "0.10 * 200 = 20."
+  },
+  {
+    id: 178,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a circle with radius 1",
+    colB: "π",
+    answer: "C",
+    explanation: "Area = π(1)² = π. Both are equal."
+  },
+  {
+    id: 179,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $10 per day, how many days will it take to save $100?",
+    options: ["5", "10", "15", "20", "25"],
+    answer: "10",
+    explanation: "100 / 10 = 10."
+  },
+  {
+    id: 180,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "In how many ways can 2 items be chosen from 4?",
+    answer: "6",
+    explanation: "4C2 = 6."
+  },
+  {
+    id: 181,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x",
+    colB: "2",
+    question: "x + 3 = 5",
+    answer: "C",
+    explanation: "x = 2. Both are equal."
+  },
+  {
+    id: 182,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 2^3?",
+    options: ["4", "6", "8", "10", "12"],
+    answer: "8",
+    explanation: "2 * 2 * 2 = 8."
+  },
+  {
+    id: 183,
+    type: "NE",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the area of a rectangle with length 5 and width 2?",
+    answer: "10",
+    explanation: "5 * 2 = 10."
+  },
+  {
+    id: 184,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The number of minutes in 1 hour",
+    colB: "60",
+    answer: "C",
+    explanation: "60 minutes = 1 hour. Both are equal."
+  },
+  {
+    id: 185,
+    type: "MC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the average of {2, 4}?",
+    options: ["2", "3", "4", "5", "6"],
+    answer: "3",
+    explanation: "6 / 2 = 3."
+  },
+  {
+    id: 186,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x + 2 = 4, what is the value of x?",
+    answer: "2",
+    explanation: "x = 2."
+  },
+  {
+    id: 187,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "0.5 * 2",
+    colB: "1",
+    answer: "C",
+    explanation: "0.5 * 2 = 1. Both are equal."
+  },
+  {
+    id: 188,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 2?",
+    options: ["2", "4", "6", "8", "10"],
+    answer: "4",
+    explanation: "2 * 2 = 4."
+  },
+  {
+    id: 189,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $5 per day, how many days will it take to save $50?",
+    answer: "10",
+    explanation: "50 / 5 = 10."
+  },
+  {
+    id: 190,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The probability of rolling a 6 on a fair die",
+    colB: "1/6",
+    answer: "C",
+    explanation: "Probability is 1/6. Both are equal."
+  },
+  {
+    id: 191,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x = 3, what is the value of x + 2?",
+    options: ["3", "4", "5", "6", "7"],
+    answer: "5",
+    explanation: "3 + 2 = 5."
+  },
+  {
+    id: 192,
+    type: "NE",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 10^2?",
+    answer: "100",
+    explanation: "10 * 10 = 100."
+  },
+  {
+    id: 193,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The area of a rectangle with length 4 and width 2",
+    colB: "8",
+    answer: "C",
+    explanation: "4 * 2 = 8. Both are equal."
+  },
+  {
+    id: 194,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person drives at 30 mph for 2 hours, how many miles do they travel?",
+    options: ["40", "50", "60", "70", "80"],
+    answer: "60",
+    explanation: "30 * 2 = 60."
+  },
+  {
+    id: 195,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the median of {1, 2, 3}?",
+    answer: "2",
+    explanation: "Median is 2."
+  },
+  {
+    id: 196,
+    type: "QC",
+    difficulty: 3,
+    topic: "Algebra",
+    colA: "x",
+    colB: "1",
+    question: "x + 1 = 2",
+    answer: "C",
+    explanation: "x = 1. Both are equal."
+  },
+  {
+    id: 197,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 25% of 40?",
+    options: ["5", "10", "15", "20", "25"],
+    answer: "10",
+    explanation: "0.25 * 40 = 10."
+  },
+  {
+    id: 198,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 3?",
+    answer: "9",
+    explanation: "3 * 3 = 9."
+  },
+  {
+    id: 199,
+    type: "QC",
+    difficulty: 2,
+    topic: "Word Problems",
+    colA: "The number of minutes in 0.5 hours",
+    colB: "30",
+    answer: "C",
+    explanation: "0.5 * 60 = 30. Both are equal."
+  },
+  {
+    id: 200,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "What is the average of {10, 20}?",
+    options: ["10", "15", "20", "25", "30"],
+    answer: "15",
+    explanation: "30 / 2 = 15."
+  },
+  {
+    id: 201,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x + 5 = 10, what is the value of x?",
+    answer: "5",
+    explanation: "x = 5."
+  },
+  {
+    id: 202,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "1 + 1",
+    colB: "2",
+    answer: "C",
+    explanation: "1 + 1 = 2. Both are equal."
+  },
+  {
+    id: 203,
+    type: "MC",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the perimeter of a square with side 2?",
+    options: ["4", "6", "8", "10", "12"],
+    answer: "8",
+    explanation: "4 * 2 = 8."
+  },
+  {
+    id: 204,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person buys 1 item for $5, what is the total cost?",
+    answer: "5",
+    explanation: "1 * 5 = 5."
+  },
+  {
+    id: 205,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The average of {5, 5}",
+    colB: "5",
+    answer: "C",
+    explanation: "10 / 2 = 5. Both are equal."
+  },
+  {
+    id: 206,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x = 0, what is the value of x + 1?",
+    options: ["0", "1", "2", "3", "4"],
+    answer: "1",
+    explanation: "0 + 1 = 1."
+  },
+  {
+    id: 207,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 10% of 100?",
+    answer: "10",
+    explanation: "0.10 * 100 = 10."
+  },
+  {
+    id: 208,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a circle with radius 0",
+    colB: "0",
+    answer: "C",
+    explanation: "Area = π(0)² = 0. Both are equal."
+  },
+  {
+    id: 209,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $1 per day, how many days will it take to save $10?",
+    options: ["5", "10", "15", "20", "25"],
+    answer: "10",
+    explanation: "10 / 1 = 10."
+  },
+  {
+    id: 210,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "In how many ways can 1 item be chosen from 5?",
+    answer: "5",
+    explanation: "5C1 = 5."
+  },
+  {
+    id: 211,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x",
+    colB: "0",
+    question: "x + 1 = 1",
+    answer: "C",
+    explanation: "x = 0. Both are equal."
+  },
+  {
+    id: 212,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 1^10?",
+    options: ["0", "1", "10", "100", "1000"],
+    answer: "1",
+    explanation: "1 raised to any power is 1."
+  },
+  {
+    id: 213,
+    type: "NE",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the area of a rectangle with length 1 and width 1?",
+    answer: "1",
+    explanation: "1 * 1 = 1."
+  },
+  {
+    id: 214,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The number of seconds in 1 minute",
+    colB: "60",
+    answer: "C",
+    explanation: "60 seconds = 1 minute. Both are equal."
+  },
+  {
+    id: 215,
+    type: "MC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the average of {1, 1}?",
+    options: ["0", "1", "2", "3", "4"],
+    answer: "1",
+    explanation: "2 / 2 = 1."
+  },
+  {
+    id: 216,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x + 1 = 1, what is the value of x?",
+    answer: "0",
+    explanation: "x = 0."
+  },
+  {
+    id: 217,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "0 * 10",
+    colB: "0",
+    answer: "C",
+    explanation: "0 * 10 = 0. Both are equal."
+  },
+  {
+    id: 218,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 1?",
+    options: ["0", "1", "2", "3", "4"],
+    answer: "1",
+    explanation: "1 * 1 = 1."
+  },
+  {
+    id: 219,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $0 per day, how many days will it take to save $10?",
+    answer: "Never",
+    explanation: "Saving $0 per day will never reach $10."
+  },
+  {
+    id: 220,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The probability of rolling a 7 on a fair die",
+    colB: "0",
+    answer: "C",
+    explanation: "A fair die only has numbers 1-6. Probability of rolling a 7 is 0. Both are equal."
+  },
+  {
+    id: 221,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x + 10",
+    colB: "20",
+    question: "x = 10",
+    answer: "C",
+    explanation: "10 + 10 = 20. Both are equal."
+  },
+  {
+    id: 222,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a circle with radius 10?",
+    options: ["10π", "20π", "50π", "100π", "200π"],
+    answer: "100π",
+    explanation: "πr² = π(10)² = 100π."
+  },
+  {
+    id: 223,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 10% of 500?",
+    answer: "50",
+    explanation: "0.10 * 500 = 50."
+  },
+  {
+    id: 224,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The number of ways to choose 1 item from 10",
+    colB: "10",
+    answer: "C",
+    explanation: "10C1 = 10. Both are equal."
+  },
+  {
+    id: 225,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $100 per week, how many weeks will it take to save $1000?",
+    options: ["5", "10", "15", "20", "25"],
+    answer: "10",
+    explanation: "1000 / 100 = 10."
+  },
+  {
+    id: 226,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x + 10 = 20, what is the value of x?",
+    answer: "10",
+    explanation: "x = 10."
+  },
+  {
+    id: 227,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "1 * 1",
+    colB: "1",
+    answer: "C",
+    explanation: "1 * 1 = 1. Both are equal."
+  },
+  {
+    id: 228,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the perimeter of a square with side 10?",
+    options: ["10", "20", "30", "40", "50"],
+    answer: "40",
+    explanation: "4 * 10 = 40."
+  },
+  {
+    id: 229,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person buys 10 items for $1 each, what is the total cost?",
+    answer: "10",
+    explanation: "10 * 1 = 10."
+  },
+  {
+    id: 230,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The average of {1, 1, 1, 1, 1}",
+    colB: "1",
+    answer: "C",
+    explanation: "5 / 5 = 1. Both are equal."
+  },
+  {
+    id: 231,
+    type: "MC",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x = 10, what is the value of x + 10?",
+    options: ["10", "20", "30", "40", "50"],
+    answer: "20",
+    explanation: "10 + 10 = 20."
+  },
+  {
+    id: 232,
+    type: "NE",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is 10^3?",
+    answer: "1000",
+    explanation: "10 * 10 * 10 = 1000."
+  },
+  {
+    id: 233,
+    type: "QC",
+    difficulty: 2,
+    topic: "Geometry",
+    colA: "The area of a rectangle with length 10 and width 1",
+    colB: "10",
+    answer: "C",
+    explanation: "10 * 1 = 10. Both are equal."
+  },
+  {
+    id: 234,
+    type: "MC",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person drives at 10 mph for 10 hours, how many miles do they travel?",
+    options: ["10", "50", "100", "150", "200"],
+    answer: "100",
+    explanation: "10 * 10 = 100."
+  },
+  {
+    id: 235,
+    type: "NE",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the median of {1, 1, 1}?",
+    answer: "1",
+    explanation: "Median is 1."
+  },
+  {
+    id: 236,
+    type: "QC",
+    difficulty: 3,
+    topic: "Algebra",
+    colA: "x",
+    colB: "10",
+    question: "x + 10 = 20",
+    answer: "C",
+    explanation: "x = 10. Both are equal."
+  },
+  {
+    id: 237,
+    type: "MC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 10% of 10?",
+    options: ["0.1", "1", "10", "100", "1000"],
+    answer: "1",
+    explanation: "0.10 * 10 = 1."
+  },
+  {
+    id: 238,
+    type: "NE",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 1?",
+    answer: "1",
+    explanation: "1 * 1 = 1."
+  },
+  {
+    id: 239,
+    type: "QC",
+    difficulty: 2,
+    topic: "Word Problems",
+    colA: "The number of minutes in 1 hour",
+    colB: "60",
+    answer: "C",
+    explanation: "60 minutes = 1 hour. Both are equal."
+  },
+  {
+    id: 240,
+    type: "MC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "What is the average of {10, 10, 10}?",
+    options: ["0", "5", "10", "15", "20"],
+    answer: "10",
+    explanation: "30 / 3 = 10."
+  },
+  {
+    id: 241,
+    type: "NE",
+    difficulty: 2,
+    topic: "Algebra",
+    question: "If x + 1 = 2, what is the value of x?",
+    answer: "1",
+    explanation: "x = 1."
+  },
+  {
+    id: 242,
+    type: "QC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    colA: "1 * 10",
+    colB: "10",
+    answer: "C",
+    explanation: "1 * 10 = 10. Both are equal."
+  },
+  {
+    id: 243,
+    type: "MC",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the perimeter of a square with side 1?",
+    options: ["1", "2", "3", "4", "5"],
+    answer: "4",
+    explanation: "4 * 1 = 4."
+  },
+  {
+    id: 244,
+    type: "NE",
+    difficulty: 3,
+    topic: "Word Problems",
+    question: "If a person buys 1 item for $1, what is the total cost?",
+    answer: "1",
+    explanation: "1 * 1 = 1."
+  },
+  {
+    id: 245,
+    type: "QC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    colA: "The average of {1, 1}",
+    colB: "1",
+    answer: "C",
+    explanation: "2 / 2 = 1. Both are equal."
+  },
+  {
+    id: 246,
+    type: "MC",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x = 1, what is the value of x + 1?",
+    options: ["0", "1", "2", "3", "4"],
+    answer: "2",
+    explanation: "1 + 1 = 2."
+  },
+  {
+    id: 247,
+    type: "NE",
+    difficulty: 2,
+    topic: "Arithmetic",
+    question: "What is 100% of 100?",
+    answer: "100",
+    explanation: "1.00 * 100 = 100."
+  },
+  {
+    id: 248,
+    type: "QC",
+    difficulty: 3,
+    topic: "Geometry",
+    colA: "The area of a circle with radius 0",
+    colB: "0",
+    answer: "C",
+    explanation: "Area = π(0)² = 0. Both are equal."
+  },
+  {
+    id: 249,
+    type: "MC",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $10 per day, how many days will it take to save $100?",
+    options: ["5", "10", "15", "20", "25"],
+    answer: "10",
+    explanation: "100 / 10 = 10."
+  },
+  {
+    id: 250,
+    type: "NE",
+    difficulty: 3,
+    topic: "Data Analysis",
+    question: "In how many ways can 1 item be chosen from 10?",
+    answer: "10",
+    explanation: "10C1 = 10."
+  },
+  {
+    id: 251,
+    type: "QC",
+    difficulty: 2,
+    topic: "Algebra",
+    colA: "x",
+    colB: "1",
+    question: "x + 1 = 2",
+    answer: "C",
+    explanation: "x = 1. Both are equal."
+  },
+  {
+    id: 252,
+    type: "MC",
+    difficulty: 3,
+    topic: "Arithmetic",
+    question: "What is the value of 1^100?",
+    options: ["0", "1", "10", "100", "1000"],
+    answer: "1",
+    explanation: "1 raised to any power is 1."
+  },
+  {
+    id: 253,
+    type: "NE",
+    difficulty: 2,
+    topic: "Geometry",
+    question: "What is the area of a rectangle with length 1 and width 1?",
+    answer: "1",
+    explanation: "1 * 1 = 1."
+  },
+  {
+    id: 254,
+    type: "QC",
+    difficulty: 3,
+    topic: "Word Problems",
+    colA: "The number of seconds in 1 minute",
+    colB: "60",
+    answer: "C",
+    explanation: "60 seconds = 1 minute. Both are equal."
+  },
+  {
+    id: 255,
+    type: "MC",
+    difficulty: 2,
+    topic: "Data Analysis",
+    question: "What is the average of {1, 1}?",
+    options: ["0", "1", "2", "3", "4"],
+    answer: "1",
+    explanation: "2 / 2 = 1."
+  },
+  {
+    id: 256,
+    type: "NE",
+    difficulty: 3,
+    topic: "Algebra",
+    question: "If x + 1 = 1, what is the value of x?",
+    answer: "0",
+    explanation: "x = 0."
+  },
+  {
+    id: 257,
+    type: "QC",
+    difficulty: 2,
+    topic: "Arithmetic",
+    colA: "0 * 1",
+    colB: "0",
+    answer: "C",
+    explanation: "0 * 1 = 0. Both are equal."
+  },
+  {
+    id: 258,
+    type: "MC",
+    difficulty: 3,
+    topic: "Geometry",
+    question: "What is the area of a square with side 1?",
+    options: ["0", "1", "2", "3", "4"],
+    answer: "1",
+    explanation: "1 * 1 = 1."
+  },
+  {
+    id: 259,
+    type: "NE",
+    difficulty: 2,
+    topic: "Word Problems",
+    question: "If a person saves $0 per day, how many days will it take to save $1?",
+    answer: "Never",
+    explanation: "Saving $0 per day will never reach $1."
+  },
+  {
+    id: 260,
+    type: "QC",
+    difficulty: 3,
+    topic: "Data Analysis",
+    colA: "The probability of rolling a 7 on a fair die",
+    colB: "0",
+    answer: "C",
+    explanation: "A fair die only has numbers 1-6. Probability of rolling a 7 is 0. Both are equal."
   }
 ];
 

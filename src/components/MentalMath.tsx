@@ -244,6 +244,16 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
         </div>
       </div>
 
+      {/* Stress Meter (Timer Progress Bar) */}
+      <div className="w-full h-2 bg-ink/5 rounded-full overflow-hidden">
+        <motion.div 
+          initial={{ width: '100%' }}
+          animate={{ width: `${Math.max(0, Math.min((timeLeft / 60) * 100, 100))}%` }}
+          transition={{ duration: 1, ease: "linear" }}
+          className={`h-full ${timeLeft < 10 ? 'bg-red-500' : 'bg-accent-gold'}`}
+        />
+      </div>
+
       <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-2xl relative overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div 

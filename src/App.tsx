@@ -865,6 +865,76 @@ function analyzePosition(state: GameState, depth: number = 3) {
   return evaluations;
 }
 
+// ─── CHESS COMPONENTS ──────────────────────────────────────────────────────────
+
+const ChessBoard = ({ 
+  board, 
+  selected, 
+  legalMoves = [], 
+  lastMove, 
+  inCheck, 
+  hint, 
+  onSquareClick,
+  isFullscreen
+}: {
+  board: Board;
+  selected?: ChessPos | null;
+  legalMoves?: ChessPos[];
+  lastMove?: { from: ChessPos; to: ChessPos } | null;
+  inCheck?: boolean;
+  hint?: { from?: ChessPos, to?: ChessPos, type: string } | null;
+  onSquareClick?: (row: number, col: number) => void;
+  isFullscreen?: boolean;
+}) => {
+  return (
+    <div className={`border-4 border-accent-gold/40 rounded-lg overflow-hidden shadow-2xl bg-white ${isFullscreen ? 'w-full max-w-[min(90vw,75vh)] aspect-square' : 'w-full max-w-md aspect-square'}`}>
+      {board.map((rowArr, row) => (
+        <div key={row} className="flex h-[12.5%]">
+          {rowArr.map((piece, col) => {
+            const isLight = (row + col) % 2 === 0;
+            const isSelected = selected?.row === row && selected?.col === col;
+            const isLegal = legalMoves.some(m => m.row === row && m.col === col);
+            const isLast = lastMove && ((lastMove.from.row===row&&lastMove.from.col===col)||(lastMove.to.row===row&&lastMove.to.col===col));
+            const isKingInCheck = inCheck && piece?.type === 'K' && piece?.color === 'w';
+            const isHintFrom = hint?.from?.row === row && hint?.from?.col === col && (hint.type === 'piece' || hint.type === 'move');
+            const isHintTo = hint?.to?.row === row && hint?.to?.col === col && (hint.type === 'square' || hint.type === 'move');
+
+            let bg = isLight ? 'bg-[#f0d9b5]' : 'bg-[#b58863]';
+            if (isSelected) bg = 'bg-yellow-400';
+            else if (isKingInCheck) bg = 'bg-red-400';
+            else if (isLast) bg = isLight ? 'bg-yellow-200' : 'bg-yellow-600';
+            else if (isHintFrom) bg = 'bg-blue-300';
+            else if (isHintTo) bg = 'bg-blue-400';
+
+            return (
+              <div
+                key={col}
+                onClick={() => onSquareClick?.(row, col)}
+                className={`flex-1 flex items-center justify-center cursor-pointer relative select-none ${bg} hover:brightness-105 transition-all aspect-square`}
+              >
+                {isLegal && (
+                  <div className={`absolute inset-0 flex items-center justify-center ${piece ? 'ring-4 ring-inset ring-black/10' : ''}`}>
+                    {!piece && <div className="w-3 h-3 rounded-full bg-black/10" />}
+                  </div>
+                )}
+                {piece && (
+                  <span className={`text-2xl sm:text-4xl md:text-5xl leading-none z-10 drop-shadow-sm ${piece.color === 'w' ? 'text-white' : 'text-black'}`} style={{
+                    filter: piece.color === 'w' ? 'drop-shadow(0 0 1px black)' : 'drop-shadow(0 0 1px white)'
+                  }}>
+                    {PIECE_UNICODE[piece.color + piece.type]}
+                  </span>
+                )}
+                {col === 0 && <span className={`absolute top-0.5 left-0.5 text-[8px] sm:text-[10px] font-bold ${isLight ? 'text-[#b58863]' : 'text-[#f0d9b5]'}`}>{8-row}</span>}
+                {row === 7 && <span className={`absolute bottom-0.5 right-0.5 text-[8px] sm:text-[10px] font-bold ${isLight ? 'text-[#b58863]' : 'text-[#f0d9b5]'}`}>{'abcdefgh'[col]}</span>}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: number) => void, soundEnabled: boolean, currentXp: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -897,6 +967,8 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
     return () => document.removeEventListener('fullscreenchange', handleFsChange);
   }, []);
 
+  const [reviewIndex, setReviewIndex] = useState<number>(-1);
+
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       containerRef.current?.requestFullscreen().catch(err => console.error(err));
@@ -906,18 +978,23 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
   };
 
   const classifyMove = (move: {from: ChessPos, to: ChessPos}, bestMoves: {move: {from: ChessPos, to: ChessPos}, val: number}[], player: 'w' | 'b') => {
-    if (bestMoves.length === 0) return 'Excellent';
+    if (bestMoves.length === 0) return 'Best';
     const best = bestMoves[0];
     const isBest = best.move.from.row === move.from.row && best.move.from.col === move.from.col && 
                    best.move.to.row === move.to.row && best.move.to.col === move.to.col;
-    if (isBest) return 'Excellent';
     
-    const isInTop3 = bestMoves.slice(0, 3).some(m => 
+    // Book move detection: first 8 moves if in top 3
+    const isBook = history.length < 16 && bestMoves.slice(0, 3).some(m => 
       m.move.from.row === move.from.row && m.move.from.col === move.from.col && 
       m.move.to.row === move.to.row && m.move.to.col === move.to.col
     );
-    if (isInTop3) return 'Good';
+    if (isBook) return 'Book';
 
+    // Great move: only good move in position
+    const isGreat = isBest && bestMoves.length > 1 && (best.val - bestMoves[1].val > 150);
+    if (isGreat) return 'Great';
+    if (isBest) return 'Best';
+    
     const playedMove = bestMoves.find(m => 
       m.move.from.row === move.from.row && m.move.from.col === move.from.col && 
       m.move.to.row === move.to.row && m.move.to.col === move.to.col
@@ -926,7 +1003,8 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
     if (!playedMove) return 'Blunder';
 
     const diff = Math.abs(best.val - playedMove.val);
-    if (diff < 100) return 'Inaccuracy';
+    if (diff < 40) return 'Excellent';
+    if (diff < 120) return 'Inaccuracy';
     if (diff < 300) return 'Mistake';
     return 'Blunder';
   };
@@ -953,6 +1031,7 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
   const undoMove = () => {
     if (history.length < 2 || currentXp < 5) return;
     
+    setReviewIndex(-1);
     // Undo 2 moves (Player + AI)
     const newHistory = history.slice(0, -2);
     const lastRecord = newHistory[newHistory.length - 1];
@@ -1172,51 +1251,16 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
         </div>
       )}
 
-      <div className={`border-4 border-accent-gold/40 rounded-lg overflow-hidden shadow-2xl bg-white ${isFullscreen ? 'w-full max-w-[min(90vw,75vh)] aspect-square' : ''}`}>
-        {gameState.board.map((rowArr, row) => (
-          <div key={row} className="flex h-[12.5%]">
-            {rowArr.map((piece, col) => {
-              const isLight = (row + col) % 2 === 0;
-              const isSelected = selected?.row === row && selected?.col === col;
-              const isLegal = legalMoves.some(m => m.row === row && m.col === col);
-              const isLast = lastMove && ((lastMove.from.row===row&&lastMove.from.col===col)||(lastMove.to.row===row&&lastMove.to.col===col));
-              const isKingInCheck = inCheck && piece?.type === 'K' && piece?.color === 'w';
-              const isHintFrom = hint?.from?.row === row && hint?.from?.col === col && (hint.type === 'piece' || hint.type === 'move');
-              const isHintTo = hint?.to?.row === row && hint?.to?.col === col && (hint.type === 'square' || hint.type === 'move');
-
-              let bg = isLight ? 'bg-[#f0d9b5]' : 'bg-[#b58863]';
-              if (isSelected) bg = 'bg-yellow-400';
-              else if (isKingInCheck) bg = 'bg-red-400';
-              else if (isLast) bg = isLight ? 'bg-yellow-200' : 'bg-yellow-600';
-              else if (isHintFrom) bg = 'bg-blue-300';
-              else if (isHintTo) bg = 'bg-blue-400';
-
-              return (
-                <div
-                  key={col}
-                  onClick={() => handleSquareClick(row, col)}
-                  className={`flex-1 flex items-center justify-center cursor-pointer relative select-none ${bg} hover:brightness-105 transition-all aspect-square`}
-                >
-                  {isLegal && (
-                    <div className={`absolute inset-0 flex items-center justify-center ${piece ? 'ring-4 ring-inset ring-black/10' : ''}`}>
-                      {!piece && <div className="w-3 h-3 rounded-full bg-black/10" />}
-                    </div>
-                  )}
-                  {piece && (
-                    <span className={`text-3xl sm:text-4xl md:text-5xl leading-none z-10 drop-shadow-sm ${piece.color === 'w' ? 'text-white' : 'text-black'}`} style={{
-                      filter: piece.color === 'w' ? 'drop-shadow(0 0 1px black)' : 'drop-shadow(0 0 1px white)'
-                    }}>
-                      {PIECE_UNICODE[piece.color + piece.type]}
-                    </span>
-                  )}
-                  {col === 0 && <span className={`absolute top-0.5 left-0.5 text-[8px] sm:text-[10px] font-bold ${isLight ? 'text-[#b58863]' : 'text-[#f0d9b5]'}`}>{8-row}</span>}
-                  {row === 7 && <span className={`absolute bottom-0.5 right-0.5 text-[8px] sm:text-[10px] font-bold ${isLight ? 'text-[#b58863]' : 'text-[#f0d9b5]'}`}>{'abcdefgh'[col]}</span>}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      <ChessBoard 
+        board={gameState.board}
+        selected={selected}
+        legalMoves={legalMoves}
+        lastMove={lastMove}
+        inCheck={inCheck}
+        hint={hint}
+        onSquareClick={handleSquareClick}
+        isFullscreen={isFullscreen}
+      />
 
       <div className="flex flex-wrap justify-center gap-3">
         <button onClick={resetGame} className="px-6 py-2 bg-ink text-white rounded-lg font-semibold hover:opacity-90 transition-all text-sm shadow-md flex items-center gap-2">
@@ -1347,96 +1391,128 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
                 </button>
               </div>
 
-              <div className="flex-1 overflow-auto p-6">
-                {analysisLoading ? (
-                  <div className="h-64 flex flex-col items-center justify-center gap-4">
-                    <div className="w-12 h-12 border-4 border-accent-gold border-t-transparent rounded-full animate-spin" />
-                    <p className="text-ink/60 font-medium animate-pulse">Engine is analyzing moves...</p>
-                  </div>
-                ) : (
-                  <div className="space-y-8">
-                    {/* Summary Stats */}
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                      {['Excellent', 'Good', 'Inaccuracy', 'Mistake', 'Blunder'].map(cls => {
-                        const count = history.filter(r => r.player === 'w' && r.classification === cls).length;
-                        const colors: any = {
-                          Excellent: 'text-green-500',
-                          Good: 'text-blue-500',
-                          Inaccuracy: 'text-yellow-500',
-                          Mistake: 'text-orange-500',
-                          Blunder: 'text-red-500'
-                        };
-                        return (
-                          <div key={cls} className="bg-bg-primary p-3 rounded-xl border border-ink/5 text-center">
-                            <div className={`text-xl font-bold ${colors[cls]}`}>{count}</div>
-                            <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest">{cls}</div>
+              <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+                <div className="flex-1 p-6 flex flex-col items-center justify-center bg-bg-primary/30">
+                  {reviewIndex === -1 ? (
+                    <div className="text-center space-y-4">
+                      <div className="w-20 h-20 bg-accent-gold/10 rounded-full flex items-center justify-center text-accent-gold mx-auto">
+                        <BarChart2 size={40} />
+                      </div>
+                      <h4 className="text-xl font-serif font-bold text-ink">Game Summary</h4>
+                      <p className="text-sm text-ink/60 max-w-xs">Click "Review Game" to step through every move and see engine analysis.</p>
+                      <button 
+                        onClick={() => setReviewIndex(0)}
+                        className="px-6 py-3 bg-ink text-white rounded-xl font-bold text-sm hover:bg-ink/90 transition-all shadow-lg"
+                      >
+                        Review Game
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="w-full max-w-md space-y-4">
+                      <ChessBoard 
+                        board={history[reviewIndex].stateAfter.board}
+                        lastMove={{ from: history[reviewIndex].from, to: history[reviewIndex].to }}
+                        inCheck={isInCheck(history[reviewIndex].stateAfter.board, history[reviewIndex].stateAfter.turn)}
+                      />
+                      <div className="flex justify-between items-center bg-white dark:bg-bg-dark p-4 rounded-xl shadow-sm border border-ink/5">
+                        <button 
+                          disabled={reviewIndex === 0}
+                          onClick={() => setReviewIndex(prev => prev - 1)}
+                          className="p-2 hover:bg-ink/5 rounded-full disabled:opacity-20"
+                        >
+                          <ChevronLeft size={24} />
+                        </button>
+                        <div className="text-center">
+                          <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest">Move {Math.floor(reviewIndex / 2) + 1}</div>
+                          <div className="font-bold text-ink flex items-center gap-2">
+                            {PIECE_UNICODE[history[reviewIndex].piece.color + history[reviewIndex].piece.type]}
+                            {'abcdefgh'[history[reviewIndex].from.col]}{8-history[reviewIndex].from.row} → {'abcdefgh'[history[reviewIndex].to.col]}{8-history[reviewIndex].to.row}
                           </div>
-                        );
-                      })}
+                        </div>
+                        <button 
+                          disabled={reviewIndex === history.length - 1}
+                          onClick={() => setReviewIndex(prev => prev + 1)}
+                          className="p-2 hover:bg-ink/5 rounded-full disabled:opacity-20"
+                        >
+                          <ChevronRight size={24} />
+                        </button>
+                      </div>
                     </div>
+                  )}
+                </div>
 
-                    {/* Move List */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-serif font-bold text-ink border-b border-ink/5 pb-2">Key Moments</h4>
-                      <div className="grid gap-4">
-                        {history.filter(r => r.player === 'w' && (r.classification === 'Blunder' || r.classification === 'Mistake' || r.classification === 'Excellent')).slice(-5).map((record, i) => {
-                          const colors: any = {
-                            Excellent: 'bg-green-500/10 border-green-500/20 text-green-700',
-                            Good: 'bg-blue-500/10 border-blue-500/20 text-blue-700',
-                            Inaccuracy: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-700',
-                            Mistake: 'bg-orange-500/10 border-orange-500/20 text-orange-700',
-                            Blunder: 'bg-red-500/10 border-red-500/20 text-red-700'
-                          };
-                          
-                          return (
-                            <div key={i} className={`p-4 rounded-xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${colors[record.classification!]}`}>
-                              <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center font-bold text-lg">
-                                  {record.moveNumber}
-                                </div>
-                                <div>
-                                  <div className="font-bold flex items-center gap-2">
-                                    {PIECE_UNICODE[record.piece.color + record.piece.type]} {'abcdefgh'[record.from.col]}{8-record.from.row} → {'abcdefgh'[record.to.col]}{8-record.to.row}
-                                    <span className="text-xs uppercase tracking-widest opacity-70">({record.classification})</span>
-                                  </div>
-                                  <p className="text-xs opacity-80 mt-1">
-                                    {record.classification === 'Blunder' ? 'This move significantly weakens your position.' : 
-                                     record.classification === 'Excellent' ? 'The strongest move in this position.' : 
-                                     'A questionable move that gives the opponent an advantage.'}
-                                  </p>
-                                </div>
-                              </div>
-                              <button 
-                                onClick={() => {
-                                  setGameState(JSON.parse(JSON.stringify(record.stateBefore)));
-                                  setGameOver(false);
-                                  setShowAnalysis(false);
-                                  setHistory(prev => prev.slice(0, prev.indexOf(record)));
-                                  setStatus('Retrying position. Your turn (White)');
-                                }}
-                                className="px-4 py-2 bg-white/50 hover:bg-white/80 rounded-lg text-xs font-bold transition-all flex items-center gap-2"
-                              >
-                                <RotateCcw size={14} /> Retry Position
-                              </button>
+                <div className="w-full md:w-80 border-l border-ink/5 overflow-auto p-6 bg-white dark:bg-bg-dark">
+                  {analysisLoading ? (
+                    <div className="h-full flex flex-col items-center justify-center gap-4">
+                      <div className="w-12 h-12 border-4 border-accent-gold border-t-transparent rounded-full animate-spin" />
+                      <p className="text-ink/60 font-medium animate-pulse">Analyzing...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {reviewIndex !== -1 && (
+                        <div className="space-y-4">
+                          <div className={`p-4 rounded-xl border ${
+                            history[reviewIndex].classification === 'Great' ? 'bg-purple-500/10 border-purple-500/20 text-purple-700' :
+                            history[reviewIndex].classification === 'Best' ? 'bg-green-500/10 border-green-500/20 text-green-700' :
+                            history[reviewIndex].classification === 'Excellent' ? 'bg-teal-500/10 border-teal-500/20 text-teal-700' :
+                            history[reviewIndex].classification === 'Book' ? 'bg-blue-500/10 border-blue-500/20 text-blue-700' :
+                            history[reviewIndex].classification === 'Inaccuracy' ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-700' :
+                            history[reviewIndex].classification === 'Mistake' ? 'bg-orange-500/10 border-orange-500/20 text-orange-700' :
+                            'bg-red-500/10 border-red-500/20 text-red-700'
+                          }`}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-bold uppercase tracking-widest text-[10px]">{history[reviewIndex].classification}</span>
+                              <span className="text-xs font-bold">{(history[reviewIndex].evaluation / 100).toFixed(1)}</span>
                             </div>
-                          );
-                        })}
-                      </div>
-                    </div>
+                            <p className="text-xs font-medium">
+                              {history[reviewIndex].classification === 'Great' ? "A brilliant move that was the only way to maintain the advantage!" :
+                               history[reviewIndex].classification === 'Best' ? "The engine's top choice in this position." :
+                               history[reviewIndex].classification === 'Book' ? "Standard opening theory." :
+                               history[reviewIndex].classification === 'Blunder' ? "A serious error that changes the outcome of the game." :
+                               "A solid move, though the engine found better alternatives."}
+                            </p>
+                          </div>
 
-                    <div className="bg-accent-gold/5 p-6 rounded-2xl border border-accent-gold/10">
-                      <div className="flex items-center gap-2 text-accent-gold mb-2">
-                        <Info size={18} />
-                        <span className="font-bold uppercase tracking-widest text-xs">Learning Tip</span>
+                          {history[reviewIndex].bestMoves && history[reviewIndex].bestMoves![0] && (
+                            <div className="p-4 bg-bg-primary rounded-xl border border-ink/5">
+                              <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-2">Engine's Best Move</div>
+                              <div className="font-bold text-ink flex items-center gap-2">
+                                {PIECE_UNICODE[history[reviewIndex].piece.color + history[reviewIndex].piece.type]}
+                                {'abcdefgh'[history[reviewIndex].bestMoves![0].move.from.col]}{8-history[reviewIndex].bestMoves![0].move.from.row} → 
+                                {'abcdefgh'[history[reviewIndex].bestMoves![0].move.to.col]}{8-history[reviewIndex].bestMoves![0].move.to.row}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="space-y-4">
+                        <h4 className="text-xs font-bold text-ink/30 uppercase tracking-widest">Accuracy Summary</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          {['Great', 'Best', 'Book', 'Excellent', 'Inaccuracy', 'Mistake', 'Blunder'].map(cls => {
+                            const count = history.filter(r => r.player === 'w' && r.classification === cls).length;
+                            if (count === 0) return null;
+                            const colors: any = {
+                              Great: 'text-purple-500',
+                              Best: 'text-green-500',
+                              Book: 'text-blue-500',
+                              Excellent: 'text-teal-500',
+                              Inaccuracy: 'text-yellow-500',
+                              Mistake: 'text-orange-500',
+                              Blunder: 'text-red-500'
+                            };
+                            return (
+                              <div key={cls} className="bg-bg-primary p-2 rounded-lg border border-ink/5 text-center">
+                                <div className={`text-sm font-bold ${colors[cls]}`}>{count}</div>
+                                <div className="text-[8px] font-bold text-ink/30 uppercase tracking-tight">{cls}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                      <p className="text-sm text-ink/80 leading-relaxed">
-                        {history.some(r => r.classification === 'Blunder') 
-                          ? "Focus on scanning the board for undefended pieces before making a move. Blunders often occur when we miss a simple tactical threat."
-                          : "Your tactical awareness is strong! To improve further, try to think 2-3 moves ahead and consider your opponent's best responses."}
-                      </p>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -1450,16 +1526,33 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
 
 function scrambleWord(word: string): string {
   const letters = word.toUpperCase().split('');
-  // Fisher-Yates shuffle — ensure not same as original
+  if (letters.length <= 1) return word.toUpperCase();
+  
   let result = [...letters];
   let attempts = 0;
-  do {
+  
+  // Fisher-Yates shuffle — ensure not same as original
+  while (attempts < 50) {
     for (let i = result.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [result[i], result[j]] = [result[j], result[i]];
     }
+    // If it's different, we are done. If it's the same, try again.
+    if (result.join('') !== letters.join('')) break;
     attempts++;
-  } while (result.join('') === letters.join('') && attempts < 20);
+  }
+  
+  // Fallback: if after 50 attempts it's still the same (e.g. "AAA"), 
+  // and it's not all same characters, just swap the first two different characters
+  if (result.join('') === letters.join('')) {
+    for (let i = 0; i < result.length - 1; i++) {
+      if (result[i] !== result[i+1]) {
+        [result[i], result[i+1]] = [result[i+1], result[i]];
+        break;
+      }
+    }
+  }
+  
   return result.join('');
 }
 
@@ -1755,6 +1848,8 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
     setScore(0); setTimeLeft(TOTAL_TIME); setCombo(0);
     setTotalAnswered(0); setCorrectCount(0);
     pickQuestion();
+    // Fix: Persist game start immediately
+    incrementStat('gamesPlayed');
   };
 
   useEffect(() => {
@@ -1804,7 +1899,8 @@ function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => 
 
   const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
   const timerColor = timeLeft > 30 ? 'text-green-500' : timeLeft > 10 ? 'text-yellow-500' : 'text-red-500';
-  const timerWidth = (timeLeft / TOTAL_TIME) * 100;
+  // Fix: Ensure timer width never exceeds 100% or goes below 0%
+  const timerWidth = Math.max(0, Math.min((timeLeft / TOTAL_TIME) * 100, 100));
   const timerBarColor = timeLeft > 30 ? 'bg-green-500' : timeLeft > 10 ? 'bg-yellow-500' : 'bg-red-500';
 
   if (gameState === 'idle') return (
@@ -2151,6 +2247,8 @@ const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
     setTimer(5 + lvl * 2);
     setRecallIndex(0);
     setUserInput('');
+    
+    if (lvl === 1) incrementStat('gamesPlayed');
   };
 
   useEffect(() => {
@@ -2332,33 +2430,12 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
 
   const wordsWithPronunciation = ALL_GRE_WORDS.filter(w => w.pronunciation && w.pronunciation.length > 0);
 
-  const generateQuestion = () => {
-    const correct = wordsWithPronunciation[Math.floor(Math.random() * wordsWithPronunciation.length)];
-    const others = wordsWithPronunciation
-      .filter(w => w.id !== correct.id)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 3)
-      .map(w => w.word);
-    
-    setCurrentWord(correct);
-    setOptions([correct.word, ...others].sort(() => 0.5 - Math.random()));
-    setSelectedOption(null);
-    setIsCorrect(null);
-    
-    // Auto-play pronunciation
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(correct.word);
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
   const startQuiz = () => {
     setGameState('playing');
     setScore(0);
     setQuestionCount(0);
     generateQuestion();
+    // Fix: Ensure stat persists even if game ends abruptly
     incrementStat('gamesPlayed');
   };
 
@@ -2401,6 +2478,22 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
       utterance.rate = 0.8;
       window.speechSynthesis.speak(utterance);
     }
+  };
+
+  // Fix: Only play pronunciation on user interaction (start or replay)
+  // Removed auto-play from generateQuestion to avoid browser blocking
+  const generateQuestion = () => {
+    const correct = wordsWithPronunciation[Math.floor(Math.random() * wordsWithPronunciation.length)];
+    const others = wordsWithPronunciation
+      .filter(w => w.id !== correct.id)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3)
+      .map(w => w.word);
+    
+    setCurrentWord(correct);
+    setOptions([correct.word, ...others].sort(() => 0.5 - Math.random()));
+    setSelectedOption(null);
+    setIsCorrect(null);
   };
 
   return (
@@ -2641,7 +2734,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                           value={userInput}
                           onChange={(e) => setUserInput(e.target.value)}
                           onKeyDown={(e) => e.key === 'Enter' && checkNumber()}
-                          className="w-full p-6 bg-white border border-ink/10 rounded-sm text-center text-5xl font-serif font-bold text-ink focus:ring-1 focus:ring-accent-gold/20 transition-all"
+                          className="w-full p-6 bg-white border border-ink/10 rounded-sm text-center text-3xl sm:text-5xl font-serif font-bold text-ink focus:ring-1 focus:ring-accent-gold/20 transition-all"
                           autoFocus
                         />
                       </div>
@@ -6675,6 +6768,19 @@ const App = () => {
     };
     document.title = titles[activeSection] ?? 'GREnius';
   }, [activeSection]);
+
+  // Fix: LocalStorage Desync protection
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.xp) {
+        setXp(parseInt(e.newValue || '0'));
+      } else if (e.key === STORAGE_KEYS.streak) {
+        setStreak(parseInt(e.newValue || '0'));
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleXpChange = (newXp: number) => {
     setXp(newXp);

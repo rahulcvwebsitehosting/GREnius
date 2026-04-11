@@ -1069,6 +1069,18 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
     setAnalysisLoading(false);
   };
 
+  const goToNextMoveOfType = (cls: string) => {
+    const indices = history
+      .map((h, i) => (h.player === 'w' && h.classification === cls ? i : -1))
+      .filter(i => i !== -1);
+    
+    if (indices.length === 0) return;
+
+    // Find the next index after current reviewIndex
+    const nextIndex = indices.find(i => i > reviewIndex) ?? indices[0];
+    setReviewIndex(nextIndex);
+  };
+
   const undoMove = () => {
     if (history.length < 2 || currentXp < 5) return;
     
@@ -1641,10 +1653,19 @@ function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: n
                               Blunder: 'text-red-500'
                             };
                             return (
-                              <div key={cls} className="bg-bg-primary p-2 rounded-lg border border-ink/5 text-center">
+                              <button 
+                                key={cls} 
+                                onClick={() => goToNextMoveOfType(cls)}
+                                className={`p-2 rounded-lg border transition-all text-center group relative ${
+                                  reviewIndex !== -1 && history[reviewIndex].classification === cls 
+                                  ? 'bg-ink/10 border-ink/20 shadow-inner' 
+                                  : 'bg-bg-primary border-ink/5 hover:border-ink/20 hover:shadow-sm'
+                                }`}
+                              >
                                 <div className={`text-sm font-bold ${colors[cls]}`}>{count}</div>
                                 <div className="text-[8px] font-bold text-ink/30 uppercase tracking-tight">{cls}</div>
-                              </div>
+                                <div className="absolute inset-0 bg-ink/5 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity" />
+                              </button>
                             );
                           })}
                         </div>

@@ -1,72 +1,135 @@
-# GREnius — Premium GRE Preparation Platform
+# 🧠 GREnius: The Cognitive Blueprint
 
-**1000+ production-ready GRE words, quantitative practice, and verbal reasoning tools.**
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Express](https://img.shields.io/badge/Express-5.0-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 
-The most comprehensive open-source library of GRE preparation tools — also works with daily challenges, world days, and news integration. Reusable expertise packages covering vocabulary, math, logic, and more.
-
-**Works with:** React · Vite · Tailwind CSS · Lucide Icons · Framer Motion · SWR · D3.js · Recharts
-
-![License](https://img.shields.io/badge/LICENSE-MIT-yellow)
-![Words](https://img.shields.io/badge/WORDS-1000%2B-brightgreen)
-![Sections](https://img.shields.io/badge/SECTIONS-5-blue)
-![Quizzes](https://img.shields.io/badge/QUIZZES-20%2B-blueviolet)
-![Stars](https://img.shields.io/badge/STARS-5.2K-blue)
-![Status](https://img.shields.io/badge/STATUS-VALIDATED-brightgreen)
-
-> 5,200+ Students — the most comprehensive open-source GRE preparation library.
+> **A premium, high-performance cognitive training platform engineered for GRE aspirants and chess enthusiasts. Built with a focus on algorithmic precision and architectural elegance.**
 
 ---
 
-## What is GREnius?
+## 🏗️ Problem vs. Solution
 
-GREnius is a modular instruction package that gives students domain expertise they don't have out of the box. Each feature includes:
-
-- **Vocabulary**: 1000+ high-frequency words with etymology, roots, and usage examples.
-- **Quantitative**: Practice questions for algebra, geometry, and data analysis.
-- **Verbal**: Reasoning and comprehension exercises to sharpen your analytical skills.
-- **World Days**: A unique calendar of global observances linked to GRE vocabulary.
-- **News**: Real-time news integration to see your vocabulary words in the wild.
-- **Progress Tracking**: XP, levels, and streaks to keep you motivated.
+| The Problem | The GREnius Solution |
+| :--- | :--- |
+| **Cognitive Fatigue** | Dynamic, game-based learning modules that maintain high engagement through gamification. |
+| **Static Learning** | Algorithmic difficulty scaling that adapts to the user's performance in real-time. |
+| **Fragmented Prep** | A unified ecosystem combining GRE Quantitative practice with advanced strategic training (Chess). |
+| **Lack of Assessment** | Deep-dive post-game analysis and ELO-based performance tracking. |
 
 ---
 
-## Key Features
+## 🧠 Intelligence & Architecture
 
-### 🧠 Cognitive Dashboard
-Track your XP, current level, and study streaks. Get insights into your learning patterns and upcoming challenges.
+GREnius is built on a **Full-Stack Blueprint** utilizing a custom Express server with Vite middleware integration for seamless development and production-grade performance.
 
-### 📚 Lexical Mastery
-Explore a massive database of GRE words. Each word comes with definitions, synonyms, and etymological roots.
+### ♟️ Chess Engine: "The Grandmaster Algorithm"
+The core engine utilizes a **Negamax search with Alpha-Beta pruning** and **Quiescence Search** to eliminate the horizon effect.
 
-### 🔢 Quantitative Reasoning
-Sharpen your math skills with practice sets designed to mimic the actual GRE format.
+```mermaid
+graph TD
+    A[User Move] --> B{AI Thinking}
+    B --> C[Opening Book Lookup]
+    C -- Match Found --> D[Instant Theory Move]
+    C -- No Match --> E[Negamax Search]
+    E --> F[Alpha-Beta Pruning]
+    F --> G[Quiescence Search]
+    G --> H[Static Evaluation + PST]
+    H --> I[Optimal Move Selection]
+    I --> J[ELO Assessment]
+```
 
-### 🌍 World Days Calendar
-Connect your learning to the real world. Every day features a global observance and a related GRE word.
+### 📊 System Flow
 
-### 📰 Contextual News
-Read the latest news from around the world and identify GRE vocabulary in professional journalism.
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend (React)
+    participant B as Backend (Express)
+    participant E as Engine (Negamax)
+    
+    U->>F: Performs Action (Game/Quant)
+    F->>F: Update Local State (XP/Stats)
+    F->>B: Sync Progress (Optional)
+    F->>E: Request AI Move (Chess)
+    E-->>F: Return Optimized Move
+    F-->>U: Render UI Update + Feedback
+```
 
 ---
 
-## Technical Stack
+## 🚀 Primary Features
 
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Tailwind CSS for a sleek, modern UI
-- **Animations**: Framer Motion for smooth transitions
-- **Data Fetching**: SWR for efficient API management
-- **Visualizations**: D3.js and Recharts for progress tracking
-- **Icons**: Lucide React for consistent iconography
+### 1. **Advanced Chess Suite**
+- **Difficulty Scaling**: Three distinct tiers (600, 1200, 1800+ ELO).
+- **Opening Book**: Integrated theory for Sicilian, Ruy Lopez, and Queen's Gambit.
+- **Post-Game Analysis**: Interactive accuracy summary with "Show me how" correction logic.
 
----
+### 2. **GRE Quantitative Mastery**
+- **250+ High-Difficulty Questions**: Covering Geometry, Algebra, and Data Interpretation.
+- **Question Types**: Quantitative Comparison (QC), Multiple Choice (MC), and Numeric Entry (NE).
 
-## Getting Started
-
-1. **Explore the Dashboard**: See your daily challenge and current progress.
-2. **Master Words**: Dive into the vocabulary section to expand your lexicon.
-3. **Practice Quizzes**: Test your knowledge in Verbal and Quantitative sections.
-4. **Track Growth**: Watch your XP grow and unlock new academic titles.
+### 3. **Cognitive Game Modules**
+- **Mental Math**: Stress-based arithmetic challenges.
+- **Memory Palace**: Grid-based visual pattern recognition.
+- **Speed Blitz**: Rapid-fire vocabulary and logic puzzles.
 
 ---
 
-Developed with ❤️ for aspiring scholars.
+## 🛠️ Setup & Installation
+
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
+
+### Installation
+
+1. **Clone the Blueprint**
+   ```bash
+   git clone https://github.com/rahulcvwebsitehosting/grenius.git
+   cd grenius
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Launch Development Environment**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for Production**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 🎨 UI Layout Blueprint
+
+| Component | Description | Visual Mood |
+| :--- | :--- | :--- |
+| **Dashboard** | Central hub for all cognitive modules and XP tracking. | Minimalist, High-Contrast |
+| **Chess Arena** | Professional-grade board with material advantage indicators. | Classic, Strategic |
+| **Quant Lab** | Focused environment for GRE question sets. | Academic, Clean |
+| **Analysis Modal** | Deep-dive metrics and Mermaid-style performance charts. | Data-Driven, Dark Mode |
+
+---
+
+## 🤝 Connect
+
+Developed with ❤️ by **Rahul Shyam**. Let's build the future of cognitive technology together.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/rahulshyamcivil)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rahulcvwebsitehosting)
+
+---
+
+<p align="center">
+  <i>"Precision in every move, intelligence in every line."</i><br>
+  © 2026 GREnius Cognitive Systems. All rights reserved.
+</p>

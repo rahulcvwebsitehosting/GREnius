@@ -1,0 +1,13 @@
+541:function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: number) => void, soundEnabled: boolean, currentXp: number }) {
+1327:function scrambleWord(word: string): string {
+1359:function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
+1614:function SpeedBlitz({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
+1868:function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) => void, soundEnabled: boolean }) {
+3882:function DailyChallenge({ onBack, onXpChange }: { onBack: () => void, onXpChange: (xp: number) => void }) {
+5160:// Paste this into src/App.tsx before the main App() function,
+5203:function getDaysUntilEvent(month: number, day: number): number {
+5212:function isTodayCheck(month: number, day: number): boolean {
+5217:function isThisMonthCheck(month: number): boolean {
+5474:function WorldDays({ onNavigate, onSearch }: { onNavigate: (section: string) => void, onSearch: (query: string) => void }) {
+5778:function WorldDaysDashboardCard({ onNavigate }: { onNavigate: () => void }) {
+6513:  // Use this function everywhere instead of setActiveSection directly

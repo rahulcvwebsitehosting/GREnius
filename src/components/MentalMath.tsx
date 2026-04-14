@@ -177,7 +177,7 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+          <div className="p-6 sm:p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
             <div className="space-y-2">
               <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Score</span>
               <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{score}</p>
@@ -220,8 +220,8 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
 
   return (
     <div className="max-w-2xl mx-auto space-y-12 py-12 animate-in fade-in">
-      <div className="flex items-center justify-between border-b border-ink/5 pb-8">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between border-b border-ink/5 pb-8 gap-4">
+        <div className="flex items-center gap-4 w-full sm:w-auto">
           <div className="w-12 h-12 bg-bg-primary rounded-sm border border-ink/5 flex items-center justify-center text-accent-gold">
             <Brain size={24} />
           </div>
@@ -230,8 +230,8 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
             <h3 className="text-xl font-serif font-bold text-ink">Blitz Mode</h3>
           </div>
         </div>
-        <div className="flex items-center gap-8">
-          <div className="text-right">
+        <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="text-left sm:text-right">
             <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Time</span>
             <p className={`text-2xl font-serif font-bold ${timeLeft < 10 ? 'text-red-500 animate-pulse' : 'text-ink'}`}>
               {timeLeft}s
@@ -254,7 +254,7 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
         />
       </div>
 
-      <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-2xl relative overflow-hidden">
+      <div className="p-6 sm:p-12 bg-white rounded-sm border border-ink/5 shadow-2xl relative overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div 
             key={currentQuestion?.text}
@@ -263,7 +263,7 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-12 text-center"
           >
-            <h2 className="text-4xl font-serif font-bold text-ink leading-tight min-h-[80px] flex items-center justify-center">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-ink leading-tight min-h-[80px] flex items-center justify-center">
               {currentQuestion?.text}
             </h2>
 
@@ -275,7 +275,7 @@ const MentalMath: React.FC<MentalMathProps> = ({ onXpChange, onClose }) => {
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder="ANSWER..."
-                  className={`w-full p-8 bg-bg-primary border-2 rounded-sm font-serif font-bold text-4xl text-center transition-all outline-none
+                  className={`w-full p-4 sm:p-8 bg-bg-primary border-2 rounded-sm font-serif font-bold text-2xl sm:text-4xl text-center transition-all outline-none
                     ${showFeedback ? (isCorrect ? 'border-teal-500 bg-teal-50' : 'border-red-500 bg-red-50') : 'border-ink/5 focus:border-accent-gold'}
                   `}
                 />

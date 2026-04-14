@@ -12,7 +12,7 @@ interface GameAnalysisProps {
 export const GameAnalysis: React.FC<GameAnalysisProps> = ({ mistakes, onClose, title = "Performance Analysis" }) => {
   if (mistakes.length === 0) {
     return (
-      <div className="p-12 text-center space-y-6 bg-white rounded-sm border border-ink/5 shadow-xl animate-in fade-in zoom-in duration-500">
+      <div className="p-6 sm:p-12 text-center space-y-6 bg-white rounded-sm border border-ink/5 shadow-xl animate-in fade-in zoom-in duration-500">
         <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center text-teal-500 mx-auto">
           <CheckCircle2 size={40} />
         </div>

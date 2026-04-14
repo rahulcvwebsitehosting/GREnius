@@ -997,7 +997,7 @@ const ChessBoard = ({
                   </div>
                 )}
                 {piece && (
-                  <span className={`text-2xl sm:text-4xl md:text-5xl leading-none z-10 drop-shadow-sm ${piece.color === 'w' ? 'text-white' : 'text-black'}`} style={{
+                  <span className={`text-3xl sm:text-4xl md:text-5xl leading-none z-10 drop-shadow-sm ${piece.color === 'w' ? 'text-white' : 'text-black'}`} style={{
                     filter: piece.color === 'w' ? 'drop-shadow(0 0 1px black)' : 'drop-shadow(0 0 1px white)'
                   }}>
                     {PIECE_UNICODE[piece.color + piece.type]}
@@ -1957,7 +1957,7 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+          <div className="p-6 sm:p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
             <div className="space-y-2">
               <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Score</span>
               <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{score}</p>
@@ -2026,7 +2026,7 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
           <div
             key={i}
             onClick={() => assembled[i] && handleAssembledClick(i)}
-            className={`w-10 h-10 border-b-2 flex items-center justify-center text-lg font-bold cursor-pointer transition-all
+            className={`w-8 h-8 sm:w-10 sm:h-10 border-b-2 flex items-center justify-center text-base sm:text-lg font-bold cursor-pointer transition-all
               ${assembled[i] ? 'border-accent-gold text-ink dark:text-ink-dark' : 'border-ink/20 dark:border-ink-dark/20'}
               ${feedback === 'correct' ? 'border-green-500 text-green-500' : ''}
               ${feedback === 'wrong' ? 'border-red-500 text-red-500 animate-shake' : ''}
@@ -2044,7 +2044,7 @@ function WordScramble({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
             key={i}
             onClick={() => handleLetterClick(i)}
             disabled={l.used}
-            className={`w-10 h-10 rounded-lg text-lg font-bold font-mono transition-all
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-base sm:text-lg font-bold font-mono transition-all
               ${l.used
                 ? 'bg-ink/10 dark:bg-ink-dark/10 text-ink/20 dark:text-ink-dark/20 cursor-not-allowed'
                 : 'bg-accent-gold/20 border border-accent-gold/50 text-ink dark:text-ink-dark hover:bg-accent-gold/40 cursor-pointer'
@@ -2436,7 +2436,7 @@ function SynonymDuel({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+        <div className="p-6 sm:p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
           <div className="space-y-2">
             <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
             <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
@@ -2599,7 +2599,7 @@ const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <div className="space-y-8">
-          <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+          <div className="p-6 sm:p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
             <div className="space-y-2">
               <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Peak Level</span>
               <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{level}</p>
@@ -2675,7 +2675,7 @@ const MemoryPalace = ({ onXpChange, soundEnabled }: { onXpChange: (xp: number) =
                     onChange={(e) => setUserInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleRecall()}
                     autoFocus
-                    className="w-full text-center text-lg font-serif font-bold border-b border-ink focus:outline-none bg-transparent"
+                    className="w-full text-center text-base sm:text-lg font-serif font-bold border-b border-ink focus:outline-none bg-transparent"
                   />
                 </div>
               )}
@@ -2844,7 +2844,7 @@ const PronunciationQuiz = ({ onXpChange, soundEnabled }: { onXpChange: (xp: numb
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
+            <div className="p-6 sm:p-12 bg-white rounded-sm border border-ink/5 shadow-xl space-y-8">
               <div className="space-y-2">
                 <span className="text-[10px] font-sans font-bold text-ink/30 uppercase tracking-[0.2em]">Final Accuracy</span>
                 <p className="text-7xl font-serif font-bold text-ink tracking-tighter">{Math.round((score / 10) * 100)}%</p>
@@ -2999,7 +2999,7 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                       key={number}
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="text-8xl font-serif font-bold text-ink tracking-tighter"
+                      className="text-5xl sm:text-8xl font-serif font-bold text-ink tracking-tighter break-all px-4"
                     >
                       {number}
                     </motion.p>
@@ -3039,11 +3039,11 @@ const MindGames = ({ onXpChange, currentXp }: { onXpChange: (xp: number) => void
                     <div className="p-8 bg-red-50 rounded-sm border border-red-100 space-y-6 text-left">
                       <div className="space-y-2">
                         <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Expected Sequence</span>
-                        <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter">{number}</p>
+                        <p className="text-3xl sm:text-4xl font-serif font-bold text-red-900 tracking-tighter break-all">{number}</p>
                       </div>
                       <div className="space-y-2">
                         <span className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-[0.2em]">Your Input</span>
-                        <p className="text-4xl font-serif font-bold text-red-900 tracking-tighter opacity-50">{userInput || 'No Input'}</p>
+                        <p className="text-3xl sm:text-4xl font-serif font-bold text-red-900 tracking-tighter opacity-50 break-all">{userInput || 'No Input'}</p>
                       </div>
                     </div>
 

@@ -5,7 +5,6 @@
 
 import { Word, QuantQuestion, VerbalQuestion, Achievement, UserStats, WorldDay } from './types';
 
-export const GRE_WORDS: Word[] = [];
 
 export const GRE_QUANT: QuantQuestion[] = [
   {
@@ -2818,6 +2817,7 @@ export const WORLD_DAYS: WorldDay[] = [
   { month:4,  day:12, name:"World Aviation Day",                          category:"science",     icon:"✈️", description:"Celebrates human progress in aviation and cosmonautics. Marks Yuri Gagarin's 1961 first human spaceflight — a seminal moment in human history.", greWord:"Audacious", greWordDef:"Showing a willingness to take surprisingly bold risks; daring.", greWordId: 113 },
   { month:4,  day:13, name:"Jallianwala Bagh Remembrance Day",           category:"memorial",    icon:"🕯️", description:"Commemorates the April 13, 1919 massacre in Amritsar where British troops fired on unarmed Indian civilians, killing hundreds and wounding thousands.", greWord:"Atrocity", greWordDef:"An act of extreme cruelty and violence; a horrible event." },
   { month:4,  day:14, name:"World Chagas Disease Day",                    category:"health",      icon:"🦟", description:"Raises awareness about Chagas disease, a neglected tropical disease that can cause serious heart and digestive problems if left untreated.", greWord:"Negligible", greWordDef:"So small or unimportant as to be not worth considering; insignificant." },
+  { month:4,  day:14, name:"Ambedkar Jayanti",                            category:"national",    icon:"⚖️", description:"Commemorates the birth anniversary of Dr. B.R. Ambedkar (1891), the principal architect of the Indian Constitution and a champion of social justice and equality.", greWord:"Egalitarian", greWordDef:"Believing in the principle that all people are equal and deserve equal rights and opportunities.", greWordId: 953 },
   { month:4,  day:18, name:"World Heritage Day",                          category:"culture",     icon:"🏛️", description:"Also known as the International Day for Monuments and Sites. Promotes the appreciation, conservation, and understanding of the world's cultural heritage.", greWord:"Archaic", greWordDef:"Very old or old-fashioned; characteristic of an earlier period.", greWordId: 90 },
   { month:4,  day:20, name:"Chinese Language Day",                         category:"culture",     icon:"🇨🇳", description:"Celebrates multilingualism and cultural diversity. Honors Cangjie, the mythical figure who is said to have invented Chinese characters.", greWord:"Ideogram", greWordDef:"A written character symbolizing the idea of a thing without indicating the sounds used to say it." },
   { month:4,  day:21, name:"World Creativity and Innovation Day",         category:"science",     icon:"💡", description:"Encourages people to use creativity in problem-solving for all aspects of human development and to achieve the Sustainable Development Goals.", greWord:"Ingenuity", greWordDef:"The quality of being clever, original, and inventive." },
@@ -3105,7 +3105,7 @@ export const WORLD_DAYS: WorldDay[] = [
 export const FLASH_REVIEW_WORDS: Word[] = [];
 // Unified pool: Manhattan Prep (ids 1–990) + Flash Review (ids 1001–1569)
 // Use this everywhere in the app instead of GRE_WORDS alone
-export const ALL_GRE_WORDS: Word[] = [
+export const GRE_WORDS: Word[] = [
 {
     "id": 1,
     "word": "Abase",
@@ -13577,5 +13577,18 @@ export const ALL_GRE_WORDS: Word[] = [
     "example": "I am dubious about his claims.",
     "difficulty": 1,
     "category": "Easy"
+  },
+{
+    "id": 953,
+    "word": "egalitarian",
+    "pronunciation": "/iˌɡæl.ɪˈter.i.ən/",
+    "pos": "adjective",
+    "definition": "Believing in the principle that all people are equal and deserve equal rights and opportunities.",
+    "mnemonic": "Egalitarian: 'Equal' + 'itarian'.",
+    "example": "He had an egalitarian vision for the future of the country.",
+    "difficulty": 2,
+    "category": "Behavior"
   }
 ];
+
+export const ALL_GRE_WORDS: Word[] = GRE_WORDS;

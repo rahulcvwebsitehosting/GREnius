@@ -178,7 +178,7 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: { onX
           const fenBefore = chessRef.current.fen();
           const moveObj = chessRef.current.move({ from: fromSq, to: toSq, promotion: 'q' });
           
-          if (soundEnabled) playSound('success' as any, soundEnabled);
+          if (soundEnabled) playSound('flip', soundEnabled);
           
           setLastMove({ from: selected, to: clickedPos });
           setSelected(null);
@@ -236,44 +236,49 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: { onX
   const makeAIMove = async () => {
     setIsThinking(true);
     
-    if (engineRef.current) {
-      const fenBefore = chessRef.current.fen();
-      const bestMoveStr = await engineRef.current.getBestMove(fenBefore);
-      
-      if (bestMoveStr) {
-        const fromSq = bestMoveStr.substring(0, 2) as Square;
-        const toSq = bestMoveStr.substring(2, 4) as Square;
-        const promotion = bestMoveStr.length > 4 ? bestMoveStr[4] : undefined;
+    try {
+      if (engineRef.current) {
+        const fenBefore = chessRef.current.fen();
+        const bestMoveStr = await engineRef.current.getBestMove(fenBefore);
         
-        const moveObj = chessRef.current.move({ from: fromSq, to: toSq, promotion });
-        
-        if (soundEnabled) playSound('success' as any, soundEnabled);
-        
-        const fromPos = squareToPos(fromSq);
-        const toPos = squareToPos(toSq);
-        
-        setLastMove({ from: fromPos, to: toPos });
-        
-        if (moveObj.captured) {
-          setCapturedB(prev => [...prev, { type: moveObj.captured!.toUpperCase() as PieceType, color: 'w' }]);
-        }
+        if (bestMoveStr) {
+          const fromSq = bestMoveStr.substring(0, 2) as Square;
+          const toSq = bestMoveStr.substring(2, 4) as Square;
+          const promotion = bestMoveStr.length > 4 ? bestMoveStr[4] : undefined;
+          
+          const moveObj = chessRef.current.move({ from: fromSq, to: toSq, promotion });
+          
+          if (soundEnabled) playSound('flip', soundEnabled);
+          
+          const fromPos = squareToPos(fromSq);
+          const toPos = squareToPos(toSq);
+          
+          setLastMove({ from: fromPos, to: toPos });
+          
+          if (moveObj.captured) {
+            setCapturedB(prev => [...prev, { type: moveObj.captured!.toUpperCase() as PieceType, color: 'w' }]);
+          }
 
-        setHistory(prev => [...prev, {
-          moveNumber: prev.length + 1,
-          player: 'b',
-          from: fromPos,
-          to: toPos,
-          piece: { type: moveObj.piece.toUpperCase() as PieceType, color: 'b' },
-          captured: moveObj.captured ? { type: moveObj.captured.toUpperCase() as PieceType, color: 'w' } : null,
-          fenBefore,
-          fenAfter: chessRef.current.fen(),
-          evaluation: 0
-        }]);
+          setHistory(prev => [...prev, {
+            moveNumber: prev.length + 1,
+            player: 'b',
+            from: fromPos,
+            to: toPos,
+            piece: { type: moveObj.piece.toUpperCase() as PieceType, color: 'b' },
+            captured: moveObj.captured ? { type: moveObj.captured.toUpperCase() as PieceType, color: 'w' } : null,
+            fenBefore,
+            fenAfter: chessRef.current.fen(),
+            evaluation: 0
+          }]);
+        }
       }
+    } catch (error) {
+      console.error('AI Move error:', error);
+      setStatus('AI failed to move. Your turn.');
+    } finally {
+      updateBoardState();
+      setIsThinking(false);
     }
-    
-    updateBoardState();
-    setIsThinking(false);
   };
 
   const analyzeGame = async () => {

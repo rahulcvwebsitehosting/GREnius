@@ -8,7 +8,8 @@ if (!fs.existsSync(destDir)) {
   fs.mkdirSync(destDir);
 }
 
-fs.copyFileSync(path.join(srcDir, 'stockfish.js'), path.join(destDir, 'stockfish.js'));
-fs.copyFileSync(path.join(srcDir, 'stockfish.wasm'), path.join(destDir, 'stockfish.wasm'));
+// Use Stockfish 18 lite-single which is stable, fast, and doesn't require CORS headers (COOP/COEP)
+fs.copyFileSync(path.join(srcDir, 'stockfish-18-lite-single.js'), path.join(destDir, 'stockfish.js'));
+fs.copyFileSync(path.join(srcDir, 'stockfish-18-lite-single.wasm'), path.join(destDir, 'stockfish.wasm'));
 
-console.log('Copied stockfish files to public/');
+console.log('Copied Stockfish 18 lite-single package files to public/');

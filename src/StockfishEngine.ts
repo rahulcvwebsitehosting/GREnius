@@ -1,32 +1,92 @@
 export class StockfishEngine {
   private worker: Worker;
   private isReady: boolean = false;
+  private isInitializing: boolean = false;
+  private initPromise: Promise<void> | null = null;
   private callbacks: Record<string, Function> = {};
   private currentDepth: number = 20;
 
   constructor() {
     this.worker = new Worker('/stockfish.js');
     this.worker.onmessage = this.onMessage.bind(this);
-    this.worker.postMessage('uci');
-    this.worker.postMessage('setoption name Threads value 4');
-    this.worker.postMessage('setoption name Hash value 128');
+    this.init();
+  }
+
+  private async init() {
+    if (this.isInitializing) return this.initPromise;
+    this.isInitializing = true;
+    
+    this.initPromise = new Promise((resolve, reject) => {
+      const timeoutToken = setTimeout(() => {
+        console.error('Stockfish Engine: Initialization timeout reached (30s)');
+        this.isInitializing = false;
+        reject(new Error('Stockfish timeout'));
+      }, 30000);
+
+      let uciOk = false;
+      let readyOk = false;
+
+      const finishInit = () => {
+        if (uciOk && readyOk) {
+          console.log('Stockfish Engine: Fully initialized and ready');
+          clearTimeout(timeoutToken);
+          this.isReady = true;
+          this.isInitializing = false;
+          // Set safe defaults for lite-single version
+          this.worker.postMessage('setoption name Hash value 16');
+          resolve();
+        }
+      };
+
+      this.callbacks['uciok'] = () => {
+        console.log('Stockfish Engine: uciok received. Engine identification complete.');
+        uciOk = true;
+        console.log('Stockfish Engine: Sending isready...');
+        this.worker.postMessage('isready');
+      };
+
+      this.callbacks['readyok'] = () => {
+        console.log('Stockfish Engine: readyok received. Engine is ready for commands.');
+        readyOk = true;
+        finishInit();
+      };
+      
+      this.worker.onerror = (e) => {
+        clearTimeout(timeoutToken);
+        console.error('Stockfish Worker Error:', e);
+        this.isInitializing = false;
+        reject(new Error('Stockfish worker error'));
+      };
+
+      console.log('Stockfish Engine: Starting initialization...');
+      console.log('Stockfish Engine: Sending uci...');
+      this.worker.postMessage('uci');
+    });
+    
+    return this.initPromise;
   }
 
   private onMessage(event: MessageEvent) {
-    const line = event.data;
+    const line = typeof event.data === 'string' ? event.data.trim() : '';
+    console.log('Stockfish message:', line);
+    if (!line) return;
+    
     if (line === 'uciok') {
-      this.isReady = true;
-      this.worker.postMessage('isready');
+      if (this.callbacks['uciok']) {
+        this.callbacks['uciok']();
+        delete this.callbacks['uciok'];
+      }
     } else if (line === 'readyok') {
-      if (this.callbacks['ready']) {
-        this.callbacks['ready']();
-        delete this.callbacks['ready'];
+      if (this.callbacks['readyok']) {
+        this.callbacks['readyok']();
+        delete this.callbacks['readyok'];
       }
     } else if (line.startsWith('bestmove')) {
       const match = line.match(/bestmove\s+(\S+)/);
       if (match && this.callbacks['bestmove']) {
-        this.callbacks['bestmove'](match[1]);
+        const callback = this.callbacks['bestmove'];
         delete this.callbacks['bestmove'];
+        callback(match[1]);
       }
     } else if (line.startsWith('info depth')) {
       if (this.callbacks['info']) {
@@ -36,6 +96,7 @@ export class StockfishEngine {
   }
 
   public async getBestMove(fen: string, depth?: number): Promise<string> {
+    if (!this.isReady) await this.init();
     const searchDepth = depth || this.currentDepth;
     return new Promise((resolve) => {
       this.callbacks['bestmove'] = resolve;
@@ -45,6 +106,7 @@ export class StockfishEngine {
   }
 
   public async evaluatePosition(fen: string, depth: number = 15): Promise<{ score: number, bestMove: string, lines: any[] }> {
+    if (!this.isReady) await this.init();
     return new Promise((resolve) => {
       let bestMove = '';
       let score = 0;

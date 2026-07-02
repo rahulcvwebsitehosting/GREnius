@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { RotateCcw, Lightbulb, Maximize2, Minimize2, Flag, Play, Brain, BarChart3, SkipBack, SkipForward } from 'lucide-react';
 import { Chess, Square } from 'chess.js';
-import { StockfishEngine } from '../StockfishEngine';
 import { posToSquare, squareToPos, getBoard, PieceType, Piece, Board, ChessPos } from '../chessUtils';
 import { PIECE_IMAGES } from '../pieceSvgs';
 type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)' | 'Extreme Grandmaster (2500+ Elo)';
@@ -117,9 +116,7 @@ function PlayerBar({ name, rating, capturedPieces }: {
   return (
     <div className="flex items-center gap-2 px-2.5 py-1.5 bg-white/90 rounded-[3px] border border-gray-200/70 shadow-sm">
       <div className="shrink-0">
-        <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-xs font-bold">
-          {name[0]}
-        </div>
+        <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-xs font-bold">{name[0]}</div>
       </div>
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <span className="text-sm font-semibold text-gray-800 truncate">{name}</span>
@@ -141,10 +138,7 @@ function MoveHistory({ history, reviewIndex, onSelectMove }: {
   history: MoveRecord[]; reviewIndex: number; onSelectMove: (idx: number) => void;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [history.length]);
-
+  useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [history.length]);
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 shrink-0">
@@ -153,27 +147,23 @@ function MoveHistory({ history, reviewIndex, onSelectMove }: {
       </div>
       <div ref={listRef} className="flex-1 overflow-y-auto custom-scrollbar py-1">
         {history.length === 0 ? (
-          <div className="flex items-center justify-center h-full py-8">
-            <p className="text-xs text-gray-300">Make a move to begin</p>
-          </div>
+          <div className="flex items-center justify-center h-full py-8"><p className="text-xs text-gray-300">Make a move to begin</p></div>
         ) : (
-          <table className="w-full text-sm">
-            <tbody>
-              {Array.from({ length: Math.ceil(history.length / 2) }).map((_, i) => {
-                const wMove = history[i * 2];
-                const bMove = history[i * 2 + 1];
-                return (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="w-7 text-[11px] text-gray-400 text-right pr-1 py-0.5 font-mono">{i + 1}.</td>
-                    <td className={`py-0.5 px-1.5 rounded cursor-pointer font-mono text-[13px] ${reviewIndex === i * 2 ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700'}`}
-                      onClick={() => onSelectMove(i * 2)}>{wMove.san}</td>
-                    <td className={`py-0.5 px-1.5 rounded cursor-pointer font-mono text-[13px] ${reviewIndex === i * 2 + 1 ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700'}`}
-                      onClick={() => bMove && onSelectMove(i * 2 + 1)}>{bMove?.san || ''}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <table className="w-full text-sm"><tbody>
+            {Array.from({ length: Math.ceil(history.length / 2) }).map((_, i) => {
+              const wMove = history[i * 2];
+              const bMove = history[i * 2 + 1];
+              return (
+                <tr key={i} className="hover:bg-gray-50">
+                  <td className="w-7 text-[11px] text-gray-400 text-right pr-1 py-0.5 font-mono">{i + 1}.</td>
+                  <td className={`py-0.5 px-1.5 rounded cursor-pointer font-mono text-[13px] ${reviewIndex === i * 2 ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700'}`}
+                    onClick={() => onSelectMove(i * 2)}>{wMove.san}</td>
+                  <td className={`py-0.5 px-1.5 rounded cursor-pointer font-mono text-[13px] ${reviewIndex === i * 2 + 1 ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-gray-700'}`}
+                    onClick={() => bMove && onSelectMove(i * 2 + 1)}>{bMove?.san || ''}</td>
+                </tr>
+              );
+            })}
+          </tbody></table>
         )}
       </div>
     </div>
@@ -218,9 +208,24 @@ function GameOverModal({ result, onPlayAgain, onAnalyze, onReview }: {
   );
 }
 
+function engineReady(worker: Worker): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => { console.warn('Engine init timeout'); reject(new Error('timeout')); }, 15000);
+    let uci = false, ready = false;
+    const handler = (e: MessageEvent) => {
+      const d = typeof e.data === 'string' ? e.data.trim() : '';
+      if (d === 'uciok') { uci = true; worker.postMessage('isready'); }
+      else if (d === 'readyok') { ready = true; }
+      if (uci && ready) { clearTimeout(timeout); worker.onmessage = null; resolve(); }
+    };
+    worker.onmessage = handler;
+    worker.postMessage('uci');
+  });
+}
+
 export default function ChessGame() {
-  const engineRef = useRef<StockfishEngine | null>(null);
   const gameRef = useRef(new Chess());
+  const workerRef = useRef<Worker | null>(null);
   const [board, setBoard] = useState<Board>(getBoard(gameRef.current));
   const [selected, setSelected] = useState<ChessPos | null>(null);
   const [legalMoves, setLegalMoves] = useState<ChessPos[]>([]);
@@ -238,22 +243,23 @@ export default function ChessGame() {
   const animIdRef = useRef(0);
   const capturedW = useRef<Piece[]>([]);
   const capturedB = useRef<Piece[]>([]);
-
+  const aiBusy = useRef(false);
+  const engineReadyPromiseRef = useRef<Promise<void>>();
   const lastMove = history.length > 0 ? { from: history[history.length - 1].from, to: history[history.length - 1].to } : null;
   const currentEval = evaluations.length > 0 ? evaluations[evaluations.length - 1] : 0;
 
-  const diffToLevel: Record<Difficulty, number> = {
-    'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8,
-    'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20,
-  };
-
   useEffect(() => {
-    if (engineRef.current) return;
-    const engine = new StockfishEngine();
-    engineRef.current = engine;
-    const level = diffToLevel[difficulty];
-    setTimeout(() => engine.setDifficulty(level), 500);
-    return () => { engine.terminate(); };
+    const worker = new Worker('/stockfish18.js');
+    workerRef.current = worker;
+    const promise = engineReady(worker).then(() => {
+      const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[difficulty];
+      worker.postMessage(`setoption name Skill Level value ${level}`);
+      worker.postMessage('setoption name UCI_LimitStrength value false');
+      worker.postMessage('setoption name Threads value 1');
+      worker.postMessage('setoption name Hash value 32');
+    }).catch(e => console.error('Engine failed:', e));
+    engineReadyPromiseRef.current = promise;
+    return () => { worker.terminate(); };
   }, []);
 
   const refreshBoard = useCallback(() => {
@@ -265,45 +271,56 @@ export default function ChessGame() {
     }
   }, []);
 
+  const getWorkerMove = (fen: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const worker = workerRef.current;
+      if (!worker) { reject(new Error('no worker')); return; }
+      const timeout = setTimeout(() => { worker.onmessage = null; reject(new Error('timeout')); }, 30000);
+      worker.onmessage = (e: MessageEvent) => {
+        const d = typeof e.data === 'string' ? e.data.trim() : '';
+        if (d.startsWith('bestmove')) {
+          clearTimeout(timeout);
+          worker.onmessage = null;
+          const m = d.match(/bestmove\s+(\S+)/);
+          resolve(m ? m[1] : '');
+        }
+      };
+      worker.postMessage(`position fen ${fen}`);
+      worker.postMessage('go depth 12');
+    });
+  };
+
   const makeAIMove = async () => {
-    const eng = engineRef.current;
-    if (!eng || gameRef.current.isGameOver()) return;
+    if (aiBusy.current || !workerRef.current || gameRef.current.isGameOver()) return;
+    await engineReadyPromiseRef.current;
+    aiBusy.current = true;
     try {
       const fen = gameRef.current.fen();
-      console.log('AI: getting best move for', fen.slice(0, 30));
-      const moveStr = await eng.getBestMove(fen);
-      if (!moveStr) { console.warn('AI: no move returned'); return; }
+      const moveStr = await getWorkerMove(fen);
+      if (!moveStr) { console.warn('AI: empty move'); aiBusy.current = false; return; }
       const result = gameRef.current.move(moveStr, { strict: true });
-      if (!result) { console.warn('AI: invalid move', moveStr); return; }
-      console.log('AI: played', result.san);
+      if (!result) { console.warn('AI: invalid', moveStr); aiBusy.current = false; return; }
       const from = squareToPos(result.from);
       const to = squareToPos(result.to);
-      const capturedPiece = result.captured
-        ? { type: result.captured as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const }
-        : null;
+      const capturedPiece = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
       if (capturedPiece) {
         if (result.color === 'w') capturedB.current.push(capturedPiece);
         else capturedW.current.push(capturedPiece);
       }
-      const p: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
-      const animId = ++animIdRef.current;
+      const p: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
       const rec: MoveRecord = {
         moveNumber: Math.floor(history.length / 2) + 1,
-        player: result.color as 'w' | 'b',
-        from, to, piece: p, captured: capturedPiece,
+        player: result.color as 'w' | 'b', from, to, piece: p, captured: capturedPiece,
         san: result.san, fenBefore: fen, fenAfter: gameRef.current.fen(), evaluation: 0,
       };
-      setAnimatingPiece({ id: animId, piece: p, from, to });
+      setAnimatingPiece({ id: ++animIdRef.current, piece: p, from, to });
       setHistory(prev => [...prev, rec]);
-      setTimeout(() => {
-        setAnimatingPiece(null);
-        refreshBoard();
-      }, 150);
-    } catch (e) { console.error('AI move error:', e); }
+      setTimeout(() => { setAnimatingPiece(null); refreshBoard(); aiBusy.current = false; }, 150);
+    } catch (e) { console.error('AI error:', e); aiBusy.current = false; }
   };
 
   const handleSquareClick = (row: number, col: number) => {
-    if (gameOver || mode !== 'play') return;
+    if (gameOver || mode !== 'play' || aiBusy.current) return;
     const g = gameRef.current;
     if (selected === null) {
       const piece = getBoard(g)[row][col];
@@ -313,34 +330,27 @@ export default function ChessGame() {
       setLegalMoves(moves.map(m => squareToPos(m.to as Square)));
       return;
     }
-    if (selected.row === row && selected.col === col) {
-      setSelected(null); setLegalMoves([]);
-      return;
-    }
+    if (selected.row === row && selected.col === col) { setSelected(null); setLegalMoves([]); return; }
     const fromSquare = posToSquare(selected) as Square;
     const toSquare = posToSquare({ row, col }) as Square;
     const fenBefore = g.fen();
     const result = g.move({ from: fromSquare, to: toSquare, promotion: 'q' });
     if (!result) { setSelected(null); setLegalMoves([]); return; }
-    const capturedPiece = result.captured
-      ? { type: result.captured as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const }
-      : null;
+    const capturedPiece = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
     if (capturedPiece) {
       if (result.color === 'w') capturedB.current.push(capturedPiece);
       else capturedW.current.push(capturedPiece);
     }
     const from = squareToPos(result.from);
     const to = squareToPos(result.to);
-    const piece: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
-    const animId = ++animIdRef.current;
+    const piece: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
     const rec: MoveRecord = {
       moveNumber: Math.floor(history.length / 2) + 1,
-      player: result.color as 'w' | 'b',
-      from, to, piece, captured: capturedPiece,
+      player: result.color as 'w' | 'b', from, to, piece, captured: capturedPiece,
       san: result.san, fenBefore, fenAfter: g.fen(), evaluation: 0,
     };
     setSelected(null); setLegalMoves([]);
-    setAnimatingPiece({ id: animId, piece, from, to });
+    setAnimatingPiece({ id: ++animIdRef.current, piece, from, to });
     refreshBoard();
     setHistory(prev => [...prev, rec]);
     setReviewIndex(-1);
@@ -376,10 +386,10 @@ export default function ChessGame() {
   }, [history]);
 
   const getHint = useCallback(async () => {
-    const eng = engineRef.current;
-    if (!eng || gameOver) return;
+    if (!workerRef.current || gameOver || aiBusy.current) return;
+    await engineReadyPromiseRef.current;
     try {
-      const moveStr = await eng.getBestMove(gameRef.current.fen());
+      const moveStr = await getWorkerMove(gameRef.current.fen());
       if (moveStr) {
         const from = squareToPos(moveStr.slice(0, 2) as Square);
         if (from) {
@@ -391,16 +401,8 @@ export default function ChessGame() {
     } catch (e) { console.error('Hint error:', e); }
   }, []);
 
-  const enterReview = useCallback(() => {
-    setMode('review');
-    setReviewIndex(history.length - 1);
-  }, [history]);
-
-  const selectMove = useCallback((idx: number) => {
-    setMode('review');
-    setReviewIndex(idx);
-  }, []);
-
+  const enterReview = useCallback(() => { setMode('review'); setReviewIndex(history.length - 1); }, [history]);
+  const selectMove = useCallback((idx: number) => { setMode('review'); setReviewIndex(idx); }, []);
   const reviewPrev = useCallback(() => setReviewIndex(prev => Math.max(-1, prev - 1)), []);
   const reviewNext = useCallback(() => setReviewIndex(prev => Math.min(history.length - 1, prev + 1)), [history]);
 
@@ -419,8 +421,7 @@ export default function ChessGame() {
       <div className="flex gap-3 items-start">
         <div className={`${isFullscreen ? 'fixed inset-0 z-40 bg-[#1a1a1a] flex items-center justify-center p-4' : 'flex-1 max-w-[520px]'}`}>
           <div className={`${isFullscreen ? 'w-full max-w-[min(85vh,85vw)]' : 'w-full'}`}>
-            <PlayerBar name="Stockfish" rating={difficulty.match(/\d+/)?.[0]}
-              capturedPieces={capturedW.current} />
+            <PlayerBar name="Stockfish" rating={difficulty.match(/\d+/)?.[0]} capturedPieces={capturedW.current} />
             <div className="flex gap-1.5 mt-1">
               <div className="relative flex-1">
                 <ChessBoard board={board} selected={selected} legalMoves={legalMoves}
@@ -430,14 +431,10 @@ export default function ChessGame() {
                   onAnalyze={() => setShowEval(true)} onReview={enterReview} />}
               </div>
               {showEval && mode === 'play' && !gameOver && (
-                <div className="w-[10px] shrink-0">
-                  <EvalBar score={currentEval} />
-                </div>
+                <div className="w-[10px] shrink-0"><EvalBar score={currentEval} /></div>
               )}
             </div>
-            <div className="mt-1">
-              <PlayerBar name="You" rating="" capturedPieces={capturedB.current} />
-            </div>
+            <div className="mt-1"><PlayerBar name="You" rating="" capturedPieces={capturedB.current} /></div>
             <div className="flex items-center gap-1 mt-2.5 flex-wrap justify-center">
               {mode === 'play' && !gameOver && (
                 <>
@@ -458,9 +455,7 @@ export default function ChessGame() {
                     <Flag size={13} /> Resign
                   </button>
                   <button onClick={handleDraw}
-                    className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">
-                    Draw
-                  </button>
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">Draw</button>
                   <button onClick={() => setShowEval(p => !p)}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">
                     <BarChart3 size={13} />
@@ -487,18 +482,14 @@ export default function ChessGame() {
                 </div>
               )}
               <button onClick={() => setFlipped(p => !p)}
-                className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">
-                Flip
-              </button>
+                className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">Flip</button>
               <button onClick={() => setIsFullscreen(p => !p)}
                 className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">
                 {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
               </button>
               {history.length > 0 && mode === 'play' && !gameOver && (
                 <button onClick={enterReview}
-                  className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors">
-                  Review
-                </button>
+                  className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors">Review</button>
               )}
               {gameOver && (
                 <button onClick={startNewGame}

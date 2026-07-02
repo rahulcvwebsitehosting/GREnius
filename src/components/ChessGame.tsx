@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw, Lightbulb, X, Maximize2, Minimize2, Flag, Play, Brain, BarChart3, SkipBack, SkipForward } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { RotateCcw, Lightbulb, Maximize2, Minimize2, Flag, Play, Brain, BarChart3, SkipBack, SkipForward } from 'lucide-react';
 import { Chess, Square } from 'chess.js';
 import { StockfishEngine } from '../StockfishEngine';
-import { posToSquare, squareToPos, getBoard, PIECE_UNICODE, PieceType, Piece, Board, ChessPos } from '../chessUtils';
+import { posToSquare, squareToPos, getBoard, PieceType, Piece, Board, ChessPos } from '../chessUtils';
+import { PIECE_SVGS } from '../pieceSvgs';
 type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)' | 'Extreme Grandmaster (2500+ Elo)';
 
 interface MoveRecord {
@@ -17,7 +18,6 @@ interface MoveRecord {
   fenBefore: string;
   fenAfter: string;
   evaluation: number;
-  classification?: 'Brilliant' | 'Great' | 'Best' | 'Excellent' | 'Book' | 'Inaccuracy' | 'Mistake' | 'Blunder';
 }
 interface AnimatingPiece {
   id: number;
@@ -33,20 +33,13 @@ const BOARD_LIGHT_SEL = '#f6f669';
 const BOARD_DARK_SEL = '#baca2b';
 const BOARD_LIGHT_CHECK = '#ff6b6b';
 const BOARD_DARK_CHECK = '#cc4444';
-
 const PIECE_VALUES: Record<string, number> = { Q: 9, R: 5, B: 3.5, N: 3.5, P: 1, K: 0 };
 
-const PieceUnicode = ({ piece, size = 'text-3xl' }: { piece: Piece; size?: string }) => {
+const PieceSvg = ({ piece }: { piece: Piece }) => {
   if (!piece) return null;
-  return (
-    <span className={`${size} leading-none select-none inline-flex items-center justify-center ${
-      piece.color === 'w'
-        ? 'text-white drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.6)]'
-        : 'text-gray-900 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.35)]'
-    }`}>
-      {PIECE_UNICODE[piece.color + piece.type]}
-    </span>
-  );
+  const svg = PIECE_SVGS[piece.color + piece.type];
+  if (!svg) return null;
+  return <div className="flex items-center justify-center w-full h-full" dangerouslySetInnerHTML={{ __html: svg }} />;
 };
 
 function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, animatingPiece, flipped, onSquareClick }: {
@@ -59,7 +52,6 @@ function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, anima
   return (
     <div className="relative w-full aspect-square rounded-[4px] overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.25)] select-none">
       {rows.map((rowArr, ri) => {
-        const displayRow = flipped ? ri : ri;
         const actualRow = flipped ? 7 - ri : ri;
         return (
           <div key={ri} className="flex h-[12.5%]">
@@ -79,7 +71,7 @@ function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, anima
                 <div key={col} onClick={() => onSquareClick?.(actualRow, actualCol)}
                   className="flex-1 flex items-center justify-center relative cursor-pointer aspect-square"
                   style={{ backgroundColor: bg }}>
-                  {p && <PieceUnicode piece={p} />}
+                  {p && <PieceSvg piece={p} />}
                   {isLegal && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                       {p ? (
@@ -107,27 +99,23 @@ function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, anima
           style={{ width: '12.5%', height: '12.5%', top: `${animatingPiece.from.row * 12.5}%`, left: `${animatingPiece.from.col * 12.5}%` }}
           animate={{ top: `${animatingPiece.to.row * 12.5}%`, left: `${animatingPiece.to.col * 12.5}%` }}
           transition={{ duration: 0.15, ease: 'ease-in-out' }}>
-          <PieceUnicode piece={animatingPiece.piece} />
+          <PieceSvg piece={animatingPiece.piece} />
         </motion.div>
       )}
     </div>
   );
 }
 
-function PlayerBar({ name, rating, capturedPieces, isBottom, isThinking }: {
+function PlayerBar({ name, rating, capturedPieces }: {
   name: string; rating?: string; capturedPieces: Piece[];
-  isBottom?: boolean; isThinking?: boolean;
 }) {
   const sorted = [...capturedPieces].sort((a, b) => (PIECE_VALUES[b.type] || 0) - (PIECE_VALUES[a.type] || 0));
   return (
     <div className="flex items-center gap-2 px-2.5 py-1.5 bg-white/90 rounded-[3px] border border-gray-200/70 shadow-sm">
-      <div className="relative shrink-0">
-        <div className={`w-7 h-7 rounded-full ${isBottom ? 'bg-amber-50 text-amber-600 border border-amber-200' : 'bg-gray-800 text-white'} flex items-center justify-center text-xs font-bold`}>
-          {isBottom ? 'Y' : 'S'}
+      <div className="shrink-0">
+        <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-xs font-bold">
+          {name[0]}
         </div>
-        {isThinking && (
-          <div className="absolute -top-[3px] -right-[3px] w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-        )}
       </div>
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <span className="text-sm font-semibold text-gray-800 truncate">{name}</span>
@@ -135,7 +123,7 @@ function PlayerBar({ name, rating, capturedPieces, isBottom, isThinking }: {
       </div>
       <div className="flex items-center gap-0.5">
         {sorted.slice(0, 5).map((p, i) => (
-          <span key={i} className="text-sm leading-none">{PIECE_UNICODE[p.color + p.type]}</span>
+          <span key={i} className="w-3.5 h-3.5 inline-block" dangerouslySetInnerHTML={{ __html: PIECE_SVGS[p.color + p.type] || '' }} />
         ))}
         {sorted.length > 5 && <span className="text-[10px] text-gray-400 ml-0.5">+{sorted.length - 5}</span>}
       </div>
@@ -224,8 +212,6 @@ function GameOverModal({ result, onPlayAgain, onAnalyze, onReview }: {
   );
 }
 
-
-
 export default function ChessGame() {
   const engineRef = useRef<StockfishEngine | null>(null);
   const [game, setGame] = useState(new Chess());
@@ -236,7 +222,6 @@ export default function ChessGame() {
   const [reviewIndex, setReviewIndex] = useState(-1);
   const [evaluations, setEvaluations] = useState<number[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>('Intermediate (1200 Elo)');
-  const [isThinking, setIsThinking] = useState(false);
   const [playerColor] = useState<'w' | 'b'>('w');
   const [gameOver, setGameOver] = useState<{ type: string; winner?: 'w' | 'b' } | null>(null);
   const [animatingPiece, setAnimatingPiece] = useState<AnimatingPiece | null>(null);
@@ -250,8 +235,6 @@ export default function ChessGame() {
   const capturedB = useRef<Piece[]>([]);
 
   const lastMove = history.length > 0 ? { from: history[history.length - 1].from, to: history[history.length - 1].to } : null;
-  const materialAdv = capturedB.current.reduce((s, p) => s + (PIECE_VALUES[p.type] || 0), 0)
-    - capturedW.current.reduce((s, p) => s + (PIECE_VALUES[p.type] || 0), 0);
   const currentEval = evaluations.length > 0 ? evaluations[evaluations.length - 1] : 0;
 
   const diffToLevel: Record<Difficulty, number> = {
@@ -280,25 +263,15 @@ export default function ChessGame() {
     }
   }, []);
 
-  const requestEval = useCallback(async (g: Chess) => {
-    const eng = engineRef.current;
-    if (!eng) return;
-    try {
-      const evalResult = await eng.evaluatePosition(g.fen());
-      setEvaluations(prev => [...prev, evalResult.score]);
-    } catch { /* ignore */ }
-  }, []);
-
   const makeAIMove = useCallback(async (fen: string) => {
     const eng = engineRef.current;
     if (!eng) return;
-    setIsThinking(true);
     try {
       const moveStr = await eng.getBestMove(fen);
-      if (!moveStr) { setIsThinking(false); return; }
+      if (!moveStr) return;
       const g = new Chess(fen);
       const result = g.move(moveStr, { strict: true });
-      if (!result) { setIsThinking(false); return; }
+      if (!result) return;
       const from = squareToPos(result.from);
       const to = squareToPos(result.to);
       const capturedPiece = result.captured
@@ -315,14 +288,12 @@ export default function ChessGame() {
         setAnimatingPiece(null);
         setGame(g);
         updateBoardState(g);
-        requestEval(g);
-        setIsThinking(false);
       }, 150);
-    } catch { setIsThinking(false); }
-  }, [updateBoardState, requestEval]);
+    } catch { /* ignore */ }
+  }, [updateBoardState]);
 
   const handlePlayerMove = useCallback((row: number, col: number) => {
-    if (isThinking || gameOver || mode !== 'play') return;
+    if (gameOver || mode !== 'play') return;
     const g = new Chess(game.fen());
     if (selected === null) {
       const piece = board[row][col];
@@ -366,12 +337,11 @@ export default function ChessGame() {
         setGame(g);
         const isOver = updateBoardState(g);
         setHistory(prev => [...prev, moveRec]);
-        requestEval(g);
         setReviewIndex(-1);
         if (!isOver) makeAIMove(newFen);
       }, 150);
     } catch { setSelected(null); setLegalMoves([]); }
-  }, [game, board, selected, playerColor, isThinking, gameOver, mode, history, updateBoardState, requestEval, makeAIMove]);
+  }, [game, board, selected, playerColor, gameOver, mode, history, updateBoardState, makeAIMove]);
 
   const startNewGame = useCallback(() => {
     const g = new Chess();
@@ -387,7 +357,7 @@ export default function ChessGame() {
   const handleDraw = useCallback(() => setGameOver({ type: 'draw' }), []);
 
   const undoMove = useCallback(() => {
-    if (history.length < 2 || isThinking) return;
+    if (history.length < 2) return;
     const g = new Chess(game.fen());
     g.undo(); g.undo();
     const gCopy = new Chess(g.fen());
@@ -397,12 +367,11 @@ export default function ChessGame() {
     setGameOver(null);
     if (capturedB.current.length > 0) capturedB.current.pop();
     if (capturedW.current.length > 0) capturedW.current.pop();
-  }, [history, isThinking, game]);
+  }, [history, game]);
 
   const getHint = useCallback(async () => {
     const eng = engineRef.current;
-    if (!eng || isThinking || gameOver) return;
-    setIsThinking(true);
+    if (!eng || gameOver) return;
     try {
       const moveStr = await eng.getBestMove(game.fen());
       if (moveStr) {
@@ -415,8 +384,7 @@ export default function ChessGame() {
         }
       }
     } catch { /* ignore */ }
-    setIsThinking(false);
-  }, [isThinking, game]);
+  }, [game]);
 
   const enterReview = useCallback(() => {
     setMode('review');
@@ -447,7 +415,7 @@ export default function ChessGame() {
         <div className={`${isFullscreen ? 'fixed inset-0 z-40 bg-[#1a1a1a] flex items-center justify-center p-4' : 'flex-1 max-w-[520px]'}`}>
           <div className={`${isFullscreen ? 'w-full max-w-[min(85vh,85vw)]' : 'w-full'}`}>
             <PlayerBar name="Stockfish" rating={difficulty.match(/\d+/)?.[0]}
-              capturedPieces={capturedW.current} isThinking={isThinking} />
+              capturedPieces={capturedW.current} />
             <div className="flex gap-1.5 mt-1">
               <div className="relative flex-1">
                 <ChessBoard board={board} selected={selected} legalMoves={legalMoves}
@@ -463,7 +431,7 @@ export default function ChessGame() {
               )}
             </div>
             <div className="mt-1">
-              <PlayerBar name="You" rating="" capturedPieces={capturedB.current} isBottom />
+              <PlayerBar name="You" rating="" capturedPieces={capturedB.current} />
             </div>
             <div className="flex items-center gap-1 mt-2.5 flex-wrap justify-center">
               {mode === 'play' && !gameOver && (
@@ -472,12 +440,12 @@ export default function ChessGame() {
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 transition-colors">
                     <Brain size={13} /> {difficulty}
                   </button>
-                  <button onClick={undoMove} disabled={history.length < 2 || isThinking}
+                  <button onClick={undoMove} disabled={history.length < 2}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 disabled:opacity-30 transition-colors">
                     <RotateCcw size={13} /> Undo
                   </button>
-                  <button onClick={getHint} disabled={isThinking}
-                    className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 disabled:opacity-30 transition-colors">
+                  <button onClick={getHint}
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">
                     <Lightbulb size={13} /> Hint
                   </button>
                   <button onClick={resign}

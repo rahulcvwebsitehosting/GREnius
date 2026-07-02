@@ -4,7 +4,7 @@ import { RotateCcw, Lightbulb, Maximize2, Minimize2, Flag, Play, Brain, BarChart
 import { Chess, Square } from 'chess.js';
 import { StockfishEngine } from '../StockfishEngine';
 import { posToSquare, squareToPos, getBoard, PieceType, Piece, Board, ChessPos } from '../chessUtils';
-import { PIECE_SVGS } from '../pieceSvgs';
+import { PIECE_IMAGES } from '../pieceSvgs';
 type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)' | 'Extreme Grandmaster (2500+ Elo)';
 
 interface MoveRecord {
@@ -35,11 +35,15 @@ const BOARD_LIGHT_CHECK = '#ff6b6b';
 const BOARD_DARK_CHECK = '#cc4444';
 const PIECE_VALUES: Record<string, number> = { Q: 9, R: 5, B: 3.5, N: 3.5, P: 1, K: 0 };
 
-const PieceSvg = ({ piece }: { piece: Piece }) => {
+const PieceImg = ({ piece }: { piece: Piece }) => {
   if (!piece) return null;
-  const svg = PIECE_SVGS[piece.color + piece.type];
-  if (!svg) return null;
-  return <div className="flex items-center justify-center w-full h-full" dangerouslySetInnerHTML={{ __html: svg }} />;
+  const url = PIECE_IMAGES[piece.color + piece.type];
+  if (!url) return null;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <img src={url} alt="" className="w-[85%] h-[85%] object-contain select-none pointer-events-none" draggable={false} />
+    </div>
+  );
 };
 
 function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, animatingPiece, flipped, onSquareClick }: {
@@ -71,7 +75,7 @@ function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, anima
                 <div key={col} onClick={() => onSquareClick?.(actualRow, actualCol)}
                   className="flex-1 flex items-center justify-center relative cursor-pointer aspect-square"
                   style={{ backgroundColor: bg }}>
-                  {p && <PieceSvg piece={p} />}
+                  {p && <PieceImg piece={p} />}
                   {isLegal && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                       {p ? (
@@ -99,7 +103,7 @@ function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, anima
           style={{ width: '12.5%', height: '12.5%', top: `${animatingPiece.from.row * 12.5}%`, left: `${animatingPiece.from.col * 12.5}%` }}
           animate={{ top: `${animatingPiece.to.row * 12.5}%`, left: `${animatingPiece.to.col * 12.5}%` }}
           transition={{ duration: 0.15, ease: 'ease-in-out' }}>
-          <PieceSvg piece={animatingPiece.piece} />
+          <PieceImg piece={animatingPiece.piece} />
         </motion.div>
       )}
     </div>
@@ -123,7 +127,9 @@ function PlayerBar({ name, rating, capturedPieces }: {
       </div>
       <div className="flex items-center gap-0.5">
         {sorted.slice(0, 5).map((p, i) => (
-          <span key={i} className="w-3.5 h-3.5 inline-block" dangerouslySetInnerHTML={{ __html: PIECE_SVGS[p.color + p.type] || '' }} />
+          <span key={i} className="w-3.5 h-3.5 inline-block">
+            <img src={PIECE_IMAGES[p.color + p.type]} alt="" className="w-full h-full object-contain" draggable={false} />
+          </span>
         ))}
         {sorted.length > 5 && <span className="text-[10px] text-gray-400 ml-0.5">+{sorted.length - 5}</span>}
       </div>
@@ -260,7 +266,9 @@ export default function ChessGame() {
       if (g.isCheckmate()) setGameOver({ type: 'checkmate', winner: g.turn() === 'w' ? 'b' : 'w' });
       else if (g.isStalemate()) setGameOver({ type: 'stalemate' });
       else if (g.isDraw()) setGameOver({ type: 'draw' });
+      return true;
     }
+    return false;
   }, []);
 
   const makeAIMove = useCallback(async (fen: string) => {
@@ -289,7 +297,7 @@ export default function ChessGame() {
         setGame(g);
         updateBoardState(g);
       }, 150);
-    } catch { /* ignore */ }
+    } catch (e) { console.error('AI move error:', e); }
   }, [updateBoardState]);
 
   const handlePlayerMove = useCallback((row: number, col: number) => {
@@ -383,7 +391,7 @@ export default function ChessGame() {
           setLegalMoves(moves.map(m => squareToPos(m.to as Square)));
         }
       }
-    } catch { /* ignore */ }
+    } catch (e) { console.error('Hint error:', e); }
   }, [game]);
 
   const enterReview = useCallback(() => {

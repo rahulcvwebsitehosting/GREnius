@@ -1,15 +1,16 @@
-export const PIECE_SVGS: Record<string, string> = {
-  wK: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#fff" stroke="#000" stroke-width="1.2"><path d="M22.5 3c-1.5 0-3 1.5-3 3 0 1 .5 1.5.5 2l-2 4h-3l1.5 5.5L17 27l1 2.5 2-1.5 2.5 2V36h-4v3h10v-3h-4v-6l2.5-2 2 1.5 1-2.5-1.5-9.5L28 12h-3l-2-4c.5-.5.5-1 .5-2 0-1.5-1.5-3-3-3z"/><path d="M19.5 12h6" fill="none"/></g></svg>',
-  wQ: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#fff" stroke="#000" stroke-width="1.2"><path d="M23 4c-1.1 0-2 .9-2 2 0 .5.2 1 .5 1.4L20 12l-2-5-2 6-2-3-1.5 8 1.5 3 4 2-1 12h12l-1-12 4-2 1.5-3-1.5-8-2 3-2-6-2 5-1.5-4.6c.3-.4.5-.9.5-1.4 0-1.1-.9-2-2-2z"/><path d="M12 36h22v3H12z"/></g></svg>',
-  wR: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#fff" stroke="#000" stroke-width="1.2"><path d="M9 39h28v-4H9v4zM12 35v-4h4v4h4v-4h4v4h4v-4h4v4h4v-4h-8v-4h8V15h-8v-5h-4v5h-4v-5h-4v5h-4v5h-8v16h8v4h-4z"/></g></svg>',
-  wB: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#fff" stroke="#000" stroke-width="1.2"><path d="M15 32c2 4 4 4 7 4s5 0 7-4c2-4 1-7-1-10-2-3-2.5-5-2.5-7 0-2 1-4 1-4s-1.5-1-3.5-1-3.5 1-3.5 1 1 2 1 4c0 2-.5 4-2.5 7-2 3-3 6-1 10z"/><path d="M12 36h22v3H12z"/></g></svg>',
-  wN: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#fff" stroke="#000" stroke-width="1.2"><path d="M22 10c3 0 5 2 5 5 0 3-2 5-4 7-2 2-3 3-3 5 0 2 2 4 5 4h5c3 0 5-2 5-5 0-2-1-4-3-5s-4-2-4-4c0-2 1-3 2-3 1 0 2 0 2 1v1c0 1 1 2 2 2 1 0 2-1 2-2 0-3-2-6-6-6-3 0-5 2-6 4-1 2-2 3-4 3s-3-1-3-3c0-1 0-2 1-3l-4 2c-2 1-3 3-3 5 0 4 3 7 7 7 2 0 4-1 5-2 1-1 2-3 2-5 0-2-1-4-3-5s-3-2-3-4c0-2 1-3 2-4z"/></g></svg>',
-  wP: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#fff" stroke="#000" stroke-width="1.2"><path d="M22 9c-2.2 0-4 1.8-4 4 0 .9.3 1.7.8 2.4C17.3 16.5 16 18.6 16 21c0 2 .9 3.8 2.4 5-3 1.1-7.4 5.6-7.4 13.5h22c0-7.9-4.4-12.4-7.4-13.5 1.5-1.2 2.4-3 2.4-5 0-2.4-1.3-4.5-2.8-5.6.5-.7.8-1.5.8-2.4 0-2.2-1.8-4-4-4z"/></g></svg>',
+const CDN = 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150';
 
-  bK: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#1a1a1a"><path d="M22.5 3c-1.5 0-3 1.5-3 3 0 1 .5 1.5.5 2l-2 4h-3l1.5 5.5L17 27l1 2.5 2-1.5 2.5 2V36h-4v3h10v-3h-4v-6l2.5-2 2 1.5 1-2.5-1.5-9.5L28 12h-3l-2-4c.5-.5.5-1 .5-2 0-1.5-1.5-3-3-3z"/><path d="M19.5 12h6" stroke="#1a1a1a" stroke-width="1.5" fill="none"/></g></svg>',
-  bQ: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#1a1a1a"><path d="M23 4c-1.1 0-2 .9-2 2 0 .5.2 1 .5 1.4L20 12l-2-5-2 6-2-3-1.5 8 1.5 3 4 2-1 12h12l-1-12 4-2 1.5-3-1.5-8-2 3-2-6-2 5-1.5-4.6c.3-.4.5-.9.5-1.4 0-1.1-.9-2-2-2z"/><path d="M12 36h22v3H12z"/></g></svg>',
-  bR: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#1a1a1a"><path d="M9 39h28v-4H9v4zM12 35v-4h4v4h4v-4h4v4h4v-4h4v4h4v-4h-8v-4h8V15h-8v-5h-4v5h-4v-5h-4v5h-4v5h-8v16h8v4h-4z"/></g></svg>',
-  bB: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#1a1a1a"><path d="M15 32c2 4 4 4 7 4s5 0 7-4c2-4 1-7-1-10-2-3-2.5-5-2.5-7 0-2 1-4 1-4s-1.5-1-3.5-1-3.5 1-3.5 1 1 2 1 4c0 2-.5 4-2.5 7-2 3-3 6-1 10z"/><path d="M12 36h22v3H12z"/></g></svg>',
-  bN: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#1a1a1a"><path d="M22 10c3 0 5 2 5 5 0 3-2 5-4 7-2 2-3 3-3 5 0 2 2 4 5 4h5c3 0 5-2 5-5 0-2-1-4-3-5s-4-2-4-4c0-2 1-3 2-3 1 0 2 0 2 1v1c0 1 1 2 2 2 1 0 2-1 2-2 0-3-2-6-6-6-3 0-5 2-6 4-1 2-2 3-4 3s-3-1-3-3c0-1 0-2 1-3l-4 2c-2 1-3 3-3 5 0 4 3 7 7 7 2 0 4-1 5-2 1-1 2-3 2-5 0-2-1-4-3-5s-3-2-3-4c0-2 1-3 2-4z"/></g></svg>',
-  bP: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="100%" height="100%"><g fill="#1a1a1a"><path d="M22 9c-2.2 0-4 1.8-4 4 0 .9.3 1.7.8 2.4C17.3 16.5 16 18.6 16 21c0 2 .9 3.8 2.4 5-3 1.1-7.4 5.6-7.4 13.5h22c0-7.9-4.4-12.4-7.4-13.5 1.5-1.2 2.4-3 2.4-5 0-2.4-1.3-4.5-2.8-5.6.5-.7.8-1.5.8-2.4 0-2.2-1.8-4-4-4z"/></g></svg>',
+export const PIECE_IMAGES: Record<string, string> = {
+  wK: `${CDN}/wk.png`,
+  wQ: `${CDN}/wq.png`,
+  wR: `${CDN}/wr.png`,
+  wB: `${CDN}/wb.png`,
+  wN: `${CDN}/wn.png`,
+  wP: `${CDN}/wp.png`,
+  bK: `${CDN}/bk.png`,
+  bQ: `${CDN}/bq.png`,
+  bR: `${CDN}/br.png`,
+  bB: `${CDN}/bb.png`,
+  bN: `${CDN}/bn.png`,
+  bP: `${CDN}/bp.png`,
 };

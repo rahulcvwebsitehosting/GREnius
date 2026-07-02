@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Settings as SettingsIcon, ChevronRight, Flame, Trophy, Zap, Keyboard, Menu, X, Search, BookMarked, Book, Maximize2, Minimize2, RotateCcw, Lightbulb, SkipForward, Play, Pause, FastForward, Rewind, ChevronLeft } from 'lucide-react';
+import { ChevronRight, RotateCcw, Lightbulb, X, Search, Maximize2, Minimize2, Flag, Play, Brain, BarChart3, SkipBack, SkipForward } from 'lucide-react';
 import { Chess, Square } from 'chess.js';
 import { StockfishEngine } from '../StockfishEngine';
 import { posToSquare, squareToPos, getBoard, PIECE_UNICODE, PieceType, Piece, Board, ChessPos } from '../chessUtils';
-import { GameAnalysis } from './GameAnalysis';
-import { playSound, XP_REWARDS } from '../utils';
-
+import { playSound } from '../utils';
 type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)' | 'Extreme Grandmaster (2500+ Elo)';
 
 interface MoveRecord {
@@ -16,749 +14,618 @@ interface MoveRecord {
   to: ChessPos;
   piece: Piece;
   captured: Piece | null;
+  san: string;
   fenBefore: string;
   fenAfter: string;
   evaluation: number;
-  bestMoves?: { move: string, val: number }[];
   classification?: 'Brilliant' | 'Great' | 'Best' | 'Excellent' | 'Book' | 'Inaccuracy' | 'Mistake' | 'Blunder';
-  explanation?: string;
 }
-
-const ChessBoard = ({ 
-  board, 
-  selected, 
-  legalMoves = [], 
-  lastMove, 
-  inCheck, 
-  hint, 
-  onSquareClick,
-  isFullscreen
-}: {
-  board: Board;
-  selected?: ChessPos | null;
-  legalMoves?: ChessPos[];
-  lastMove?: { from: ChessPos; to: ChessPos } | null;
-  inCheck?: boolean;
-  hint?: { from?: ChessPos, to?: ChessPos, type: string } | null;
-  onSquareClick?: (row: number, col: number) => void;
-  isFullscreen?: boolean;
-}) => {
+interface AnimatingPiece {
+  id: number;
+  piece: Piece;
+  from: ChessPos;
+  to: ChessPos;
+}
+const BOARD_LIGHT = '#ebecd0';
+const BOARD_DARK = '#779556';
+const BOARD_LIGHT_LAST = '#f5f082';
+const BOARD_DARK_LAST = '#bac237';
+const BOARD_LIGHT_SEL = '#f6f669';
+const BOARD_DARK_SEL = '#baca2b';
+const BOARD_LIGHT_CHECK = '#ff6b6b';
+const BOARD_DARK_CHECK = '#cc4444';
+const PieceUnicode = ({ piece, size = 'text-4xl' }: { piece: Piece; size?: string }) => {
+  if (!piece) return null;
   return (
-    <div className={`border-4 border-accent-gold/40 rounded-lg overflow-hidden shadow-2xl bg-white w-full aspect-square`}>
+    <span className={`${size} leading-none select-none ${
+      piece.color === 'w'
+        ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'
+        : 'text-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]'
+    }`}>
+      {PIECE_UNICODE[piece.color + piece.type]}
+    </span>
+  );
+};
+
+function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, animatingPiece, onSquareClick }: {
+  board: Board; selected?: ChessPos | null; legalMoves?: ChessPos[];
+  lastMove?: { from: ChessPos; to: ChessPos } | null; inCheck?: boolean;
+  animatingPiece?: AnimatingPiece | null;
+  onSquareClick?: (row: number, col: number) => void;
+}) {
+  return (
+    <div className="relative w-full aspect-square rounded-sm overflow-hidden shadow-lg select-none">
       {board.map((rowArr, row) => (
         <div key={row} className="flex h-[12.5%]">
-          {rowArr.map((piece, col) => {
+          {rowArr.map((p, col) => {
             const isLight = (row + col) % 2 === 0;
             const isSelected = selected?.row === row && selected?.col === col;
+            const isLastFrom = lastMove?.from.row === row && lastMove?.from.col === col;
+            const isLastTo = lastMove?.to.row === row && lastMove?.to.col === col;
             const isLegal = legalMoves.some(m => m.row === row && m.col === col);
-            const isLast = lastMove && ((lastMove.from.row===row&&lastMove.from.col===col)||(lastMove.to.row===row&&lastMove.to.col===col));
-            const isKingInCheck = inCheck && piece?.type === 'K';
-            const isHintFrom = hint?.from?.row === row && hint?.from?.col === col && (hint.type === 'piece' || hint.type === 'move');
-            const isHintTo = hint?.to?.row === row && hint?.to?.col === col && (hint.type === 'square' || hint.type === 'move');
-
-            let bg = isLight ? 'bg-[#f0d9b5]' : 'bg-[#b58863]';
-            if (isSelected) bg = 'bg-yellow-400';
-            else if (isKingInCheck) bg = 'bg-red-400';
-            else if (isLast) bg = isLight ? 'bg-yellow-200' : 'bg-yellow-600';
-            else if (isHintFrom) bg = 'bg-blue-300';
-            else if (isHintTo) bg = 'bg-blue-400';
-
+            const isKingCheck = inCheck && p?.type === 'K';
+            let bg = isLight ? BOARD_LIGHT : BOARD_DARK;
+            if (isSelected) bg = isLight ? BOARD_LIGHT_SEL : BOARD_DARK_SEL;
+            else if (isKingCheck) bg = isLight ? BOARD_LIGHT_CHECK : BOARD_DARK_CHECK;
+            else if (isLastFrom || isLastTo) bg = isLight ? BOARD_LIGHT_LAST : BOARD_DARK_LAST;
             return (
-              <div
-                key={col}
-                onClick={() => onSquareClick?.(row, col)}
-                className={`flex-1 flex items-center justify-center cursor-pointer relative select-none ${bg} hover:brightness-105 transition-all aspect-square`}
-              >
+              <div key={col} onClick={() => onSquareClick?.(row, col)}
+                className="flex-1 flex items-center justify-center relative cursor-pointer aspect-square transition-colors duration-150"
+                style={{ backgroundColor: bg }}>
                 {isLegal && (
-                  <div className={`absolute inset-0 flex items-center justify-center ${piece ? 'ring-4 ring-inset ring-black/10' : ''}`}>
-                    {!piece && <div className="w-3 h-3 rounded-full bg-black/10" />}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    {p ? (
+                      <div className="w-[35%] h-[35%] rounded-full border-[3px] border-black/15" />
+                    ) : (
+                      <div className="w-[25%] h-[25%] rounded-full bg-black/12" />
+                    )}
                   </div>
                 )}
-                {piece && (
-                  <span className={`text-3xl sm:text-4xl md:text-5xl leading-none z-10 drop-shadow-sm ${piece.color === 'w' ? 'text-white' : 'text-black'}`} style={{
-                    filter: piece.color === 'w' ? 'drop-shadow(0 0 1px black)' : 'drop-shadow(0 0 1px white)'
-                  }}>
-                    {PIECE_UNICODE[piece.color + piece.type]}
-                  </span>
-                )}
-                {col === 0 && <span className={`absolute top-0.5 left-0.5 text-[8px] sm:text-[10px] font-bold ${isLight ? 'text-[#b58863]' : 'text-[#f0d9b5]'}`}>{8-row}</span>}
-                {row === 7 && <span className={`absolute bottom-0.5 right-0.5 text-[8px] sm:text-[10px] font-bold ${isLight ? 'text-[#b58863]' : 'text-[#f0d9b5]'}`}>{'abcdefgh'[col]}</span>}
+                {col === 0 && (
+                  <span className="absolute top-0.5 left-0.5 text-[9px] font-bold pointer-events-none"
+                    style={{ color: isLight ? BOARD_DARK : BOARD_LIGHT }}>{8 - row}</span>)}
+                {row === 7 && (
+                  <span className="absolute bottom-0.5 right-0.5 text-[9px] font-bold pointer-events-none"
+                    style={{ color: isLight ? BOARD_DARK : BOARD_LIGHT }}>{'abcdefgh'[col]}</span>)}
               </div>
             );
           })}
         </div>
       ))}
+      {animatingPiece && (
+        <motion.div key={animatingPiece.id}
+          className="absolute z-30 pointer-events-none flex items-center justify-center"
+          style={{ width: '12.5%', height: '12.5%', top: `${animatingPiece.from.row * 12.5}%`, left: `${animatingPiece.from.col * 12.5}%` }}
+          animate={{ top: `${animatingPiece.to.row * 12.5}%`, left: `${animatingPiece.to.col * 12.5}%` }}
+          transition={{ duration: 0.2, ease: 'ease-in-out' }}>
+          <PieceUnicode piece={animatingPiece.piece} size="text-4xl" />
+        </motion.div>
+      )}
     </div>
   );
-};
+}
 
-export default function ChessGame({ onXpChange, soundEnabled, currentXp }: { onXpChange: (xp: number) => void, soundEnabled: boolean, currentXp: number }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [difficulty, setDifficulty] = useState<Difficulty>('Intermediate (1200 Elo)');
-  
-  const chessRef = useRef(new Chess());
-  const engineRef = useRef<StockfishEngine | null>(null);
-
-  const [board, setBoard] = useState<Board>(getBoard(chessRef.current));
-  const [materialAdvantage, setMaterialAdvantage] = useState<number>(0);
-  const [selected, setSelected] = useState<ChessPos | null>(null);
-  const [legalMoves, setLegalMoves] = useState<ChessPos[]>([]);
-  const [status, setStatus] = useState<string>('Your turn (White)');
-  const [gameOver, setGameOver] = useState(false);
-  const [lastMove, setLastMove] = useState<{from: ChessPos, to: ChessPos} | null>(null);
-  const [capturedW, setCapturedW] = useState<Piece[]>([]);
-  const [capturedB, setCapturedB] = useState<Piece[]>([]);
-  const [isThinking, setIsThinking] = useState(false);
-  const [history, setHistory] = useState<MoveRecord[]>([]);
-  const [showAnalysis, setShowAnalysis] = useState(false);
-  const [analysisLoading, setAnalysisLoading] = useState(false);
-  const [hint, setHint] = useState<{ from?: ChessPos, to?: ChessPos, type: 'piece' | 'square' | 'move' } | null>(null);
-  const [engineEval, setEngineEval] = useState<number>(0);
-  const [bestMoveArrow, setBestMoveArrow] = useState<{ from: ChessPos, to: ChessPos } | null>(null);
-  const [showHintMenu, setShowHintMenu] = useState(false);
-  const [showResignConfirm, setShowResignConfirm] = useState(false);
-  const [reviewIndex, setReviewIndex] = useState<number>(-1);
-
-  useEffect(() => {
-    engineRef.current = new StockfishEngine();
-    
-    engineRef.current.setOnEvalUpdate((evaluation) => {
-      // Score is from engine perspective, but we usually show from White's perspective
-      const side = chessRef.current.turn();
-      const score = side === 'w' ? evaluation.score : -evaluation.score;
-      setEngineEval(score / 100); // Convert centipawns to pawns
-      
-      if (evaluation.pvs && evaluation.pvs.length > 0) {
-        const best = evaluation.pvs[0];
-        const fromSq = best.substring(0, 2);
-        const toSq = best.substring(2, 4);
-        // We only show arrows if it's the player's turn and they asked for a hint or we're in "show best move" mode
-      }
-    });
-
-    return () => {
-      engineRef.current?.terminate();
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (!engineRef.current) return;
-      let level = 10;
-      let elo = 1200;
-      if (difficulty.includes('Beginner')) {
-        level = 2;
-        elo = 600;
-      } else if (difficulty.includes('Intermediate')) {
-        level = 10;
-        elo = 1200;
-      } else if (difficulty.includes('Advanced')) {
-        level = 16;
-        elo = 1800;
-      } else if (difficulty.includes('Extreme')) {
-        level = 20;
-        elo = 2500;
-      }
-      
-      if (!cancelled) engineRef.current.setDifficulty(level, elo);
-    })();
-    return () => { cancelled = true; };
-  }, [difficulty]);
-
-  useEffect(() => {
-    const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', handleFsChange);
-    return () => document.removeEventListener('fullscreenchange', handleFsChange);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen().catch(err => console.error(err));
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
-  const calculateMaterial = (b: Board) => {
-    const values: Record<string, number> = { P: 1, N: 3, B: 3, R: 5, Q: 9, K: 0 };
-    let total = 0;
-    b.forEach(row => row.forEach(piece => {
-      if (piece) {
-        const val = values[piece.type] || 0;
-        total += piece.color === 'w' ? val : -val;
-      }
-    }));
-    setMaterialAdvantage(total);
-  };
-
-  const updateBoardState = () => {
-    const newBoard = getBoard(chessRef.current);
-    setBoard(newBoard);
-    calculateMaterial(newBoard);
-    if (chessRef.current.isGameOver()) {
-      setGameOver(true);
-      if (chessRef.current.isCheckmate()) {
-        setStatus(`Checkmate! ${chessRef.current.turn() === 'w' ? 'Black' : 'White'} wins.`);
-      } else if (chessRef.current.isDraw()) {
-        setStatus('Draw!');
-      }
-    } else {
-      setStatus(chessRef.current.turn() === 'w' ? 'Your turn (White)' : 'AI is thinking...');
-    }
-  };
-
-  const handleSquareClick = async (row: number, col: number) => {
-    if (gameOver || isThinking || reviewIndex !== -1) return;
-
-    const clickedPos = { row, col };
-    const piece = board[row][col];
-
-    if (selected) {
-      if (selected.row === row && selected.col === col) {
-        setSelected(null);
-        setLegalMoves([]);
-        return;
-      }
-
-      const move = legalMoves.find(m => m.row === row && m.col === col);
-      if (move) {
-        const fromSq = posToSquare(selected);
-        const toSq = posToSquare(clickedPos);
-        
-        try {
-          const fenBefore = chessRef.current.fen();
-          const moveObj = chessRef.current.move({ from: fromSq, to: toSq, promotion: 'q' });
-          
-          if (soundEnabled) playSound('flip', soundEnabled);
-          
-          setLastMove({ from: selected, to: clickedPos });
-          setSelected(null);
-          setLegalMoves([]);
-          
-          if (moveObj.captured) {
-            setCapturedW(prev => [...prev, { type: moveObj.captured!.toUpperCase() as PieceType, color: 'b' }]);
-          }
-
-          setHistory(prev => [...prev, {
-            moveNumber: prev.length + 1,
-            player: 'w',
-            from: selected,
-            to: clickedPos,
-            piece: { type: moveObj.piece.toUpperCase() as PieceType, color: 'w' },
-            captured: moveObj.captured ? { type: moveObj.captured.toUpperCase() as PieceType, color: 'b' } : null,
-            fenBefore,
-            fenAfter: chessRef.current.fen(),
-            evaluation: 0
-          }]);
-
-          updateBoardState();
-          
-          if (!chessRef.current.isGameOver()) {
-            makeAIMove();
-          }
-        } catch (e) {
-          // Invalid move
-          if (piece?.color === 'w') {
-            setSelected(clickedPos);
-            const moves = chessRef.current.moves({ square: posToSquare(clickedPos), verbose: true });
-            setLegalMoves(moves.map(m => squareToPos(m.to)));
-          } else {
-            setSelected(null);
-            setLegalMoves([]);
-          }
-        }
-      } else if (piece?.color === 'w') {
-        setSelected(clickedPos);
-        const moves = chessRef.current.moves({ square: posToSquare(clickedPos), verbose: true });
-        setLegalMoves(moves.map(m => squareToPos(m.to)));
-      } else {
-        setSelected(null);
-        setLegalMoves([]);
-      }
-    } else {
-      if (piece?.color === 'w') {
-        setSelected(clickedPos);
-        const moves = chessRef.current.moves({ square: posToSquare(clickedPos), verbose: true });
-        setLegalMoves(moves.map(m => squareToPos(m.to)));
-      }
-    }
-  };
-
-  const makeAIMove = async () => {
-    setIsThinking(true);
-    
-    try {
-      if (engineRef.current) {
-        const fenBefore = chessRef.current.fen();
-        const bestMoveStr = await engineRef.current.getBestMove(fenBefore);
-        
-        if (bestMoveStr) {
-          const fromSq = bestMoveStr.substring(0, 2) as Square;
-          const toSq = bestMoveStr.substring(2, 4) as Square;
-          const promotion = bestMoveStr.length > 4 ? bestMoveStr[4] : undefined;
-          
-          const moveObj = chessRef.current.move({ from: fromSq, to: toSq, promotion });
-          
-          if (soundEnabled) playSound('flip', soundEnabled);
-          
-          const fromPos = squareToPos(fromSq);
-          const toPos = squareToPos(toSq);
-          
-          setLastMove({ from: fromPos, to: toPos });
-          
-          if (moveObj.captured) {
-            setCapturedB(prev => [...prev, { type: moveObj.captured!.toUpperCase() as PieceType, color: 'w' }]);
-          }
-
-          setHistory(prev => [...prev, {
-            moveNumber: prev.length + 1,
-            player: 'b',
-            from: fromPos,
-            to: toPos,
-            piece: { type: moveObj.piece.toUpperCase() as PieceType, color: 'b' },
-            captured: moveObj.captured ? { type: moveObj.captured.toUpperCase() as PieceType, color: 'w' } : null,
-            fenBefore,
-            fenAfter: chessRef.current.fen(),
-            evaluation: 0
-          }]);
-        }
-      }
-    } catch (error) {
-      console.error('AI Move error:', error);
-      setStatus('AI failed to move. Your turn.');
-    } finally {
-      updateBoardState();
-      setIsThinking(false);
-    }
-  };
-
-  const analyzeGame = async () => {
-    setAnalysisLoading(true);
-    setShowAnalysis(true);
-    
-    const newHistory = [...history];
-    for (let i = 0; i < newHistory.length; i++) {
-      const record = newHistory[i];
-      if (record.classification) continue;
-      
-      if (engineRef.current) {
-        const evalData = await engineRef.current.evaluatePosition(record.fenBefore, 15);
-        record.evaluation = evalData.score;
-        if (evalData.pvs) {
-          record.bestMoves = evalData.pvs.slice(0, 3).map(move => ({ move, val: evalData.score }));
-        }
-        
-        // Simple classification based on evaluation drop
-        const side = record.player === 'w' ? 1 : -1;
-        const currentEval = evalData.score * side;
-        
-        if (i > 0) {
-          const prevEval = newHistory[i-1].evaluation * (newHistory[i-1].player === 'w' ? 1 : -1);
-          const diff = currentEval - prevEval;
-          
-          if (diff < -300) record.classification = 'Blunder';
-          else if (diff < -100) record.classification = 'Mistake';
-          else if (diff < -50) record.classification = 'Inaccuracy';
-          else if (diff > 100) record.classification = 'Great';
-          else record.classification = 'Excellent';
-        } else {
-          record.classification = 'Book';
-        }
-      }
-    }
-    
-    setHistory(newHistory);
-    setAnalysisLoading(false);
-  };
-
-  const goToNextMoveOfType = (cls: string) => {
-    const indices = history
-      .map((h, i) => (h.player === 'w' && h.classification === cls ? i : -1))
-      .filter(i => i !== -1);
-    
-    if (indices.length === 0) return;
-
-    const nextIndex = indices.find(i => i > reviewIndex) ?? indices[0];
-    setReviewIndex(nextIndex);
-  };
-
-  const undoMove = () => {
-    if (history.length < 2 || currentXp < 5) return;
-    
-    setReviewIndex(-1);
-    const newHistory = history.slice(0, -2);
-    const lastRecord = newHistory[newHistory.length - 1];
-    
-    if (lastRecord) {
-      chessRef.current.load(lastRecord.fenAfter);
-      setLastMove({ from: lastRecord.from, to: lastRecord.to });
-    } else {
-      chessRef.current.reset();
-      setLastMove(null);
-    }
-    
-    setHistory(newHistory);
-    updateBoardState();
-    onXpChange(-5);
-  };
-
-  const resetGame = () => {
-    chessRef.current.reset();
-    setHistory([]);
-    setCapturedW([]);
-    setCapturedB([]);
-    setLastMove(null);
-    setSelected(null);
-    setLegalMoves([]);
-    setGameOver(false);
-    setReviewIndex(-1);
-    setShowAnalysis(false);
-    updateBoardState();
-  };
-
-  const handleHint = async (type: 'piece' | 'square' | 'move') => {
-    if (currentXp < 10 || gameOver || isThinking) return;
-    
-    setIsThinking(true);
-    try {
-      if (engineRef.current) {
-        const bestMoveStr = await engineRef.current.getBestMove(chessRef.current.fen(), 18);
-        if (bestMoveStr) {
-          const fromSq = bestMoveStr.substring(0, 2);
-          const toSq = bestMoveStr.substring(2, 4);
-          
-          const fromPos = squareToPos(fromSq);
-          const toPos = squareToPos(toSq);
-          
-          setHint({ from: fromPos, to: toPos, type });
-          setBestMoveArrow({ from: fromPos, to: toPos });
-          onXpChange(-10);
-          setShowHintMenu(false);
-          
-          setTimeout(() => {
-            setHint(null);
-            setBestMoveArrow(null);
-          }, 3000);
-        }
-      }
-    } catch (e) {
-      console.error('Hint error:', e);
-    } finally {
-      setIsThinking(false);
-    }
-  };
-
-  // Render logic...
-  const evalPercentage = Math.max(0, Math.min(100, 50 + (engineEval * 10))); // Simple mapping: +5 is 100%, -5 is 0%
-
+function PlayerBar({ name, rating, title, capturedPieces, materialAdvantage, isBottom, isThinking }: {
+  name: string; rating?: string; title?: string; capturedPieces: Piece[];
+  materialAdvantage: number; isBottom?: boolean; isThinking?: boolean;
+}) {
+  const sorted = [...capturedPieces].sort((a, b) => {
+    const order: Record<string, number> = { Q: 9, R: 5, B: 3, N: 3, P: 1, K: 0 };
+    return (order[b.type] || 0) - (order[a.type] || 0);
+  });
   return (
-    <div ref={containerRef} className={`flex flex-col ${isFullscreen ? 'bg-slate-900 fixed inset-0 z-50 overflow-y-auto w-screen h-screen' : 'h-full'}`}>
-      <div className="flex items-center justify-between p-4 bg-white border-b sticky top-0 z-20 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-accent-gold/20 rounded-lg">
-            <Brain className="w-6 h-6 text-accent-gold" />
+    <div className={`flex items-center justify-between px-3 py-2 rounded-md bg-white/95 shadow-sm border border-gray-200/60`}>
+      <div className="flex items-center gap-2 min-w-0">
+        <div className="relative">
+          <div className={`w-8 h-8 rounded-full ${
+            isBottom ? 'bg-amber-100 text-amber-700' : 'bg-slate-800 text-white'
+          } flex items-center justify-center text-sm font-bold`}>
+            {isBottom ? 'Y' : 'S'}
           </div>
-          <div>
-            <h2 className="text-xl font-bold text-primary-dark">Grandmaster Chess</h2>
-            <p className="text-sm text-gray-500">Play against Stockfish 16.1</p>
-          </div>
+          {isThinking && (
+            <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 rounded-full flex items-center justify-center">
+              <div className="w-1.5 h-1.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-2">
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-            className="text-sm border-gray-300 rounded-md shadow-sm focus:border-accent-gold focus:ring-accent-gold"
-            disabled={history.length > 0 && !gameOver}
-          >
-            <option>Beginner (600 Elo)</option>
-            <option>Intermediate (1200 Elo)</option>
-            <option>Advanced (1800+ Elo)</option>
-            <option>Extreme Grandmaster (2500+ Elo)</option>
-          </select>
-          <button onClick={toggleFullscreen} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
-            {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-          </button>
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm font-bold text-gray-800 truncate">{name}</span>
+            {title && <span className="text-[10px] text-gray-400 font-medium">{title}</span>}
+          </div>
+          {rating && <span className="text-[11px] text-gray-500">{rating}</span>}
         </div>
       </div>
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0.5">
+          {sorted.slice(0, 5).map((p, i) => (
+            <span key={i} className="text-sm leading-none" style={{ opacity: p.color === 'b' ? 0.7 : 0.9 }}>
+              {PIECE_UNICODE[p.color + p.type]}
+            </span>
+          ))}
+          {sorted.length > 5 && <span className="text-[10px] text-gray-400 font-medium ml-0.5">+{sorted.length - 5}</span>}
+        </div>
+        {materialAdvantage !== 0 && (
+          <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
+            ((isBottom && materialAdvantage > 0) || (!isBottom && materialAdvantage < 0))
+              ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}>
+            {materialAdvantage > 0 ? '+' : ''}{materialAdvantage}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
 
-      <div className={`flex-1 p-4 sm:p-6 flex flex-col lg:flex-row gap-6 ${isFullscreen ? 'max-w-7xl mx-auto w-full' : ''}`}>
-        {showAnalysis ? (
-          <div className="flex-1 bg-white rounded-xl shadow-sm border p-6 overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900">Game Analysis</h3>
-              <button onClick={() => setShowAnalysis(false)} className="p-2 hover:bg-gray-100 rounded-lg">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            {analysisLoading ? (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="w-12 h-12 border-4 border-accent-gold border-t-transparent rounded-full animate-spin mb-4" />
-                <p className="text-gray-500 font-medium">Analyzing game with Stockfish...</p>
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                  <div className="p-4 bg-red-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-red-600">{history.filter(h => h.player === 'w' && h.classification === 'Blunder').length}</div>
-                    <div className="text-sm text-red-800 font-medium">Blunders</div>
-                  </div>
-                  <div className="p-4 bg-orange-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-orange-600">{history.filter(h => h.player === 'w' && h.classification === 'Mistake').length}</div>
-                    <div className="text-sm text-orange-800 font-medium">Mistakes</div>
-                  </div>
-                  <div className="p-4 bg-yellow-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-yellow-600">{history.filter(h => h.player === 'w' && h.classification === 'Inaccuracy').length}</div>
-                    <div className="text-sm text-yellow-800 font-medium">Inaccuracies</div>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-green-600">{history.filter(h => h.player === 'w' && (h.classification === 'Great' || h.classification === 'Brilliant')).length}</div>
-                    <div className="text-sm text-green-800 font-medium">Great Moves</div>
-                  </div>
-                </div>
+function MoveHistory({ history, reviewIndex, onSelectMove }: {
+  history: MoveRecord[]; reviewIndex: number; onSelectMove: (idx: number) => void;
+}) {
+  const listRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
+  }, [history.length]);
 
-                <div className="space-y-4">
-                  <h4 className="font-bold text-gray-900">Key Moments</h4>
-                  {history.map((record, originalIndex) => {
-                    if (!(record.player === 'w' && ['Blunder', 'Mistake', 'Inaccuracy', 'Great', 'Brilliant'].includes(record.classification || ''))) return null;
-                    
-                    return (
-                      <div key={originalIndex} className="flex flex-col border rounded-lg hover:bg-gray-50 overflow-hidden">
-                        <div className="flex items-start gap-4 p-4 cursor-pointer" onClick={() => { setShowAnalysis(false); setReviewIndex(originalIndex); }}>
-                          <div className={`w-2 h-full min-h-[48px] rounded-full ${
-                            record.classification === 'Blunder' ? 'bg-red-500' :
-                            record.classification === 'Mistake' ? 'bg-orange-500' :
-                            record.classification === 'Inaccuracy' ? 'bg-yellow-500' :
-                            'bg-green-500'
-                          }`} />
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center">
-                              <div className="font-medium">Move {Math.ceil(record.moveNumber / 2)}: {PIECE_UNICODE[record.piece.color + record.piece.type]} {posToSquare(record.from)}-{posToSquare(record.to)}</div>
-                              <div className={`text-sm font-bold ${
-                                record.classification === 'Blunder' ? 'text-red-600' :
-                                record.classification === 'Mistake' ? 'text-orange-600' :
-                                record.classification === 'Inaccuracy' ? 'text-yellow-600' :
-                                'text-green-600'
-                              }`}>{record.classification}</div>
-                            </div>
-                            {record.bestMoves && record.bestMoves.length > 0 && record.classification && ['Blunder', 'Mistake', 'Inaccuracy'].includes(record.classification) && (
-                              <div className="text-sm text-gray-500 mt-1">
-                                Best move was {record.bestMoves[0].move}
-                              </div>
-                            )}
-                          </div>
-                          <ChevronRight className="w-5 h-5 text-gray-400 mt-2" />
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {history.filter(h => h.player === 'w' && ['Blunder', 'Mistake', 'Inaccuracy', 'Great', 'Brilliant'].includes(h.classification || '')).length === 0 && (
-                    <div className="text-center text-gray-500 py-8">No major mistakes or brilliant moves found. Solid game!</div>
-                  )}
-                </div>
-              </>
-            )}
+  return (
+    <div className="flex-1 overflow-hidden flex flex-col">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100">
+        <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Moves</span>
+        {history.length > 0 && (
+          <span className="text-[11px] text-gray-400 font-medium">{Math.ceil(history.length / 2)} moves</span>
+        )}
+      </div>
+      <div ref={listRef} className="flex-1 overflow-y-auto custom-scrollbar py-1">
+        {history.length === 0 ? (
+          <div className="flex items-center justify-center h-full py-8">
+            <p className="text-xs text-gray-400 italic">Make a move to begin</p>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center p-4">
-            <div className={`w-full flex flex-col ${isFullscreen ? 'max-w-[75vh]' : 'max-w-md'}`}>
-              <div className="w-full mb-2 flex justify-between items-end">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-1">
-                    {capturedW.map((p, i) => (
-                      <span key={i} className="text-xl opacity-50">{PIECE_UNICODE[p.color + p.type]}</span>
-                    ))}
-                  </div>
-                  {materialAdvantage < 0 && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 bg-gray-100 rounded text-gray-600">
-                      +{Math.abs(materialAdvantage)}
-                    </span>
-                  )}
-                </div>
-                <div className="text-sm font-medium text-gray-500">Stockfish</div>
-              </div>
-
-              <div className="flex gap-3 sm:gap-4 items-stretch w-full">
-                {/* Evaluation Bar */}
-                <div className="w-3 sm:w-4 flex-shrink-0 flex flex-col items-center rounded-full">
-                  <div className="mb-2 text-[10px] font-bold text-slate-700">
-                    {engineEval > 0 ? '+' : ''}{engineEval.toFixed(1)}
-                  </div>
-                  <div className="relative flex-1 w-full bg-gray-200 rounded-full overflow-hidden border border-gray-300 shadow-inner group">
-                    <motion.div 
-                      className="absolute bottom-0 left-0 right-0 bg-slate-800"
-                      animate={{ height: `${evalPercentage}%` }}
-                      transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-                    />
-                    <div className="absolute inset-0 flex flex-col justify-between py-4 text-[10px] font-bold mix-blend-difference text-white pointer-events-none text-center">
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">+M</span>
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">0</span>
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">-M</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="relative flex-1 min-w-0 flex items-center">
-                  <ChessBoard 
-                    board={reviewIndex !== -1 ? getBoard(new Chess(history[reviewIndex].fenAfter)) : board}
-                    selected={selected}
-                    legalMoves={legalMoves}
-                    lastMove={reviewIndex !== -1 ? {from: history[reviewIndex].from, to: history[reviewIndex].to} : lastMove}
-                    inCheck={reviewIndex !== -1 ? new Chess(history[reviewIndex].fenAfter).inCheck() : chessRef.current.inCheck()}
-                    hint={hint}
-                    onSquareClick={handleSquareClick}
-                    isFullscreen={isFullscreen}
-                  />
-                  
-                  {bestMoveArrow && (
-                    <svg className="absolute inset-0 pointer-events-none z-50 overflow-visible" viewBox="0 0 8 8">
-                      <defs>
-                        <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                          <path d="M 0 0 L 6 3 L 0 6 Z" fill="rgba(59, 130, 246, 0.8)" />
-                        </marker>
-                      </defs>
-                      <line 
-                        x1={bestMoveArrow.from.col + 0.5} 
-                        y1={bestMoveArrow.from.row + 0.5} 
-                        x2={bestMoveArrow.to.col + 0.5} 
-                        y2={bestMoveArrow.to.row + 0.5} 
-                        stroke="rgba(59, 130, 246, 0.8)" 
-                        strokeWidth="0.12" 
-                        markerEnd="url(#arrowhead)"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  )}
-                  
-                  {isThinking && (
-                    <div className="absolute inset-0 bg-black/5 flex items-center justify-center pointer-events-none z-40 backdrop-blur-[1px]">
-                      <div className="bg-white/90 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 border border-blue-100">
-                        <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Stockfish 18 thinking</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="w-full mt-2 flex justify-between items-start">
-                <div className="flex items-center gap-2">
-                  <div className="text-sm font-medium text-gray-900">You</div>
-                  {materialAdvantage > 0 && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 bg-green-50 rounded text-green-600">
-                      +{materialAdvantage}
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-1">
-                  {capturedB.map((p, i) => (
-                    <span key={i} className="text-xl opacity-50">{PIECE_UNICODE[p.color + p.type]}</span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-6 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-sm font-medium">
-                  <div className={`w-2 h-2 rounded-full ${isThinking ? 'bg-yellow-500 animate-pulse' : chessRef.current.turn() === 'w' ? 'bg-green-500' : 'bg-gray-400'}`} />
-                  {status}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="w-full lg:w-80 flex flex-col gap-4">
-          {/* Controls and History */}
-          <div className="bg-white rounded-xl shadow-sm border p-4 flex flex-col h-full max-h-[600px]">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-gray-900">Game History</h3>
-              <div className="flex gap-2">
-                <button 
-                  onClick={undoMove}
-                  disabled={history.length < 2 || currentXp < 5 || gameOver}
-                  className="p-1.5 text-gray-500 hover:bg-gray-100 rounded disabled:opacity-50"
-                  title="Undo Move (5 XP)"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => setShowHintMenu(!showHintMenu)}
-                  disabled={gameOver || currentXp < 10}
-                  className="p-1.5 text-gray-500 hover:bg-gray-100 rounded disabled:opacity-50 relative"
-                  title="Get Hint (10 XP)"
-                >
-                  <Lightbulb className="w-4 h-4" />
-                  {showHintMenu && (
-                    <div className="absolute right-0 top-full mt-1 w-48 bg-white border rounded-lg shadow-xl z-50 py-1">
-                      <button onClick={() => handleHint('piece')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Highlight Piece</button>
-                      <button onClick={() => handleHint('square')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Highlight Destination</button>
-                      <button onClick={() => handleHint('move')} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Show Full Move</button>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto pr-2 space-y-1">
+          <table className="w-full text-sm">
+            <tbody>
               {Array.from({ length: Math.ceil(history.length / 2) }).map((_, i) => {
                 const wMove = history[i * 2];
                 const bMove = history[i * 2 + 1];
                 return (
-                  <div key={i} className="flex text-sm">
-                    <div className="w-8 text-gray-400 py-1">{i + 1}.</div>
-                    <div 
-                      className={`flex-1 py-1 px-2 rounded cursor-pointer ${reviewIndex === i * 2 ? 'bg-accent-gold/20 font-medium' : 'hover:bg-gray-50'}`}
-                      onClick={() => setReviewIndex(i * 2)}
-                    >
-                      {PIECE_UNICODE[wMove.piece.color + wMove.piece.type]} {posToSquare(wMove.from)}-{posToSquare(wMove.to)}
-                    </div>
-                    {bMove && (
-                      <div 
-                        className={`flex-1 py-1 px-2 rounded cursor-pointer ${reviewIndex === i * 2 + 1 ? 'bg-accent-gold/20 font-medium' : 'hover:bg-gray-50'}`}
-                        onClick={() => setReviewIndex(i * 2 + 1)}
-                      >
-                        {PIECE_UNICODE[bMove.piece.color + bMove.piece.type]} {posToSquare(bMove.from)}-{posToSquare(bMove.to)}
-                      </div>
-                    )}
-                  </div>
+                  <tr key={i} className="hover:bg-gray-50">
+                    <td className="w-8 text-[11px] text-gray-400 text-right pr-1 py-0.5 font-medium">{i + 1}.</td>
+                    <td className={`py-0.5 px-2 rounded cursor-pointer text-gray-800 font-medium ${reviewIndex === i * 2 ? 'bg-blue-100 text-blue-800' : ''}`}
+                      onClick={() => onSelectMove(i * 2)}>{wMove.san}</td>
+                    <td className={`py-0.5 px-2 rounded cursor-pointer text-gray-800 font-medium ${reviewIndex === i * 2 + 1 ? 'bg-blue-100 text-blue-800' : ''}`}
+                      onClick={() => bMove && onSelectMove(i * 2 + 1)}>{bMove?.san || ''}</td>
+                  </tr>
                 );
               })}
-            </div>
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
 
-            {gameOver && (
-              <div className="mt-4 pt-4 border-t space-y-2">
-                <button
-                  onClick={analyzeGame}
-                  disabled={analysisLoading}
-                  className="w-full py-2 bg-accent-gold text-white rounded-lg font-medium hover:bg-accent-gold/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {analysisLoading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Search className="w-5 h-5" />}
-                  {analysisLoading ? 'Analyzing...' : 'Analyze Game'}
-                </button>
-                <button
-                  onClick={resetGame}
-                  className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-                >
-                  Play Again
-                </button>
-              </div>
-            )}
-            
-            {!gameOver && history.length > 0 && (
-              <div className="mt-4 pt-4 border-t">
-                {showResignConfirm ? (
-                  <div className="flex gap-2">
-                    <button onClick={() => { setGameOver(true); setStatus('You resigned. Black wins.'); setShowResignConfirm(false); }} className="flex-1 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors">Confirm</button>
-                    <button onClick={() => setShowResignConfirm(false)} className="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">Cancel</button>
+function EvalBar({ score }: { score: number }) {
+  const display = (score / 100).toFixed(1);
+  const pct = Math.max(0, Math.min(100, 50 + (score / 100) * 5));
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <span className="text-[10px] font-bold text-gray-600 tabular-nums w-10 text-center">
+        {score > 0 ? '+' : ''}{display}
+      </span>
+      <div className="relative w-3 flex-1 bg-gray-200 rounded-full overflow-hidden border border-gray-300 min-h-[60px]">
+        <motion.div className="absolute bottom-0 left-0 right-0 bg-gray-800"
+          animate={{ height: `${pct}%` }} transition={{ duration: 0.3, ease: 'easeOut' }} />
+      </div>
+    </div>
+  );
+}
+
+function GameOverModal({ result, onPlayAgain, onAnalyze, onReview }: {
+  result: { type: 'checkmate' | 'stalemate' | 'resign' | 'draw' | 'timeout'; winner?: 'w' | 'b' };
+  onPlayAgain: () => void; onAnalyze: () => void; onReview: () => void;
+}) {
+  const isWin = result.winner === 'w';
+  const isLoss = result.winner === 'b';
+  const isDraw = result.type === 'stalemate' || result.type === 'draw';
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <motion.div initial={{ scale: 0.85, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        className="bg-white rounded-xl shadow-2xl p-6 mx-4 max-w-xs w-full text-center">
+        <div className="text-4xl mb-2">{isWin ? '🎉' : isDraw ? '🤝' : '😞'}</div>
+        <h2 className="text-xl font-bold text-gray-800 mb-1">
+          {isWin ? 'You Win!' : isLoss ? 'You Lose' : 'Draw'}
+        </h2>
+        <p className="text-sm text-gray-500 mb-4">
+          {result.type === 'checkmate' ? 'Checkmate' : result.type === 'stalemate' ? 'Stalemate' : result.type === 'resign' ? `${isWin ? 'Opponent' : 'You'} resigned` : 'Draw agreed'}
+        </p>
+        <div className="flex flex-col gap-2">
+          <button onClick={onPlayAgain} className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition-colors">
+            Play Again
+          </button>
+          <button onClick={onAnalyze} className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors">
+            Analyze Game
+          </button>
+          <button onClick={onReview} className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold rounded-lg transition-colors">
+            Review Board
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export default function ChessGame() {
+  const engineRef = useRef<StockfishEngine | null>(null);
+  const [game, setGame] = useState(new Chess());
+  const [board, setBoard] = useState<Board>(getBoard(new Chess()));
+  const [selected, setSelected] = useState<ChessPos | null>(null);
+  const [legalMoves, setLegalMoves] = useState<ChessPos[]>([]);
+  const [history, setHistory] = useState<MoveRecord[]>([]);
+  const [reviewIndex, setReviewIndex] = useState(-1);
+  const [evaluations, setEvaluations] = useState<number[]>([]);
+  const [difficulty, setDifficulty] = useState<Difficulty>('Intermediate (1200 Elo)');
+  const [isThinking, setIsThinking] = useState(false);
+  const [playerColor] = useState<'w' | 'b'>('w');
+  const [gameOver, setGameOver] = useState<{ type: 'checkmate' | 'stalemate' | 'resign' | 'draw' | 'timeout'; winner?: 'w' | 'b' } | null>(null);
+  const [showPromotion, setShowPromotion] = useState(false);
+  const [promotionFrom, setPromotionFrom] = useState<ChessPos | null>(null);
+  const [promotionTo, setPromotionTo] = useState<ChessPos | null>(null);
+  const [animatingPiece, setAnimatingPiece] = useState<AnimatingPiece | null>(null);
+  const [mode, setMode] = useState<'play' | 'review' | 'analysis'>('play');
+  const [analysisBoard, setAnalysisBoard] = useState<Board>(getBoard(new Chess()));
+  const [analysisFen, setAnalysisFen] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const animIdRef = useRef(0);
+  const hasInitRef = useRef(false);
+  const gameRef = useRef(game);
+  gameRef.current = game;
+
+  const capturedByWhite = useRef<Piece[]>([]);
+  const capturedByBlack = useRef<Piece[]>([]);
+  const capturedW = capturedByWhite.current;
+  const capturedB = capturedByBlack.current;
+
+  const lastMove = history.length > 0 ? { from: history[history.length - 1].from, to: history[history.length - 1].to } : null;
+
+  const diffToLevel: Record<Difficulty, number> = {
+    'Beginner (600 Elo)': 2,
+    'Intermediate (1200 Elo)': 8,
+    'Advanced (1800+ Elo)': 15,
+    'Extreme Grandmaster (2500+ Elo)': 20,
+  };
+
+  useEffect(() => {
+    if (hasInitRef.current) return;
+    hasInitRef.current = true;
+    const engine = new StockfishEngine();
+    engineRef.current = engine;
+    return () => { engine.terminate(); };
+  }, []);
+
+  useEffect(() => {
+    if (engineRef.current) engineRef.current.setDifficulty(diffToLevel[difficulty]);
+  }, [difficulty]);
+
+  const getCapturedMaterial = useCallback((pieces: Piece[]) => {
+    const values: Record<string, number> = { Q: 9, R: 5, B: 3, N: 3, P: 1, K: 0 };
+    return pieces.reduce((sum, p) => sum + (values[p.type] || 0), 0);
+  }, []);
+
+  const materialAdvW = getCapturedMaterial(capturedW);
+  const materialAdvB = getCapturedMaterial(capturedB);
+  const materialAdvantage = materialAdvW - materialAdvB;
+
+  const updateBoardState = useCallback((g: Chess) => {
+    setBoard(getBoard(g));
+    const inCheck = g.inCheck();
+    const isOver = g.isGameOver();
+    if (isOver) {
+      if (g.isCheckmate()) setGameOver({ type: 'checkmate', winner: g.turn() === 'w' ? 'b' : 'w' });
+      else if (g.isStalemate()) setGameOver({ type: 'stalemate' });
+      else if (g.isDraw()) setGameOver({ type: 'draw' });
+    }
+    return { inCheck, isOver };
+  }, []);
+
+  const requestEval = useCallback(async (g: Chess) => {
+    if (!engineRef.current) return;
+    try {
+      const evalResult = await engineRef.current.evaluatePosition(g.fen());
+      setEvaluations(prev => [...prev, evalResult.score]);
+    } catch { /* ignore */ }
+  }, []);
+
+  const makeAIMove = useCallback(async () => {
+    if (!engineRef.current || gameRef.current.isGameOver()) return;
+    setIsThinking(true);
+    try {
+      const fen = gameRef.current.fen();
+      const moveStr = await engineRef.current.getBestMove(fen);
+      if (!moveStr) { setIsThinking(false); return; }
+      const g = new Chess(fen);
+      const result = g.move(moveStr, { strict: true });
+      if (!result) { setIsThinking(false); return; }
+      const from = squareToPos(result.from);
+      const to = squareToPos(result.to);
+      const capturedPiece = result.captured ? { type: result.captured as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
+      if (capturedPiece) {
+        if (result.color === 'w') capturedB.push(capturedPiece);
+        else capturedW.push(capturedPiece);
+      }
+      const animPiece: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
+      const animId = ++animIdRef.current;
+      setAnimatingPiece({ id: animId, piece: animPiece, from, to });
+      setTimeout(() => {
+        setAnimatingPiece(null);
+        setGame(g);
+        updateBoardState(g);
+        requestEval(g);
+        setIsThinking(false);
+      }, 200);
+    } catch { setIsThinking(false); }
+  }, [updateBoardState, requestEval]);
+
+  const handlePlayerMove = useCallback((row: number, col: number) => {
+    if (isThinking || gameOver || mode !== 'play') return;
+    const g = new Chess(game.fen());
+    if (selected === null) {
+      const piece = board[row][col];
+      if (!piece || piece.color !== playerColor) return;
+      setSelected({ row, col });
+      const moves = g.moves({ square: posToSquare({ row, col }) as Square, verbose: true });
+      setLegalMoves(moves.map(m => squareToPos(m.to as Square)));
+      return;
+    }
+    if (selected.row === row && selected.col === col) {
+      setSelected(null); setLegalMoves([]);
+      return;
+    }
+    const fromSquare = posToSquare(selected) as Square;
+    const toSquare = posToSquare({ row, col }) as Square;
+    try {
+      const result = g.move({ from: fromSquare, to: toSquare, promotion: 'q' });
+      if (!result) { setSelected(null); setLegalMoves([]); return; }
+      const capturedPiece = result.captured ? { type: result.captured as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
+      if (capturedPiece) {
+        if (result.color === 'w') capturedB.push(capturedPiece);
+        else capturedW.push(capturedPiece);
+      }
+      const from = squareToPos(result.from);
+      const to = squareToPos(result.to);
+      const piece: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
+      const animId = ++animIdRef.current;
+      setAnimatingPiece({ id: animId, piece, from, to });
+      const moveRec: MoveRecord = {
+        moveNumber: Math.floor(history.length / 2) + 1,
+        player: result.color as 'w' | 'b',
+        from, to, piece, captured: capturedPiece,
+        san: result.san, fenBefore: game.fen(), fenAfter: g.fen(), evaluation: 0,
+      };
+      setSelected(null); setLegalMoves([]);
+      setTimeout(() => {
+        setAnimatingPiece(null);
+        setGame(g);
+        const { isOver } = updateBoardState(g);
+        setHistory(prev => [...prev, moveRec]);
+        requestEval(g);
+        setReviewIndex(-1);
+        if (!isOver) makeAIMove();
+      }, 200);
+    } catch { setSelected(null); setLegalMoves([]); }
+  }, [game, board, selected, playerColor, isThinking, gameOver, mode, history, updateBoardState, requestEval, makeAIMove]);
+
+  const startNewGame = useCallback(() => {
+    const g = new Chess();
+    setGame(g);
+    setBoard(getBoard(g));
+    setSelected(null); setLegalMoves([]);
+    setHistory([]); setReviewIndex(-1);
+    setEvaluations([]); setGameOver(null);
+    setAnimatingPiece(null); setMode('play');
+    capturedW.length = 0; capturedB.length = 0;
+  }, []);
+
+  const resign = useCallback(() => {
+    setGameOver({ type: 'resign', winner: playerColor === 'w' ? 'b' : 'w' });
+  }, [playerColor]);
+
+  const handleDraw = useCallback(() => {
+    setGameOver({ type: 'draw' });
+  }, []);
+
+  const undoMove = useCallback(() => {
+    if (history.length < 2 || isThinking) return;
+    const g = new Chess(game.fen());
+    g.undo(); g.undo();
+    const gCopy = new Chess(g.fen());
+    setGame(gCopy);
+    setBoard(getBoard(gCopy));
+    setHistory(prev => prev.slice(0, -2));
+    setEvaluations(prev => prev.slice(0, -2));
+    setGameOver(null);
+    if (capturedW.length > 0 && history[history.length - 1].captured) capturedW.pop();
+    if (capturedB.length > 0 && history[history.length - 2].captured) capturedB.pop();
+  }, [history, isThinking, game]);
+
+  const getHint = useCallback(async () => {
+    if (!engineRef.current || isThinking || gameOver) return;
+    setIsThinking(true);
+    try {
+      const moveStr = await engineRef.current.getBestMove(game.fen());
+      if (moveStr) {
+        const to = squareToPos(moveStr.slice(2, 4) as Square);
+        const from = squareToPos(moveStr.slice(0, 2) as Square);
+        if (from) {
+          setSelected(from);
+          const g = new Chess(game.fen());
+          const moves = g.moves({ square: posToSquare(from) as Square, verbose: true });
+          setLegalMoves(moves.map(m => squareToPos(m.to as Square)));
+        }
+      }
+    } catch { /* ignore */ }
+    setIsThinking(false);
+  }, [isThinking, game]);
+
+  const enterReview = useCallback(() => {
+    setMode('review');
+    setReviewIndex(history.length - 1);
+  }, [history]);
+
+  const reviewPrev = useCallback(() => {
+    setReviewIndex(prev => Math.max(-1, prev - 1));
+  }, []);
+
+  const reviewNext = useCallback(() => {
+    setReviewIndex(prev => Math.min(history.length - 1, prev + 1));
+  }, [history]);
+
+  const selectMove = useCallback((idx: number) => {
+    setReviewIndex(idx);
+  }, []);
+
+  const reviewFen = reviewIndex >= 0 && reviewIndex < history.length
+    ? history[reviewIndex].fenBefore
+    : reviewIndex === -1
+      ? game.fen() : '';
+
+  const reviewChess = reviewFen ? new Chess(reviewFen) : game;
+  const reviewBoard = reviewFen ? getBoard(reviewChess) : board;
+  const reviewInCheck = reviewFen ? reviewChess.inCheck() : false;
+  const reviewCheckmate = reviewFen ? reviewChess.isCheckmate() : false;
+  const reviewStalemate = reviewFen ? reviewChess.isStalemate() : false;
+  const reviewTurn = reviewFen ? reviewChess.turn() === 'w' : playerColor === 'w';
+
+  useEffect(() => {
+    if (mode === 'review' && reviewIndex >= 0 && reviewIndex < history.length) {
+      const g = new Chess(history[reviewIndex].fenBefore);
+      setBoard(getBoard(g));
+    } else if (mode === 'review' && reviewIndex === -1) {
+      setBoard(getBoard(game));
+    } else if (mode === 'play') {
+      setBoard(getBoard(game));
+    }
+  }, [mode, reviewIndex, game]);
+
+  const currentEval = evaluations.length > 0 ? evaluations[evaluations.length - 1] : 0;
+
+  return (
+    <div className="max-w-7xl mx-auto px-2 py-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+        <div className="flex gap-3">
+          <div className="flex-1 max-w-[560px] mx-auto">
+            <div className={`${isFullscreen ? 'fixed inset-0 z-40 bg-black/90 flex items-center justify-center p-4' : ''}`}>
+              <div className={`${isFullscreen ? 'w-full max-w-[min(90vh,90vw)]' : ''}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <PlayerBar name="Stockfish AI" rating={difficulty.match(/\d+/)?.[0]} title="AI"
+                    capturedPieces={capturedW} materialAdvantage={materialAdvantage}
+                    isThinking={isThinking} />
+                  <div className="w-8 shrink-0">
+                    {currentEval !== 0 && mode === 'play' && !gameOver && (
+                      <button onClick={() => setShowAnalysis(p => !p)}
+                        className="w-full h-full flex items-center justify-center text-gray-400 hover:text-gray-600" title="Eval Bar">
+                        <BarChart3 size={16} />
+                      </button>
+                    )}
                   </div>
-                ) : (
-                  <button onClick={() => setShowResignConfirm(true)} className="w-full py-2 text-red-500 font-medium hover:bg-red-50 rounded-lg transition-colors">
-                    Resign Game
+                </div>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <ChessBoard board={board} selected={selected} legalMoves={legalMoves}
+                      lastMove={lastMove} inCheck={game.inCheck() && mode === 'play'}
+                      animatingPiece={animatingPiece} onSquareClick={handlePlayerMove} />
+                    {gameOver && <GameOverModal result={gameOver} onPlayAgain={startNewGame}
+                      onAnalyze={() => { setMode('analysis'); setShowAnalysis(true); }}
+                      onReview={enterReview} />}
+                  </div>
+                  {showAnalysis && (
+                    <div className="w-8 shrink-0">
+                      <EvalBar score={currentEval} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <PlayerBar name="You" rating="" capturedPieces={capturedB} materialAdvantage={-materialAdvantage}
+                    isBottom />
+                </div>
+                <div className="flex items-center justify-center gap-1.5 mt-3 flex-wrap">
+                  {mode === 'play' && !gameOver && (
+                    <>
+                      <button onClick={() => { const d: Difficulty[] = ['Beginner (600 Elo)', 'Intermediate (1200 Elo)', 'Advanced (1800+ Elo)', 'Extreme Grandmaster (2500+ Elo)']; setDifficulty(d[(d.indexOf(difficulty) + 1) % d.length]); }}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
+                        <Brain size={14} /> {difficulty}
+                      </button>
+                      <button onClick={undoMove} disabled={history.length < 2 || isThinking}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 disabled:opacity-40 transition-colors">
+                        <RotateCcw size={14} /> Undo
+                      </button>
+                      <button onClick={getHint} disabled={isThinking}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 disabled:opacity-40 transition-colors">
+                        <Lightbulb size={14} /> Hint
+                      </button>
+                      <button onClick={resign}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
+                        <Flag size={14} /> Resign
+                      </button>
+                      <button onClick={handleDraw}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
+                        Draw
+                      </button>
+                    </>
+                  )}
+                  {mode === 'review' && (
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={reviewPrev} disabled={reviewIndex < 0}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-40 transition-colors">
+                        <SkipBack size={14} /> Prev
+                      </button>
+                      <span className="text-xs text-gray-500 font-medium px-2">
+                        {reviewIndex < 0 ? 'Current' : `Move ${Math.floor(reviewIndex / 2) + 1}${reviewIndex % 2 === 0 ? 'w' : 'b'}`}
+                      </span>
+                      <button onClick={reviewNext} disabled={reviewIndex >= history.length - 1}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-40 transition-colors">
+                        <SkipForward size={14} /> Next
+                      </button>
+                      <button onClick={() => { setMode('play'); setSelected(null); setLegalMoves([]); setBoard(getBoard(game)); }}
+                        className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors">
+                        <Play size={14} /> Resume
+                      </button>
+                    </div>
+                  )}
+                  <button onClick={() => setIsFullscreen(p => !p)}
+                    className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors ml-auto">
+                    {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
                   </button>
-                )}
+                  {history.length > 0 && mode === 'play' && !gameOver && (
+                    <button onClick={enterReview}
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors">
+                      <Search size={14} /> Review
+                    </button>
+                  )}
+                  {gameOver && (
+                    <button onClick={startNewGame}
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors">
+                      <Play size={14} /> New Game
+                    </button>
+                  )}
+                </div>
               </div>
+            </div>
+          </div>
+          <div className="w-[280px] shrink-0 hidden lg:flex flex-col bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            {mode === 'analysis' && showAnalysis ? (
+              <div className="flex-1 overflow-hidden flex flex-col">
+                <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100">
+                  <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Analysis Board</span>
+                  <button onClick={() => setShowAnalysis(false)} className="text-gray-400 hover:text-gray-600">
+                    <X size={14} />
+                  </button>
+                </div>
+                <div className="flex-1 p-3 overflow-y-auto">
+                  <p className="text-xs text-gray-500">Analysis mode active</p>
+                </div>
+              </div>
+            ) : (
+              <MoveHistory history={history} reviewIndex={reviewIndex} onSelectMove={selectMove} />
             )}
           </div>
         </div>

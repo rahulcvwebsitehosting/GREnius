@@ -249,7 +249,7 @@ export default function ChessGame() {
   const currentEval = evaluations.length > 0 ? evaluations[evaluations.length - 1] : 0;
 
   useEffect(() => {
-    const worker = new Worker('/stockfish18.js');
+    const worker = new Worker('/stockfish18.js#/stockfish18.wasm,worker');
     workerRef.current = worker;
     const promise = engineReady(worker).then(() => {
       const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[difficulty];

@@ -220,8 +220,8 @@ function GameOverModal({ result, onPlayAgain, onAnalyze, onReview }: {
 
 export default function ChessGame() {
   const engineRef = useRef<StockfishEngine | null>(null);
-  const [game, setGame] = useState(new Chess());
-  const [board, setBoard] = useState<Board>(getBoard(new Chess()));
+  const gameRef = useRef(new Chess());
+  const [board, setBoard] = useState<Board>(getBoard(gameRef.current));
   const [selected, setSelected] = useState<ChessPos | null>(null);
   const [legalMoves, setLegalMoves] = useState<ChessPos[]>([]);
   const [history, setHistory] = useState<MoveRecord[]>([]);
@@ -236,7 +236,6 @@ export default function ChessGame() {
   const [showEval, setShowEval] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const animIdRef = useRef(0);
-  const hasInitRef = useRef(false);
   const capturedW = useRef<Piece[]>([]);
   const capturedB = useRef<Piece[]>([]);
 
@@ -249,37 +248,34 @@ export default function ChessGame() {
   };
 
   useEffect(() => {
-    if (hasInitRef.current) return;
-    hasInitRef.current = true;
+    if (engineRef.current) return;
     const engine = new StockfishEngine();
     engineRef.current = engine;
+    const level = diffToLevel[difficulty];
+    setTimeout(() => engine.setDifficulty(level), 500);
     return () => { engine.terminate(); };
   }, []);
 
-  useEffect(() => {
-    if (engineRef.current) engineRef.current.setDifficulty(diffToLevel[difficulty]);
-  }, [difficulty]);
-
-  const updateBoardState = useCallback((g: Chess) => {
-    setBoard(getBoard(g));
-    if (g.isGameOver()) {
-      if (g.isCheckmate()) setGameOver({ type: 'checkmate', winner: g.turn() === 'w' ? 'b' : 'w' });
-      else if (g.isStalemate()) setGameOver({ type: 'stalemate' });
-      else if (g.isDraw()) setGameOver({ type: 'draw' });
-      return true;
+  const refreshBoard = useCallback(() => {
+    setBoard(getBoard(gameRef.current));
+    if (gameRef.current.isGameOver()) {
+      if (gameRef.current.isCheckmate()) setGameOver({ type: 'checkmate', winner: gameRef.current.turn() === 'w' ? 'b' : 'w' });
+      else if (gameRef.current.isStalemate()) setGameOver({ type: 'stalemate' });
+      else if (gameRef.current.isDraw()) setGameOver({ type: 'draw' });
     }
-    return false;
   }, []);
 
-  const makeAIMove = useCallback(async (fen: string) => {
+  const makeAIMove = async () => {
     const eng = engineRef.current;
-    if (!eng) return;
+    if (!eng || gameRef.current.isGameOver()) return;
     try {
+      const fen = gameRef.current.fen();
+      console.log('AI: getting best move for', fen.slice(0, 30));
       const moveStr = await eng.getBestMove(fen);
-      if (!moveStr) return;
-      const g = new Chess(fen);
-      const result = g.move(moveStr, { strict: true });
-      if (!result) return;
+      if (!moveStr) { console.warn('AI: no move returned'); return; }
+      const result = gameRef.current.move(moveStr, { strict: true });
+      if (!result) { console.warn('AI: invalid move', moveStr); return; }
+      console.log('AI: played', result.san);
       const from = squareToPos(result.from);
       const to = squareToPos(result.to);
       const capturedPiece = result.captured
@@ -289,22 +285,28 @@ export default function ChessGame() {
         if (result.color === 'w') capturedB.current.push(capturedPiece);
         else capturedW.current.push(capturedPiece);
       }
-      const animPiece: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
+      const p: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
       const animId = ++animIdRef.current;
-      setAnimatingPiece({ id: animId, piece: animPiece, from, to });
+      const rec: MoveRecord = {
+        moveNumber: Math.floor(history.length / 2) + 1,
+        player: result.color as 'w' | 'b',
+        from, to, piece: p, captured: capturedPiece,
+        san: result.san, fenBefore: fen, fenAfter: gameRef.current.fen(), evaluation: 0,
+      };
+      setAnimatingPiece({ id: animId, piece: p, from, to });
+      setHistory(prev => [...prev, rec]);
       setTimeout(() => {
         setAnimatingPiece(null);
-        setGame(g);
-        updateBoardState(g);
+        refreshBoard();
       }, 150);
     } catch (e) { console.error('AI move error:', e); }
-  }, [updateBoardState]);
+  };
 
-  const handlePlayerMove = useCallback((row: number, col: number) => {
+  const handleSquareClick = (row: number, col: number) => {
     if (gameOver || mode !== 'play') return;
-    const g = new Chess(game.fen());
+    const g = gameRef.current;
     if (selected === null) {
-      const piece = board[row][col];
+      const piece = getBoard(g)[row][col];
       if (!piece || piece.color !== playerColor) return;
       setSelected({ row, col });
       const moves = g.moves({ square: posToSquare({ row, col }) as Square, verbose: true });
@@ -317,48 +319,47 @@ export default function ChessGame() {
     }
     const fromSquare = posToSquare(selected) as Square;
     const toSquare = posToSquare({ row, col }) as Square;
-    try {
-      const result = g.move({ from: fromSquare, to: toSquare, promotion: 'q' });
-      if (!result) { setSelected(null); setLegalMoves([]); return; }
-      const capturedPiece = result.captured
-        ? { type: result.captured as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const }
-        : null;
-      if (capturedPiece) {
-        if (result.color === 'w') capturedB.current.push(capturedPiece);
-        else capturedW.current.push(capturedPiece);
-      }
-      const from = squareToPos(result.from);
-      const to = squareToPos(result.to);
-      const piece: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
-      const newFen = g.fen();
-      const animId = ++animIdRef.current;
-      setAnimatingPiece({ id: animId, piece, from, to });
-      const moveRec: MoveRecord = {
-        moveNumber: Math.floor(history.length / 2) + 1,
-        player: result.color as 'w' | 'b',
-        from, to, piece, captured: capturedPiece,
-        san: result.san, fenBefore: game.fen(), fenAfter: newFen, evaluation: 0,
-      };
-      setSelected(null); setLegalMoves([]);
+    const fenBefore = g.fen();
+    const result = g.move({ from: fromSquare, to: toSquare, promotion: 'q' });
+    if (!result) { setSelected(null); setLegalMoves([]); return; }
+    const capturedPiece = result.captured
+      ? { type: result.captured as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const }
+      : null;
+    if (capturedPiece) {
+      if (result.color === 'w') capturedB.current.push(capturedPiece);
+      else capturedW.current.push(capturedPiece);
+    }
+    const from = squareToPos(result.from);
+    const to = squareToPos(result.to);
+    const piece: Piece = { type: result.piece as PieceType, color: result.color as 'w' | 'b' };
+    const animId = ++animIdRef.current;
+    const rec: MoveRecord = {
+      moveNumber: Math.floor(history.length / 2) + 1,
+      player: result.color as 'w' | 'b',
+      from, to, piece, captured: capturedPiece,
+      san: result.san, fenBefore, fenAfter: g.fen(), evaluation: 0,
+    };
+    setSelected(null); setLegalMoves([]);
+    setAnimatingPiece({ id: animId, piece, from, to });
+    refreshBoard();
+    setHistory(prev => [...prev, rec]);
+    setReviewIndex(-1);
+    if (!g.isGameOver()) {
       setTimeout(() => {
         setAnimatingPiece(null);
-        setGame(g);
-        const isOver = updateBoardState(g);
-        setHistory(prev => [...prev, moveRec]);
-        setReviewIndex(-1);
-        if (!isOver) makeAIMove(newFen);
+        makeAIMove();
       }, 150);
-    } catch { setSelected(null); setLegalMoves([]); }
-  }, [game, board, selected, playerColor, gameOver, mode, history, updateBoardState, makeAIMove]);
+    }
+  };
 
   const startNewGame = useCallback(() => {
-    const g = new Chess();
-    setGame(g); setBoard(getBoard(g));
+    gameRef.current = new Chess();
+    capturedW.current.length = 0; capturedB.current.length = 0;
+    setBoard(getBoard(gameRef.current));
     setSelected(null); setLegalMoves([]);
     setHistory([]); setReviewIndex(-1);
     setEvaluations([]); setGameOver(null);
     setAnimatingPiece(null); setMode('play');
-    capturedW.current.length = 0; capturedB.current.length = 0;
   }, []);
 
   const resign = useCallback(() => setGameOver({ type: 'resign', winner: playerColor === 'w' ? 'b' : 'w' }), [playerColor]);
@@ -366,33 +367,29 @@ export default function ChessGame() {
 
   const undoMove = useCallback(() => {
     if (history.length < 2) return;
-    const g = new Chess(game.fen());
-    g.undo(); g.undo();
-    const gCopy = new Chess(g.fen());
-    setGame(gCopy); setBoard(getBoard(gCopy));
+    gameRef.current.undo(); gameRef.current.undo();
+    capturedB.current.pop(); capturedW.current.pop();
+    setBoard(getBoard(gameRef.current));
     setHistory(prev => prev.slice(0, -2));
     setEvaluations(prev => prev.slice(0, -2));
     setGameOver(null);
-    if (capturedB.current.length > 0) capturedB.current.pop();
-    if (capturedW.current.length > 0) capturedW.current.pop();
-  }, [history, game]);
+  }, [history]);
 
   const getHint = useCallback(async () => {
     const eng = engineRef.current;
     if (!eng || gameOver) return;
     try {
-      const moveStr = await eng.getBestMove(game.fen());
+      const moveStr = await eng.getBestMove(gameRef.current.fen());
       if (moveStr) {
         const from = squareToPos(moveStr.slice(0, 2) as Square);
         if (from) {
           setSelected(from);
-          const g = new Chess(game.fen());
-          const moves = g.moves({ square: posToSquare(from) as Square, verbose: true });
+          const moves = gameRef.current.moves({ square: posToSquare(from) as Square, verbose: true });
           setLegalMoves(moves.map(m => squareToPos(m.to as Square)));
         }
       }
     } catch (e) { console.error('Hint error:', e); }
-  }, [game]);
+  }, []);
 
   const enterReview = useCallback(() => {
     setMode('review');
@@ -411,9 +408,9 @@ export default function ChessGame() {
     if (mode === 'review' && reviewIndex >= 0 && reviewIndex < history.length) {
       setBoard(getBoard(new Chess(history[reviewIndex].fenBefore)));
     } else if (mode === 'play' || reviewIndex === -1) {
-      setBoard(getBoard(game));
+      setBoard(getBoard(gameRef.current));
     }
-  }, [mode, reviewIndex, game, history]);
+  }, [mode, reviewIndex, history]);
 
   const diffLabels: Difficulty[] = ['Beginner (600 Elo)', 'Intermediate (1200 Elo)', 'Advanced (1800+ Elo)', 'Extreme Grandmaster (2500+ Elo)'];
 
@@ -427,8 +424,8 @@ export default function ChessGame() {
             <div className="flex gap-1.5 mt-1">
               <div className="relative flex-1">
                 <ChessBoard board={board} selected={selected} legalMoves={legalMoves}
-                  lastMove={lastMove} inCheck={game.inCheck() && mode === 'play'}
-                  animatingPiece={animatingPiece} flipped={flipped} onSquareClick={handlePlayerMove} />
+                  lastMove={lastMove} inCheck={gameRef.current.inCheck() && mode === 'play'}
+                  animatingPiece={animatingPiece} flipped={flipped} onSquareClick={handleSquareClick} />
                 {gameOver && <GameOverModal result={gameOver} onPlayAgain={startNewGame}
                   onAnalyze={() => setShowEval(true)} onReview={enterReview} />}
               </div>
@@ -483,7 +480,7 @@ export default function ChessGame() {
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 disabled:opacity-30 transition-colors">
                     <SkipForward size={13} />
                   </button>
-                  <button onClick={() => { setMode('play'); setSelected(null); setLegalMoves([]); setBoard(getBoard(game)); }}
+                  <button onClick={() => { setMode('play'); setSelected(null); setLegalMoves([]); setBoard(getBoard(gameRef.current)); }}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors">
                     <Play size={13} /> Play
                   </button>

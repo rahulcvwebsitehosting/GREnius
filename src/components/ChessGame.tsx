@@ -5,6 +5,12 @@ import { Chess, Square } from 'chess.js';
 import { posToSquare, squareToPos, getBoard, PieceType, Piece, Board, ChessPos } from '../chessUtils';
 import { PIECE_IMAGES } from '../pieceSvgs';
 import { getBestMove, configureStockfish, isServerAvailable } from '../api/stockfishClient';
+import { Chessground } from 'chessground';
+import { Api as CgApi } from 'chessground/api';
+import { Config } from 'chessground/config';
+import * as cg from 'chessground/types';
+import 'chessground/assets/chessground.base.css';
+
 type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)' | 'Extreme Grandmaster (2500+ Elo)';
 
 interface MoveRecord {
@@ -35,6 +41,35 @@ const BOARD_LIGHT_CHECK = '#ff6b6b';
 const BOARD_DARK_CHECK = '#cc4444';
 const PIECE_VALUES: Record<string, number> = { Q: 9, R: 5, B: 3.5, N: 3.5, P: 1, K: 0 };
 
+const PIECE_ROLE: Record<string, cg.Role> = { K: 'king', Q: 'queen', R: 'rook', B: 'bishop', N: 'knight', P: 'pawn' };
+const ROLE_PIECE: Record<cg.Role, string> = { king: 'K', queen: 'Q', rook: 'R', bishop: 'B', knight: 'N', pawn: 'P' };
+
+function boardToCgPieces(board: Board): cg.Pieces {
+  const pieces: cg.Pieces = new Map();
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const p = board[r][c];
+      if (p) {
+        const key = (String.fromCharCode(97 + c) + (8 - r)) as cg.Key;
+        pieces.set(key, { role: PIECE_ROLE[p.type], color: p.color === 'w' ? 'white' : 'black' });
+      }
+    }
+  }
+  return pieces;
+}
+
+function calcDests(chess: Chess): cg.Dests {
+  const dests: cg.Dests = new Map();
+  const moves = chess.moves({ verbose: true });
+  for (const m of moves) {
+    const from = m.from as cg.Key;
+    const to = m.to as cg.Key;
+    if (!dests.has(from)) dests.set(from, []);
+    dests.get(from)!.push(to);
+  }
+  return dests;
+}
+
 const PieceImg = ({ piece }: { piece: Piece }) => {
   if (!piece) return null;
   const url = PIECE_IMAGES[piece.color + piece.type];
@@ -45,70 +80,6 @@ const PieceImg = ({ piece }: { piece: Piece }) => {
     </div>
   );
 };
-
-function ChessBoard({ board, selected, legalMoves = [], lastMove, inCheck, animatingPiece, flipped, onSquareClick }: {
-  board: Board; selected?: ChessPos | null; legalMoves?: ChessPos[];
-  lastMove?: { from: ChessPos; to: ChessPos } | null; inCheck?: boolean;
-  animatingPiece?: AnimatingPiece | null; flipped?: boolean;
-  onSquareClick?: (row: number, col: number) => void;
-}) {
-  const rows = flipped ? [...board].reverse() : board;
-  return (
-    <div className="relative w-full aspect-square rounded-[4px] overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.25)] select-none">
-      {rows.map((rowArr, ri) => {
-        const actualRow = flipped ? 7 - ri : ri;
-        return (
-          <div key={ri} className="flex h-[12.5%]">
-            {rowArr.map((p, col) => {
-              const actualCol = flipped ? 7 - col : col;
-              const isLight = (actualRow + actualCol) % 2 === 0;
-              const isSelected = selected?.row === actualRow && selected?.col === actualCol;
-              const isLastFrom = lastMove?.from.row === actualRow && lastMove?.from.col === actualCol;
-              const isLastTo = lastMove?.to.row === actualRow && lastMove?.to.col === actualCol;
-              const isLegal = legalMoves.some(m => m.row === actualRow && m.col === actualCol);
-              const isKingCheck = inCheck && p?.type === 'K';
-              let bg = isLight ? BOARD_LIGHT : BOARD_DARK;
-              if (isSelected) bg = isLight ? BOARD_LIGHT_SEL : BOARD_DARK_SEL;
-              else if (isKingCheck) bg = isLight ? BOARD_LIGHT_CHECK : BOARD_DARK_CHECK;
-              else if (isLastFrom || isLastTo) bg = isLight ? BOARD_LIGHT_LAST : BOARD_DARK_LAST;
-              return (
-                <div key={col} onClick={() => onSquareClick?.(actualRow, actualCol)}
-                  className="flex-1 flex items-center justify-center relative cursor-pointer aspect-square"
-                  style={{ backgroundColor: bg }}>
-                  {p && <PieceImg piece={p} />}
-                  {isLegal && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      {p ? (
-                        <div className="w-[33%] h-[33%] rounded-full border-[3px] border-black/20" />
-                      ) : (
-                        <div className="w-[26%] h-[26%] rounded-full bg-black/10" />
-                      )}
-                    </div>
-                  )}
-                  {!flipped && col === 0 && (
-                    <span className="absolute top-[1px] left-[2px] text-[9px] font-bold leading-none pointer-events-none"
-                      style={{ color: isLight ? BOARD_DARK : BOARD_LIGHT }}>{8 - actualRow}</span>)}
-                  {!flipped && actualRow === 7 && (
-                    <span className="absolute bottom-[1px] right-[2px] text-[9px] font-bold leading-none pointer-events-none"
-                      style={{ color: isLight ? BOARD_DARK : BOARD_LIGHT }}>{'abcdefgh'[actualCol]}</span>)}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-      {animatingPiece && (
-        <motion.div key={animatingPiece.id}
-          className="absolute z-30 pointer-events-none flex items-center justify-center"
-          style={{ width: '12.5%', height: '12.5%', top: `${animatingPiece.from.row * 12.5}%`, left: `${animatingPiece.from.col * 12.5}%` }}
-          animate={{ top: `${animatingPiece.to.row * 12.5}%`, left: `${animatingPiece.to.col * 12.5}%` }}
-          transition={{ duration: 0.15, ease: 'ease-in-out' }}>
-          <PieceImg piece={animatingPiece.piece} />
-        </motion.div>
-      )}
-    </div>
-  );
-}
 
 function PlayerBar({ name, rating, capturedPieces }: {
   name: string; rating?: string; capturedPieces: Piece[];
@@ -215,7 +186,8 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   currentXp?: number;
 } = {}) {
   const gameRef = useRef(new Chess());
-  const serverAvailRef = useRef(false);
+  const cgRef = useRef<CgApi | null>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
   const [board, setBoard] = useState<Board>(getBoard(gameRef.current));
   const [selected, setSelected] = useState<ChessPos | null>(null);
   const [legalMoves, setLegalMoves] = useState<ChessPos[]>([]);
@@ -237,28 +209,78 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   const lastMove = history.length > 0 ? { from: history[history.length - 1].from, to: history[history.length - 1].to } : null;
   const currentEval = evaluations.length > 0 ? evaluations[evaluations.length - 1] : 0;
 
-  useEffect(() => {
-    isServerAvailable().then(avail => {
-      serverAvailRef.current = avail;
-      if (avail) {
-        const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[difficulty];
-        configureStockfish(level);
+  const buildCgConfig = useCallback(() => {
+    const chess = gameRef.current;
+    const turnColor = chess.turn() === 'w' ? 'white' : 'black';
+    const isPlayerTurn = mode === 'play' && !gameOver && chess.turn() === playerColor;
+    const lastMoveKeys: cg.Key[] | undefined = history.length > 0
+      ? [posToSquare(history[history.length - 1].from) as cg.Key, posToSquare(history[history.length - 1].to) as cg.Key]
+      : undefined;
+    const config: Config = {
+      fen: chess.fen(),
+      orientation: flipped ? 'black' : 'white',
+      turnColor,
+      lastMove: lastMoveKeys,
+      check: mode === 'play' && chess.isCheck() ? turnColor : undefined,
+      movable: {
+        free: false,
+        color: isPlayerTurn ? (playerColor === 'w' ? 'white' : 'black') : undefined,
+        dests: isPlayerTurn ? calcDests(chess) : undefined,
+        showDests: true,
+        rookCastle: true,
+        events: {
+          after: (orig: cg.Key, dest: cg.Key) => {
+            if (aiBusy.current || gameOver || mode !== 'play') return;
+            const result = chess.move({ from: orig, to: dest, promotion: 'q' });
+            if (!result) { cgRef.current?.set(buildCgConfig()); return; }
+            afterPlayerMove(result);
+          }
+        }
+      },
+      draggable: { enabled: true, showGhost: true },
+      selectable: { enabled: true },
+      animation: { enabled: true, duration: 200 },
+      highlight: { lastMove: true, check: true },
+      events: {
+        select: (key: cg.Key) => {
+          if (mode !== 'play' || gameOver) return;
+          const col = key.charCodeAt(0) - 97;
+          const row = 8 - parseInt(key[1]);
+          setSelected({ row, col });
+        }
       }
-    });
-  }, []);
+    };
+    return config;
+  }, [history, mode, gameOver, playerColor, flipped]);
 
-  const refreshBoard = useCallback(() => {
-    setBoard(getBoard(gameRef.current));
-    if (gameRef.current.isGameOver()) {
-      if (gameRef.current.isCheckmate()) setGameOver({ type: 'checkmate', winner: gameRef.current.turn() === 'w' ? 'b' : 'w' });
-      else if (gameRef.current.isStalemate()) setGameOver({ type: 'stalemate' });
-      else if (gameRef.current.isDraw()) setGameOver({ type: 'draw' });
+  const refreshCgBoard = useCallback(() => {
+    if (cgRef.current) cgRef.current.set(buildCgConfig());
+  }, [buildCgConfig]);
+
+  const afterPlayerMove = useCallback((result: any) => {
+    const fenBefore = result.before || gameRef.current.fen();
+    const from = squareToPos(result.from);
+    const to = squareToPos(result.to);
+    const captured = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
+    if (captured) {
+      if (result.color === 'w') capturedB.current.push(captured);
+      else capturedW.current.push(captured);
     }
-  }, []);
+    const piece: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
+    const rec: MoveRecord = {
+      moveNumber: Math.floor(history.length / 2) + 1,
+      player: result.color as 'w' | 'b', from, to, piece, captured,
+      san: result.san, fenBefore, fenAfter: gameRef.current.fen(), evaluation: 0,
+    };
+    setSelected(null); setLegalMoves([]);
+    setBoard(getBoard(gameRef.current));
+    setHistory(prev => [...prev, rec]);
+    setReviewIndex(-1);
+    refreshCgBoard();
+    if (!gameRef.current.isGameOver()) setTimeout(() => makeAIMove(), 100);
+  }, [history.length]);
 
-  const getEngineMove = (fen: string): Promise<string> => {
-    return getBestMove(fen, 12);
-  };
+  const getEngineMove = (fen: string): Promise<string> => getBestMove(fen, 12);
 
   const makeAIMove = async () => {
     if (aiBusy.current || gameRef.current.isGameOver()) return;
@@ -268,66 +290,77 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
       const moveStr = await getEngineMove(fen);
       if (!moveStr) { console.warn('AI: empty move'); aiBusy.current = false; return; }
       const result = gameRef.current.move(moveStr, { strict: true });
-      if (!result) { console.warn('AI: invalid', moveStr); aiBusy.current = false; return; }
+      if (!result) { console.warn('AI: invalid', moveStr); aiBusy.current = false; refreshCgBoard(); return; }
       const from = squareToPos(result.from);
       const to = squareToPos(result.to);
-      const capturedPiece = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
-      if (capturedPiece) {
-        if (result.color === 'w') capturedB.current.push(capturedPiece);
-        else capturedW.current.push(capturedPiece);
+      const captured = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
+      if (captured) {
+        if (result.color === 'w') capturedB.current.push(captured);
+        else capturedW.current.push(captured);
       }
       const p: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
       const rec: MoveRecord = {
         moveNumber: Math.floor(history.length / 2) + 1,
-        player: result.color as 'w' | 'b', from, to, piece: p, captured: capturedPiece,
+        player: result.color as 'w' | 'b', from, to, piece: p, captured,
         san: result.san, fenBefore: fen, fenAfter: gameRef.current.fen(), evaluation: 0,
       };
-      setAnimatingPiece({ id: ++animIdRef.current, piece: p, from, to });
       setHistory(prev => [...prev, rec]);
-      setTimeout(() => { setAnimatingPiece(null); refreshBoard(); aiBusy.current = false; }, 150);
-    } catch (e) { console.error('AI error:', e); aiBusy.current = false; }
+      setBoard(getBoard(gameRef.current));
+      setTimeout(() => { refreshCgBoard(); aiBusy.current = false; }, 50);
+    } catch (e) { console.error('AI error:', e); aiBusy.current = false; refreshCgBoard(); }
   };
+
+  useEffect(() => {
+    isServerAvailable().then(avail => {
+      if (avail) {
+        const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[difficulty];
+        configureStockfish(level);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (boardRef.current && !cgRef.current) {
+      cgRef.current = Chessground(boardRef.current, {
+        fen: gameRef.current.fen(),
+        orientation: flipped ? 'black' : 'white',
+        turnColor: 'white',
+        movable: {
+          free: false,
+          color: 'white',
+          dests: calcDests(gameRef.current),
+          showDests: true,
+          rookCastle: true,
+        },
+        draggable: { enabled: true, showGhost: true },
+        selectable: { enabled: true },
+        animation: { enabled: true, duration: 200 },
+        highlight: { lastMove: true, check: true },
+      });
+    }
+    return () => { if (cgRef.current) { cgRef.current.destroy(); cgRef.current = null; } };
+  }, []);
+
+  useEffect(() => { refreshCgBoard(); }, [refreshCgBoard]);
 
   const handleSquareClick = (row: number, col: number) => {
     if (gameOver || mode !== 'play' || aiBusy.current) return;
-    const g = gameRef.current;
+    const cg = cgRef.current;
+    if (!cg) return;
+    const key = (String.fromCharCode(97 + col) + (8 - row)) as cg.Key;
+    const piece = getBoard(gameRef.current)[row][col];
     if (selected === null) {
-      const piece = getBoard(g)[row][col];
       if (!piece || piece.color !== playerColor) return;
       setSelected({ row, col });
-      const moves = g.moves({ square: posToSquare({ row, col }) as Square, verbose: true });
+      const moves = gameRef.current.moves({ square: key as Square, verbose: true });
       setLegalMoves(moves.map(m => squareToPos(m.to as Square)));
-      return;
-    }
-    if (selected.row === row && selected.col === col) { setSelected(null); setLegalMoves([]); return; }
-    const fromSquare = posToSquare(selected) as Square;
-    const toSquare = posToSquare({ row, col }) as Square;
-    const fenBefore = g.fen();
-    const result = g.move({ from: fromSquare, to: toSquare, promotion: 'q' });
-    if (!result) { setSelected(null); setLegalMoves([]); return; }
-    const capturedPiece = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
-    if (capturedPiece) {
-      if (result.color === 'w') capturedB.current.push(capturedPiece);
-      else capturedW.current.push(capturedPiece);
-    }
-    const from = squareToPos(result.from);
-    const to = squareToPos(result.to);
-    const piece: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
-    const rec: MoveRecord = {
-      moveNumber: Math.floor(history.length / 2) + 1,
-      player: result.color as 'w' | 'b', from, to, piece, captured: capturedPiece,
-      san: result.san, fenBefore, fenAfter: g.fen(), evaluation: 0,
-    };
-    setSelected(null); setLegalMoves([]);
-    setAnimatingPiece({ id: ++animIdRef.current, piece, from, to });
-    refreshBoard();
-    setHistory(prev => [...prev, rec]);
-    setReviewIndex(-1);
-    if (!g.isGameOver()) {
-      setTimeout(() => {
-        setAnimatingPiece(null);
-        makeAIMove();
-      }, 150);
+    } else {
+      if (selected.row === row && selected.col === col) { setSelected(null); setLegalMoves([]); return; }
+      const fromSquare = posToSquare(selected) as Square;
+      const toSquare = posToSquare({ row, col }) as Square;
+      const result = gameRef.current.move({ from: fromSquare, to: toSquare, promotion: 'q' });
+      if (!result) { setSelected(null); setLegalMoves([]); return; }
+      afterPlayerMove(result);
     }
   };
 
@@ -339,7 +372,8 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
     setHistory([]); setReviewIndex(-1);
     setEvaluations([]); setGameOver(null);
     setAnimatingPiece(null); setMode('play');
-  }, []);
+    setTimeout(() => refreshCgBoard(), 50);
+  }, [refreshCgBoard]);
 
   const resign = useCallback(() => setGameOver({ type: 'resign', winner: playerColor === 'w' ? 'b' : 'w' }), [playerColor]);
   const handleDraw = useCallback(() => setGameOver({ type: 'draw' }), []);
@@ -352,7 +386,8 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
     setHistory(prev => prev.slice(0, -2));
     setEvaluations(prev => prev.slice(0, -2));
     setGameOver(null);
-  }, [history]);
+    refreshCgBoard();
+  }, [history, refreshCgBoard]);
 
   const getHint = useCallback(async () => {
     if (gameOver || aiBusy.current) return;
@@ -376,11 +411,14 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
 
   useEffect(() => {
     if (mode === 'review' && reviewIndex >= 0 && reviewIndex < history.length) {
-      setBoard(getBoard(new Chess(history[reviewIndex].fenBefore)));
+      const g = new Chess(history[reviewIndex].fenBefore);
+      setBoard(getBoard(g));
+      if (cgRef.current) cgRef.current.set({ fen: history[reviewIndex].fenBefore });
     } else if (mode === 'play' || reviewIndex === -1) {
       setBoard(getBoard(gameRef.current));
+      refreshCgBoard();
     }
-  }, [mode, reviewIndex, history]);
+  }, [mode, reviewIndex, history, refreshCgBoard]);
 
   const diffLabels: Difficulty[] = ['Beginner (600 Elo)', 'Intermediate (1200 Elo)', 'Advanced (1800+ Elo)', 'Extreme Grandmaster (2500+ Elo)'];
 
@@ -392,9 +430,7 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
             <PlayerBar name="Stockfish" rating={difficulty.match(/\d+/)?.[0]} capturedPieces={capturedW.current} />
             <div className="flex gap-1.5 mt-1">
               <div className="relative flex-1">
-                <ChessBoard board={board} selected={selected} legalMoves={legalMoves}
-                  lastMove={lastMove} inCheck={gameRef.current.inCheck() && mode === 'play'}
-                  animatingPiece={animatingPiece} flipped={flipped} onSquareClick={handleSquareClick} />
+                <div ref={boardRef} className="cg-wrap w-full aspect-square" style={{ minHeight: 320 }} />
                 {gameOver && <GameOverModal result={gameOver} onPlayAgain={startNewGame}
                   onAnalyze={() => setShowEval(true)} onReview={enterReview} />}
               </div>
@@ -407,11 +443,11 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
               {mode === 'play' && !gameOver && (
                 <>
                   <button onClick={() => {
-                const next = diffLabels[(diffLabels.indexOf(difficulty) + 1) % 4];
-                setDifficulty(next);
-                const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[next];
-                configureStockfish(level);
-              }}
+                    const next = diffLabels[(diffLabels.indexOf(difficulty) + 1) % 4];
+                    setDifficulty(next);
+                    const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[next];
+                    configureStockfish(level);
+                  }}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 transition-colors">
                     <Brain size={13} /> {difficulty}
                   </button>
@@ -448,13 +484,13 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 disabled:opacity-30 transition-colors">
                     <SkipForward size={13} />
                   </button>
-                  <button onClick={() => { setMode('play'); setSelected(null); setLegalMoves([]); setBoard(getBoard(gameRef.current)); }}
+                  <button onClick={() => { setMode('play'); setSelected(null); setLegalMoves([]); refreshCgBoard(); }}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors">
                     <Play size={13} /> Play
                   </button>
                 </div>
               )}
-              <button onClick={() => setFlipped(p => !p)}
+              <button onClick={() => { setFlipped(p => !p); refreshCgBoard(); }}
                 className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">Flip</button>
               <button onClick={() => setIsFullscreen(p => !p)}
                 className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">

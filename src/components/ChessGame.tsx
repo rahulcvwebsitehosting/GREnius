@@ -287,10 +287,19 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
     aiBusy.current = true;
     try {
       const fen = gameRef.current.fen();
+      console.log('Requesting AI move for FEN:', fen);
       const moveStr = await getEngineMove(fen);
-      if (!moveStr) { console.warn('AI: empty move'); aiBusy.current = false; return; }
+      if (!moveStr) {
+        console.warn('AI: empty move');
+        setTimeout(() => { aiBusy.current = false; }, 100);
+        return;
+      }
       const result = gameRef.current.move(moveStr, { strict: true });
-      if (!result) { console.warn('AI: invalid', moveStr); aiBusy.current = false; refreshCgBoard(); return; }
+      if (!result) {
+        console.warn('AI: invalid move', moveStr);
+        setTimeout(() => { aiBusy.current = false; refreshCgBoard(); }, 100);
+        return;
+      }
       const from = squareToPos(result.from);
       const to = squareToPos(result.to);
       const captured = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
@@ -307,14 +316,46 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
       setHistory(prev => [...prev, rec]);
       setBoard(getBoard(gameRef.current));
       setTimeout(() => { refreshCgBoard(); aiBusy.current = false; }, 50);
-    } catch (e) { console.error('AI error:', e); aiBusy.current = false; refreshCgBoard(); }
+    } catch (e) {
+      console.error('AI error:', e);
+      aiBusy.current = false;
+      refreshCgBoard();
+      // Show error to user
+      alert(`Stockfish engine error: ${e instanceof Error ? e.message : String(e)}`);
+    }
   };
+  };
+
+  const [stockfishStatus, setStockfishStatus] = useState<'idle' | 'ready' | 'error'>('idle');
+  const [stockfishError, setStockfishError] = useState<string | null>(null);
+
+  const checkStockfish = useCallback(async () => {
+    try {
+      setStockfishStatus('idle');
+      const health = await checkStockfishHealth();
+      if (health.status.ready) {
+        setStockfishStatus('ready');
+        setStockfishError(null);
+      } else {
+        setStockfishStatus('error');
+        setStockfishError('Stockfish engine not ready');
+      }
+    } catch (err) {
+      setStockfishStatus('error');
+      setStockfishError(err instanceof Error ? err.message : String(err));
+    }
+  }, []);
 
   useEffect(() => {
     isServerAvailable().then(avail => {
       if (avail) {
         const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[difficulty];
-        configureStockfish(level);
+        configureStockfish(level).then(success => {
+          if (success) checkStockfish();
+        });
+      } else {
+        setStockfishStatus('error');
+        setStockfishError('Server not available');
       }
     });
   }, []);
@@ -446,7 +487,9 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
                     const next = diffLabels[(diffLabels.indexOf(difficulty) + 1) % 4];
                     setDifficulty(next);
                     const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[next];
-                    configureStockfish(level);
+                    configureStockfish(level).then(success => {
+                      if (success) checkStockfish();
+                    });
                   }}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 transition-colors">
                     <Brain size={13} /> {difficulty}
@@ -468,6 +511,17 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
                   <button onClick={() => setShowEval(p => !p)}
                     className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors">
                     <BarChart3 size={13} />
+                  </button>
+                  <button onClick={checkStockfish}
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors" title="Check Stockfish status">
+                    {stockfishStatus === 'ready' ? (
+                      <span className="text-green-500">●</span>
+                    ) : stockfishStatus === 'error' ? (
+                      <span className="text-red-500">●</span>
+                    ) : (
+                      <span className="text-yellow-500">●</span>
+                    )}
+                    Stockfish
                   </button>
                 </>
               )}

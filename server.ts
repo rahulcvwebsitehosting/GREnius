@@ -20,13 +20,16 @@ class StockfishManager {
   start(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!fs.existsSync(STOCKFISH_PATH)) {
+        console.error(`Stockfish binary not found at ${STOCKFISH_PATH}`);
         reject(new Error(`Stockfish binary not found at ${STOCKFISH_PATH}`));
         return;
       }
 
+      console.log(`Starting Stockfish from ${STOCKFISH_PATH}`);
       this.process = spawn(STOCKFISH_PATH, [], { stdio: ['pipe', 'pipe', 'pipe'] });
 
       const timeout = setTimeout(() => {
+        console.error('Stockfish initialization timed out');
         reject(new Error('Stockfish initialization timed out'));
       }, 15000);
 
@@ -37,21 +40,30 @@ class StockfishManager {
         if (uciOk && readyOk) {
           clearTimeout(timeout);
           this.ready = true;
+          console.log('Stockfish engine ready');
           resolve();
         }
       };
 
       this.process.stdout?.on('data', (data: Buffer) => {
-        this.buffer += data.toString();
+        const output = data.toString();
+        console.log('Stockfish stdout:', output);
+        this.buffer += output;
         const lines = this.buffer.split('\n');
         this.buffer = lines.pop() || '';
 
         for (const line of lines) {
           const trimmed = line.trim();
           if (trimmed === 'uciok') {
+            console.log('Received uciok');
             uciOk = true;
-            this.process?.stdin?.write('isready\n');
+            if (this.process?.stdin?.writable) {
+              this.process.stdin.write('isready\n');
+            } else {
+              console.error('Stockfish stdin not writable');
+            }
           } else if (trimmed === 'readyok') {
+            console.log('Received readyok');
             readyOk = true;
             checkReady();
           }
@@ -63,6 +75,7 @@ class StockfishManager {
       });
 
       this.process.on('error', (err) => {
+        console.error('Stockfish process error:', err);
         clearTimeout(timeout);
         reject(err);
       });
@@ -73,7 +86,13 @@ class StockfishManager {
         this.process = null;
       });
 
-      this.process.stdin?.write('uci\n');
+      if (this.process.stdin?.writable) {
+        console.log('Sending uci command');
+        this.process.stdin.write('uci\n');
+      } else {
+        console.error('Stockfish stdin not writable');
+        reject(new Error('Stockfish stdin not writable'));
+      }
     });
   }
 
@@ -83,15 +102,19 @@ class StockfishManager {
     const request = this.requestQueue.shift()!;
 
     let resultBuffer = '';
+    let timeout: NodeJS.Timeout | null = null;
 
     const onData = (data: Buffer) => {
-      resultBuffer += data.toString();
+      const output = data.toString();
+      console.log('Stockfish response:', output);
+      resultBuffer += output;
       const lines = resultBuffer.split('\n');
       resultBuffer = lines.pop() || '';
 
       for (const line of lines) {
         const trimmed = line.trim();
         if (trimmed.startsWith('bestmove')) {
+          console.log('Found bestmove:', trimmed);
           cleanup();
           this.processing = false;
           request.resolve(trimmed);
@@ -102,6 +125,7 @@ class StockfishManager {
     };
 
     const onError = (err: Error) => {
+      console.error('Stockfish command error:', err);
       cleanup();
       this.processing = false;
       request.reject(err);
@@ -109,23 +133,42 @@ class StockfishManager {
     };
 
     const cleanup = () => {
+      if (timeout) clearTimeout(timeout);
       this.process?.stdout?.removeListener('data', onData);
       this.process?.removeListener('error', onError);
       this.process?.removeListener('exit', onExit);
     };
 
     const onExit = () => {
+      console.log('Stockfish process exited during command');
       cleanup();
       this.processing = false;
       request.reject(new Error('Stockfish process exited'));
       this.processNext();
     };
 
+    timeout = setTimeout(() => {
+      console.error('Stockfish command timed out');
+      cleanup();
+      this.processing = false;
+      request.reject(new Error('Stockfish command timeout'));
+      this.processNext();
+    }, 30000); // 30 second timeout per command
+
     this.process?.stdout?.on('data', onData);
     this.process?.on('error', onError);
     this.process?.on('exit', onExit);
 
-    this.process?.stdin?.write(request.command);
+    if (this.process?.stdin?.writable) {
+      console.log('Sending command:', request.command);
+      this.process.stdin.write(request.command);
+    } else {
+      console.error('Stockfish stdin not writable for command');
+      cleanup();
+      this.processing = false;
+      request.reject(new Error('Stockfish stdin not writable'));
+      this.processNext();
+    }
   }
 
   sendCommand(command: string): Promise<string> {
@@ -188,14 +231,35 @@ async function startServer() {
     console.error('Failed to start Stockfish:', err);
   }
 
+  app.get('/api/stockfish/health', async (req, res) => {
+    try {
+      const status = {
+        ready: stockfish['ready'],
+        process: stockfish['process'] ? {
+          pid: stockfish['process'].pid,
+          connected: stockfish['process'].connected,
+        } : null,
+        queueLength: stockfish['requestQueue'].length,
+        processing: stockfish['processing'],
+      };
+      res.json({ status });
+    } catch (err) {
+      console.error("Health check error", err);
+      res.status(500).json({ error: 'Health check failed', details: err instanceof Error ? err.message : String(err) });
+    }
+  });
+
   app.post('/api/stockfish/move', async (req, res) => {
     try {
       const { fen, depth = 15 } = req.body;
       if (!fen) return res.status(400).json({ error: 'FEN is required' });
+      console.log(`Getting best move for FEN: ${fen}, depth: ${depth}`);
       const bestMove = await stockfish.getBestMove(fen, depth);
+      console.log(`Best move: ${bestMove}`);
       res.json({ bestMove });
     } catch (err) {
-      res.status(500).json({ error: 'Stockfish engine error' });
+      console.error("Stockfish move error", err);
+      res.status(500).json({ error: 'Stockfish engine error', details: err instanceof Error ? err.message : String(err) });
     }
   });
 
@@ -203,20 +267,25 @@ async function startServer() {
     try {
       const { fen, depth = 12 } = req.body;
       if (!fen) return res.status(400).json({ error: 'FEN is required' });
+      console.log(`Evaluating position: ${fen}, depth: ${depth}`);
       const evaluation = await stockfish.evaluatePosition(fen, depth);
+      console.log(`Evaluation: ${JSON.stringify(evaluation)}`);
       res.json(evaluation);
     } catch (err) {
-      res.status(500).json({ error: 'Stockfish engine error' });
+      console.error("Stockfish evaluate error", err);
+      res.status(500).json({ error: 'Stockfish engine error', details: err instanceof Error ? err.message : String(err) });
     }
   });
 
   app.post('/api/stockfish/configure', async (req, res) => {
     try {
       const { skillLevel, elo } = req.body;
+      console.log(`Configuring Stockfish: skillLevel=${skillLevel}, elo=${elo}`);
       await stockfish.setDifficulty(skillLevel || 10, elo);
       res.json({ success: true });
     } catch (err) {
-      res.status(500).json({ error: 'Failed to configure Stockfish' });
+      console.error("Stockfish configure error", err);
+      res.status(500).json({ error: 'Failed to configure Stockfish', details: err instanceof Error ? err.message : String(err) });
     }
   });
 
@@ -224,20 +293,33 @@ async function startServer() {
     try {
       const { command } = req.body;
       if (!command) return res.status(400).json({ error: 'Command is required' });
+      console.log(`Sending Stockfish command: ${command}`);
       const result = await stockfish.sendCommand(command + '\n');
+      console.log(`Command result: ${result}`);
       res.json({ result });
     } catch (err) {
-      res.status(500).json({ error: 'Stockfish engine error' });
+      console.error("Stockfish command error", err);
+      res.status(500).json({ error: 'Stockfish engine error', details: err instanceof Error ? err.message : String(err) });
     }
   });
 
-  if (process.env.NODE_ENV === 'production') {
-    const distPath = path.resolve(__dirname, 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (_req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  } else {
+  app.get('/api/stockfish/health', async (req, res) => {
+    try {
+      const status = {
+        ready: stockfish['ready'],
+        process: stockfish['process'] ? {
+          pid: stockfish['process'].pid,
+          connected: stockfish['process'].connected,
+        } : null,
+        queueLength: stockfish['requestQueue'].length,
+        processing: stockfish['processing'],
+      };
+      res.json({ status });
+    } catch (err) {
+      console.error("Health check error", err);
+      res.status(500).json({ error: 'Health check failed', details: err instanceof Error ? err.message : String(err) });
+    }
+  });
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',

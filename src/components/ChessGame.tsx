@@ -4,12 +4,11 @@ import { RotateCcw, Lightbulb, Maximize2, Minimize2, Flag, Play, Brain, BarChart
 import { Chess, Square } from 'chess.js';
 import { posToSquare, squareToPos, getBoard, PieceType, Piece, Board, ChessPos } from '../chessUtils';
 import { PIECE_IMAGES } from '../pieceSvgs';
-import { getBestMove, configureStockfish, isServerAvailable } from '../api/stockfishClient';
+import { getBestMove, configureStockfish, checkStockfishHealth } from '../api/stockfishClient';
 import { Chessground } from 'chessground';
 import { Api as CgApi } from 'chessground/api';
 import { Config } from 'chessground/config';
 import * as cg from 'chessground/types';
-import 'chessground/assets/chessground.base.css';
 
 type Difficulty = 'Beginner (600 Elo)' | 'Intermediate (1200 Elo)' | 'Advanced (1800+ Elo)' | 'Extreme Grandmaster (2500+ Elo)';
 
@@ -202,6 +201,8 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showEval, setShowEval] = useState(false);
   const [flipped, setFlipped] = useState(false);
+  const [stockfishStatus, setStockfishStatus] = useState<'idle' | 'ready' | 'error'>('idle');
+  const [stockfishError, setStockfishError] = useState<string | null>(null);
   const animIdRef = useRef(0);
   const capturedW = useRef<Piece[]>([]);
   const capturedB = useRef<Piece[]>([]);
@@ -324,10 +325,6 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
       alert(`Stockfish engine error: ${e instanceof Error ? e.message : String(e)}`);
     }
   };
-  };
-
-  const [stockfishStatus, setStockfishStatus] = useState<'idle' | 'ready' | 'error'>('idle');
-  const [stockfishError, setStockfishError] = useState<string | null>(null);
 
   const checkStockfish = useCallback(async () => {
     try {
@@ -347,8 +344,8 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   }, []);
 
   useEffect(() => {
-    isServerAvailable().then(avail => {
-      if (avail) {
+    checkStockfishHealth().then(health => {
+      if (health?.status?.ready) {
         const level = { 'Beginner (600 Elo)': 2, 'Intermediate (1200 Elo)': 8, 'Advanced (1800+ Elo)': 15, 'Extreme Grandmaster (2500+ Elo)': 20 }[difficulty];
         configureStockfish(level).then(success => {
           if (success) checkStockfish();
@@ -357,6 +354,9 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
         setStockfishStatus('error');
         setStockfishError('Server not available');
       }
+    }).catch(err => {
+      setStockfishStatus('error');
+      setStockfishError(err instanceof Error ? err.message : String(err));
     });
   }, []);
 

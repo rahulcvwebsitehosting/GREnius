@@ -1,7 +1,5 @@
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
 import { spawn, ChildProcess } from 'child_process';
-import path from 'path';
 import fs from 'fs';
 
 const STOCKFISH_PATH = process.env.STOCKFISH_PATH || 'C:\\Users\\saini\\Downloads\\stockfish-windows-x86-64\\stockfish\\stockfish-windows-x86-64.exe';
@@ -123,7 +121,7 @@ class StockfishManager {
           return;
         }
         if (!request.expectBestmove && trimmed === 'readyok') {
-          console.log('Found readyok for setoption');
+          console.log('Found readyok');
           cleanup();
           this.processing = false;
           request.resolve(trimmed);
@@ -247,6 +245,24 @@ async function startServer() {
     console.error('Failed to start Stockfish:', err);
   }
 
+  app.get('/api/stockfish/health', async (req, res) => {
+    try {
+      const status = {
+        ready: stockfish['ready'],
+        process: stockfish['process'] ? {
+          pid: stockfish['process'].pid,
+          connected: stockfish['process'].connected,
+        } : null,
+        queueLength: stockfish['requestQueue'].length,
+        processing: stockfish['processing'],
+      };
+      res.json({ status });
+    } catch (err) {
+      console.error("Health check error", err);
+      res.status(500).json({ error: 'Health check failed', details: err instanceof Error ? err.message : String(err) });
+    }
+  });
+
   app.post('/api/stockfish/move', async (req, res) => {
     try {
       const { fen, depth = 15 } = req.body;
@@ -287,57 +303,18 @@ async function startServer() {
     }
   });
 
-  app.post('/api/stockfish/command', async (req, res) => {
-    try {
-      const { command } = req.body;
-      if (!command) return res.status(400).json({ error: 'Command is required' });
-      console.log(`Sending Stockfish command: ${command}`);
-      const result = await stockfish.sendCommand(command + '\n');
-      console.log(`Command result: ${result}`);
-      res.json({ result });
-    } catch (err) {
-      console.error("Stockfish command error", err);
-      res.status(500).json({ error: 'Stockfish engine error', details: err instanceof Error ? err.message : String(err) });
-    }
-  });
-
-  app.get('/api/stockfish/health', async (req, res) => {
-    try {
-      const status = {
-        ready: stockfish['ready'],
-        process: stockfish['process'] ? {
-          pid: stockfish['process'].pid,
-          connected: stockfish['process'].connected,
-        } : null,
-        queueLength: stockfish['requestQueue'].length,
-        processing: stockfish['processing'],
-      };
-      res.json({ status });
-    } catch (err) {
-      console.error("Health check error", err);
-      res.status(500).json({ error: 'Health check failed', details: err instanceof Error ? err.message : String(err) });
-    }
-  });
-
-  if (process.env.NODE_ENV === 'production') {
-    const distPath = path.resolve(__dirname, 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (_req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  } else {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  }
-
-  const port = parseInt(process.env.PORT || '5173');
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+  const port = 5174;
+  const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Test server running on http://0.0.0.0:${port}`);
     console.log(`Stockfish: ${STOCKFISH_PATH}`);
   });
+
+  server.on('error', (err) => {
+    console.error('Server error:', err);
+  });
+
+  // Keep process alive
+  setInterval(() => {}, 1000);
 }
 
 startServer().catch(console.error);

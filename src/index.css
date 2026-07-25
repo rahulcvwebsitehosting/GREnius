@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import 'chessground/assets/chessground.base.css';
+@import 'chessground/assets/chessground.brown.css';
 @import url('/chessground.merida.css');
 @import "tailwindcss";
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { RotateCcw, Lightbulb, Maximize2, Minimize2, Flag, Play, Brain, BarChart3, SkipBack, SkipForward } from 'lucide-react';
 import { Chess, Square } from 'chess.js';
@@ -207,6 +207,9 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   const capturedW = useRef<Piece[]>([]);
   const capturedB = useRef<Piece[]>([]);
   const aiBusy = useRef(false);
+  const afterMoveRef = useRef<(result: any) => void>(() => {});
+  const makeAIMoveRef = useRef<() => void>(() => {});
+  const refreshCgBoardRef = useRef<() => void>(() => {});
   const lastMove = history.length > 0 ? { from: history[history.length - 1].from, to: history[history.length - 1].to } : null;
   const currentEval = evaluations.length > 0 ? evaluations[evaluations.length - 1] : 0;
 
@@ -229,14 +232,6 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
         dests: isPlayerTurn ? calcDests(chess) : undefined,
         showDests: true,
         rookCastle: true,
-        events: {
-          after: (orig: cg.Key, dest: cg.Key) => {
-            if (aiBusy.current || gameOver || mode !== 'play') return;
-            const result = chess.move({ from: orig, to: dest, promotion: 'q' });
-            if (!result) { cgRef.current?.set(buildCgConfig()); return; }
-            afterPlayerMove(result);
-          }
-        }
       },
       draggable: { enabled: true, showGhost: true },
       selectable: { enabled: true },
@@ -258,8 +253,8 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
     if (cgRef.current) cgRef.current.set(buildCgConfig());
   }, [buildCgConfig]);
 
-  const afterPlayerMove = useCallback((result: any) => {
-    const fenBefore = result.before || gameRef.current.fen();
+  const afterPlayerMove = (result: any) => {
+    console.log('[ChessGame] afterPlayerMove:', result.san);
     const from = squareToPos(result.from);
     const to = squareToPos(result.to);
     const captured = result.captured ? { type: result.captured.toUpperCase() as PieceType, color: result.color === 'w' ? 'b' as const : 'w' as const } : null;
@@ -268,37 +263,59 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
       else capturedW.current.push(captured);
     }
     const piece: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
-    const rec: MoveRecord = {
-      moveNumber: Math.floor(history.length / 2) + 1,
-      player: result.color as 'w' | 'b', from, to, piece, captured,
-      san: result.san, fenBefore, fenAfter: gameRef.current.fen(), evaluation: 0,
-    };
     setSelected(null); setLegalMoves([]);
     setBoard(getBoard(gameRef.current));
-    setHistory(prev => [...prev, rec]);
+    setHistory(prev => [...prev, {
+      moveNumber: Math.floor(prev.length / 2) + 1,
+      player: result.color as 'w' | 'b', from, to, piece, captured,
+      san: result.san, fenBefore: result.before || gameRef.current.fen(), fenAfter: gameRef.current.fen(), evaluation: 0,
+    }]);
     setReviewIndex(-1);
-    refreshCgBoard();
-    if (!gameRef.current.isGameOver()) setTimeout(() => makeAIMove(), 100);
-  }, [history.length]);
+    if (cgRef.current) cgRef.current.set({
+      fen: gameRef.current.fen(),
+      turnColor: gameRef.current.turn() === 'w' ? 'white' : 'black',
+    });
+    if (!gameRef.current.isGameOver()) {
+      console.log('[ChessGame] Scheduling AI move in 100ms');
+      setTimeout(() => makeAIMoveRef.current(), 100);
+    }
+  };
 
   const getEngineMove = (fen: string): Promise<string> => getBestMove(fen, 12);
 
   const makeAIMove = async () => {
-    if (aiBusy.current || gameRef.current.isGameOver()) return;
+    console.log('[ChessGame] makeAIMove called');
+    if (aiBusy.current || gameRef.current.isGameOver()) {
+      console.log('[ChessGame] makeAIMove early return: aiBusy=', aiBusy.current);
+      return;
+    }
     aiBusy.current = true;
     try {
       const fen = gameRef.current.fen();
-      console.log('Requesting AI move for FEN:', fen);
+      console.log('[ChessGame] Requesting AI move for FEN:', fen);
       const moveStr = await getEngineMove(fen);
+      console.log('[ChessGame] AI returned:', moveStr);
       if (!moveStr) {
-        console.warn('AI: empty move');
-        setTimeout(() => { aiBusy.current = false; }, 100);
+        console.warn('[ChessGame] AI: empty move');
+        aiBusy.current = false;
+        if (cgRef.current) cgRef.current.set({ fen: gameRef.current.fen(), turnColor: gameRef.current.turn() === 'w' ? 'white' : 'black' });
         return;
       }
-      const result = gameRef.current.move(moveStr, { strict: true });
+      let result = null;
+      try {
+        result = gameRef.current.move(moveStr);
+      } catch (moveErr) {
+        console.warn('[ChessGame] AI move threw on string parse, trying as object:', moveErr);
+        try {
+          result = gameRef.current.move({ from: moveStr.slice(0, 2), to: moveStr.slice(2, 4), promotion: moveStr.slice(4, 5) || undefined });
+        } catch (moveErr2) {
+          console.error('[ChessGame] AI move parse failed:', moveErr2);
+        }
+      }
       if (!result) {
-        console.warn('AI: invalid move', moveStr);
-        setTimeout(() => { aiBusy.current = false; refreshCgBoard(); }, 100);
+        console.warn('[ChessGame] AI: invalid move', moveStr);
+        aiBusy.current = false;
+        if (cgRef.current) cgRef.current.set({ fen: gameRef.current.fen(), turnColor: gameRef.current.turn() === 'w' ? 'white' : 'black' });
         return;
       }
       const from = squareToPos(result.from);
@@ -308,21 +325,24 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
         if (result.color === 'w') capturedB.current.push(captured);
         else capturedW.current.push(captured);
       }
-      const p: Piece = { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' };
-      const rec: MoveRecord = {
-        moveNumber: Math.floor(history.length / 2) + 1,
-        player: result.color as 'w' | 'b', from, to, piece: p, captured,
+      setHistory(prev => [...prev, {
+        moveNumber: Math.floor(prev.length / 2) + 1,
+        player: result.color as 'w' | 'b', from, to,
+        piece: { type: result.piece.toUpperCase() as PieceType, color: result.color as 'w' | 'b' },
+        captured,
         san: result.san, fenBefore: fen, fenAfter: gameRef.current.fen(), evaluation: 0,
-      };
-      setHistory(prev => [...prev, rec]);
+      }]);
       setBoard(getBoard(gameRef.current));
-      setTimeout(() => { refreshCgBoard(); aiBusy.current = false; }, 50);
-    } catch (e) {
-      console.error('AI error:', e);
+      console.log('[ChessGame] AI move applied:', result.san);
+      if (cgRef.current) cgRef.current.set({
+        fen: gameRef.current.fen(),
+        turnColor: gameRef.current.turn() === 'w' ? 'white' : 'black',
+      });
       aiBusy.current = false;
-      refreshCgBoard();
-      // Show error to user
-      alert(`Stockfish engine error: ${e instanceof Error ? e.message : String(e)}`);
+    } catch (e) {
+      console.error('[ChessGame] AI error:', e);
+      aiBusy.current = false;
+      if (cgRef.current) cgRef.current.set({ fen: gameRef.current.fen() });
     }
   };
 
@@ -361,25 +381,39 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   }, []);
 
   useEffect(() => {
+    console.log('[ChessGame] Mount: initializing chessground');
     if (boardRef.current && !cgRef.current) {
       cgRef.current = Chessground(boardRef.current, {
-        fen: gameRef.current.fen(),
-        orientation: flipped ? 'black' : 'white',
-        turnColor: 'white',
+        fen: 'start',
         movable: {
           free: false,
           color: 'white',
-          dests: calcDests(gameRef.current),
           showDests: true,
           rookCastle: true,
+          events: {
+            after: (orig: cg.Key, dest: cg.Key) => {
+              console.log('[ChessGame] chessground after fired:', orig, '->', dest);
+              if (aiBusy.current) { console.log('[ChessGame] after skipped: aiBusy'); return; }
+              try {
+                const result = gameRef.current.move({ from: orig, to: dest, promotion: 'q' });
+                if (!result) { console.log('[ChessGame] chess.move failed'); return; }
+                console.log('[ChessGame] Player move applied:', result.san);
+                afterMoveRef.current(result);
+              } catch(e) { console.error('[ChessGame] after error:', e); }
+            }
+          }
         },
         draggable: { enabled: true, showGhost: true },
         selectable: { enabled: true },
         animation: { enabled: true, duration: 200 },
         highlight: { lastMove: true, check: true },
       });
+      console.log('[ChessGame] Chessground initialized');
     }
-    return () => { if (cgRef.current) { cgRef.current.destroy(); cgRef.current = null; } };
+    return () => {
+      console.log('[ChessGame] Cleanup: destroying chessground');
+      if (cgRef.current) { cgRef.current.destroy(); cgRef.current = null; }
+    };
   }, []);
 
   useEffect(() => { refreshCgBoard(); }, [refreshCgBoard]);
@@ -462,6 +496,10 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
   }, [mode, reviewIndex, history, refreshCgBoard]);
 
   const diffLabels: Difficulty[] = ['Beginner (600 Elo)', 'Intermediate (1200 Elo)', 'Advanced (1800+ Elo)', 'Extreme Grandmaster (2500+ Elo)'];
+
+  // Keep refs in sync for async chessground callbacks
+  afterMoveRef.current = afterPlayerMove;
+  makeAIMoveRef.current = makeAIMove;
 
   return (
     <div className="max-w-[980px] mx-auto px-2 py-3">

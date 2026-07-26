@@ -384,7 +384,7 @@ export default function ChessGame({ onXpChange, soundEnabled, currentXp }: {
     console.log('[ChessGame] Mount: initializing chessground');
     if (boardRef.current && !cgRef.current) {
       cgRef.current = Chessground(boardRef.current, {
-        fen: 'start',
+        fen: gameRef.current.fen(),
         movable: {
           free: false,
           color: 'white',
